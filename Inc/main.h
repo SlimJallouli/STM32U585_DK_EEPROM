@@ -124,6 +124,8 @@ void Error_Handler(void);
 #define STMOD2_TIM_GPIO_Port GPIOC
 #define VCP_TX_Pin GPIO_PIN_9
 #define VCP_TX_GPIO_Port GPIOA
+#define VCP_RX_Pin GPIO_PIN_10
+#define VCP_RX_GPIO_Port GPIOA
 #define STMOD2_17_Pin GPIO_PIN_1
 #define STMOD2_17_GPIO_Port GPIOG
 #define WKUP_B_Pin GPIO_PIN_6
