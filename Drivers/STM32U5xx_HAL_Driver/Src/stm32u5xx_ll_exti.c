@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -24,9 +24,9 @@
 #include "stm32_assert.h"
 #else
 #define assert_param(expr) ((void)0U)
-#endif
+#endif /* USE_FULL_ASSERT */
 
-/** @addtogroup STM32u5xx_LL_Driver
+/** @addtogroup STM32U5xx_LL_Driver
   * @{
   */
 
@@ -47,14 +47,14 @@
 #define IS_LL_EXTI_LINE_0_31(__VALUE__)              (((__VALUE__) & ~LL_EXTI_LINE_ALL_0_31) == 0x00000000U)
 
 #define IS_LL_EXTI_MODE(__VALUE__)                   (((__VALUE__) == LL_EXTI_MODE_IT)            \
-                                                   || ((__VALUE__) == LL_EXTI_MODE_EVENT)         \
-                                                   || ((__VALUE__) == LL_EXTI_MODE_IT_EVENT))
+                                                      || ((__VALUE__) == LL_EXTI_MODE_EVENT)         \
+                                                      || ((__VALUE__) == LL_EXTI_MODE_IT_EVENT))
 
 
 #define IS_LL_EXTI_TRIGGER(__VALUE__)                (((__VALUE__) == LL_EXTI_TRIGGER_NONE)       \
-                                                   || ((__VALUE__) == LL_EXTI_TRIGGER_RISING)     \
-                                                   || ((__VALUE__) == LL_EXTI_TRIGGER_FALLING)    \
-                                                   || ((__VALUE__) == LL_EXTI_TRIGGER_RISING_FALLING))
+                                                      || ((__VALUE__) == LL_EXTI_TRIGGER_RISING)     \
+                                                      || ((__VALUE__) == LL_EXTI_TRIGGER_FALLING)    \
+                                                      || ((__VALUE__) == LL_EXTI_TRIGGER_RISING_FALLING))
 
 /**
   * @}
@@ -97,7 +97,7 @@ ErrorStatus LL_EXTI_DeInit(void)
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
   /* Secure register set to default reset values */
   LL_EXTI_WriteReg(SECCFGR1,  0x00000000U);
-#endif
+#endif /* __ARM_FEATURE_CMSE */
   return SUCCESS;
 }
 

@@ -12,38 +12,31 @@
   *           + RAMCFG Erase Operation Functions.
   *           + RAMCFG Handle Interrupt and Callbacks Functions.
   *           + RAMCFG State and Error Functions.
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                     ##### RAMCFG Peripheral features #####
   ==============================================================================
   [..]
     (+) Each SRAM is managed by a RAMCFG instance.
-        (++) SRAM1 placed in Core Domain.
-             (+++) Size         = 192 kB.
-             (+++) Base Address = 0x20000000.
 
-        (++) SRAM2 placed in Core Domain.
-             (+++) Size         = 64 kB.
-             (+++) Base Address = 0x20030000.
+    (+) Each SRAM can be erased independently through its RAMCFG instance.
 
-        (++) SRAM3 placed in Core Domain.
-             (+++) Size         = 512 kB.
-             (+++) Base Address = 0x20040000.
-
-        (++) SRAM4 placed in Smart Run Domain.
-             (+++) Size         = 16 kB.
-             (+++) Base Address = 0x28000000.
-
-        (++) BKPRAM placed in Backup Domain.
-             (+++) Size         = 2 kB.
-             (+++) Base Address = 0x40036400.
-
-    (+) Each SRAM could be erased independently through its RAMCFG instance.
-
-    (+) The wait state value for each SRAM could be configured independently
+    (+) The wait state value for each SRAM can be configured independently
         through its RAMCFG instance.
 
-    (+) SRAM2 is divided to 64 pages with 1 kB granularity. Each page could be
+    (+) SRAM2 is divided to 64 pages with 1 kB granularity. Each page can be
         write protected independently through its RAMCFG instance.
 
     (+) SRAM2, SRAM3 and BKPRAM support ECC correction feature. This mechanism
@@ -51,14 +44,13 @@
         algorithm. This feature provides the following information:
              (++) Single error address.
              (++) Double error address.
-
   ==============================================================================
                         ##### How to use this driver #####
   ==============================================================================
   [..]
    (#) Call HAL_RAMCFG_Init() to initialize the RAMCFG peripheral before using
        any feature. Call HAL_RAMCFG_DeInit() to de-initialize the RAMCFG when
-       using this peripheral is no more needed or a hardware issue is occurred.
+       using this peripheral is no more needed or a hardware issue has occurred.
 
      *** ECC feature ***
      ===================
@@ -67,7 +59,7 @@
               disable ECC hardware process.
 
           (+) Call HAL_RAMCFG_EnableNotification() and HAL_RAMCFG_DisableNotification()
-              to enable and disable ECC interrupts. Interrupts could be :
+              to enable and disable ECC interrupts. Interrupts can be :
                     (++) Single error interrupt.
                     (++) Double error interrupt.
                     (++) Double error interrupt redirected to Non masKable
@@ -75,7 +67,7 @@
 
           (+) Call HAL_RAMCFG_GetSingleErrorAddress() to get the address of the
               last fail RAM word detected (only for single error)  and
-              Call HAL_RAMCFG_GetDoubleErrorAddress() to get the address of the
+              call HAL_RAMCFG_GetDoubleErrorAddress() to get the address of the
               last fail RAM word detected (only for double error).
 
           (+) Call HAL_RAMCFG_IsECCErrorDetected() to check if an ECC single/double
@@ -98,7 +90,7 @@
           (+) Call HAL_RAMCFG_EnableWriteProtection() to enable the write
               protection for the given SRAM2 page(s).
 
-          (+) There is no API to disable write protection as this feature could
+          (+) There is no API to disable write protection as this feature can
               be disabled only by a global peripheral reset or system reset.
 
           (+) Any write access to a write protected area of SRAM2 causes a
@@ -128,18 +120,6 @@
       (+) __HAL_RAMCFG_GET_IT_SOURCE : Check whether the specified RAMCFG
                                        interrupt source is enabled or not.
   @endverbatim
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -160,7 +140,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
 
-/** @addtogroup FLASH_Private_Constants
+/** @addtogroup RAMCFG_Private_Constants
   * @{
   */
 #define RAMCFG_TIMEOUT_VALUE 50000U
@@ -217,11 +197,14 @@ HAL_StatusTypeDef HAL_RAMCFG_Init(RAMCFG_HandleTypeDef *hramcfg)
 
 #if (USE_HAL_RAMCFG_REGISTER_CALLBACKS == 1)
   /* Check if a valid MSP API was registered */
-  if (hramcfg->MspInitCallback != NULL)
+  if (hramcfg->MspInitCallback == NULL)
   {
     /* Init the low level hardware */
-    hramcfg->MspInitCallback(hramcfg);
+    hramcfg->MspInitCallback = HAL_RAMCFG_MspInit;
   }
+
+  /* Init the low level hardware */
+  hramcfg->MspInitCallback(hramcfg);
 #else
   HAL_RAMCFG_MspInit(hramcfg);
 #endif /* USE_HAL_RAMCFG_REGISTER_CALLBACKS */
@@ -346,13 +329,13 @@ __weak void HAL_RAMCFG_MspDeInit(RAMCFG_HandleTypeDef *hramcfg)
     mechanism for the selected RAMCFG instance.
     The HAL_RAMCFG_StopECC() function allows disabling and stopping the ECC
     mechanism for the selected RAMCFG instance.
-    The HAL_RAMCFG_EnableNotification() function allows to enabling interrupts
+    The HAL_RAMCFG_EnableNotification() function allows enabling interrupts
     for single ECC error, double ECC error and NMI error.
-    The HAL_RAMCFG_DisableNotification() function allows to disabling interrupts
+    The HAL_RAMCFG_DisableNotification() function allows disabling interrupts
     for single ECC error, double ECC error. When NMI interrupt is enabled it
-    could not be disabled only by a global peripheral reset or by a system reset.
+    can only be disabled by a global peripheral reset or by a system reset.
     The HAL_RAMCFG_IsECCErrorDetected() function allows to check if an ECC error
-    is occurred.
+    has occurred.
     The HAL_RAMCFG_GetSingleErrorAddress() function allows to get the address of
     the last single ECC error detected.
     The HAL_RAMCFG_GetDoubleErrorAddress() function allows to get the address of
@@ -371,6 +354,8 @@ __weak void HAL_RAMCFG_MspDeInit(RAMCFG_HandleTypeDef *hramcfg)
   */
 HAL_StatusTypeDef HAL_RAMCFG_StartECC(RAMCFG_HandleTypeDef *hramcfg)
 {
+
+  HAL_StatusTypeDef status = HAL_OK;
   /* Check the parameters */
   assert_param(IS_RAMCFG_ECC_INSTANCE(hramcfg->Instance));
 
@@ -385,21 +370,20 @@ HAL_StatusTypeDef HAL_RAMCFG_StartECC(RAMCFG_HandleTypeDef *hramcfg)
     {
       /* Start the SRAM ECC mechanism and latching the error address */
       hramcfg->Instance->CR |= (RAMCFG_CR_ECCE | RAMCFG_CR_ALE);
+
+      /* Update the RAMCFG state */
+      hramcfg->State = HAL_RAMCFG_STATE_READY;
     }
   }
   else
   {
-    /* Update the error code */
+    /* Update the RAMCFG error code and return error  */
     hramcfg->ErrorCode = HAL_RAMCFG_ERROR_BUSY;
+    status = HAL_ERROR;
 
-    /* Return error status */
-    return HAL_ERROR;
   }
 
-  /* Update the RAMCFG state */
-  hramcfg->State = HAL_RAMCFG_STATE_READY;
-
-  return HAL_OK;
+  return status;
 }
 
 /**
@@ -411,6 +395,7 @@ HAL_StatusTypeDef HAL_RAMCFG_StartECC(RAMCFG_HandleTypeDef *hramcfg)
   */
 HAL_StatusTypeDef HAL_RAMCFG_StopECC(RAMCFG_HandleTypeDef *hramcfg)
 {
+  HAL_StatusTypeDef status = HAL_OK;
   /* Check the parameters */
   assert_param(IS_RAMCFG_ECC_INSTANCE(hramcfg->Instance));
 
@@ -429,21 +414,19 @@ HAL_StatusTypeDef HAL_RAMCFG_StopECC(RAMCFG_HandleTypeDef *hramcfg)
 
       /* Start the SRAM ECC mechanism and latching the error address */
       hramcfg->Instance->CR &= ~(RAMCFG_CR_ECCE | RAMCFG_CR_ALE);
+
+      /* Update the RAMCFG state */
+      hramcfg->State = HAL_RAMCFG_STATE_READY;
     }
   }
   else
   {
-    /* Update the error code */
+    /* Update the RAMCFG error code and return error  */
     hramcfg->ErrorCode = HAL_RAMCFG_ERROR_BUSY;
-
-    /* Return error status */
-    return HAL_ERROR;
+    status = HAL_ERROR;
   }
 
-  /* Update the RAMCFG state */
-  hramcfg->State = HAL_RAMCFG_STATE_READY;
-
-  return HAL_OK;
+  return status;
 }
 
 /**
@@ -452,12 +435,13 @@ HAL_StatusTypeDef HAL_RAMCFG_StopECC(RAMCFG_HandleTypeDef *hramcfg)
   *                         contains the configuration information for the
   *                         specified RAMCFG instance.
   * @param  Notifications : Select the notification to be enabled.
-  *                         This parameter could be any value of @ref
+  *                         This parameter can be any value of @ref
   *                         RAMCFG_Interrupt group.
   * @retval HAL status.
   */
 HAL_StatusTypeDef HAL_RAMCFG_EnableNotification(RAMCFG_HandleTypeDef *hramcfg, uint32_t Notifications)
 {
+  HAL_StatusTypeDef status = HAL_OK;
   /* Check the parameters */
   assert_param(IS_RAMCFG_ECC_INSTANCE(hramcfg->Instance));
   assert_param(IS_RAMCFG_INTERRUPT(Notifications));
@@ -470,20 +454,19 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableNotification(RAMCFG_HandleTypeDef *hramcfg, u
 
     /* Enable RAMCFG interrupts */
     __HAL_RAMCFG_ENABLE_IT(hramcfg, Notifications);
+
+    /* Update the RAMCFG state */
+    hramcfg->State = HAL_RAMCFG_STATE_READY;
+
   }
   else
   {
-    /* Update the error code */
+    /* Update the RAMCFG error code and return error */
     hramcfg->ErrorCode = HAL_RAMCFG_ERROR_BUSY;
-
-    /* Return error status */
-    return HAL_ERROR;
+    status = HAL_ERROR;
   }
 
-  /* Update the RAMCFG state */
-  hramcfg->State = HAL_RAMCFG_STATE_READY;
-
-  return HAL_OK;
+  return status;
 }
 
 /**
@@ -492,13 +475,14 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableNotification(RAMCFG_HandleTypeDef *hramcfg, u
   *                         contains the configuration information for the
   *                         specified RAMCFG instance.
   * @param  Notifications : Select the notification to be disabled.
-  *                         This parameter could be :
+  *                         This parameter can be :
   *                         RAMCFG_IT_SINGLEERR : Single Error Interrupt.
   *                         RAMCFG_IT_DOUBLEERR : Double Error Interrupt.
   * @retval HAL status.
   */
 HAL_StatusTypeDef HAL_RAMCFG_DisableNotification(RAMCFG_HandleTypeDef *hramcfg, uint32_t Notifications)
 {
+  HAL_StatusTypeDef status = HAL_OK;
   /* Check the parameters */
   assert_param(IS_RAMCFG_ECC_INSTANCE(hramcfg->Instance));
   assert_param(IS_RAMCFG_INTERRUPT(Notifications));
@@ -511,24 +495,22 @@ HAL_StatusTypeDef HAL_RAMCFG_DisableNotification(RAMCFG_HandleTypeDef *hramcfg, 
 
     /* Disable RAMCFG interrupts */
     __HAL_RAMCFG_DISABLE_IT(hramcfg, Notifications);
+
+    /* Update the RAMCFG state */
+    hramcfg->State = HAL_RAMCFG_STATE_READY;
   }
   else
   {
-    /* Update the error code */
+    /* Update the RAMCFG error code and return error */
     hramcfg->ErrorCode = HAL_RAMCFG_ERROR_BUSY;
-
-    /* Return error status */
-    return HAL_ERROR;
+    status = HAL_ERROR;
   }
 
-  /* Update the RAMCFG state */
-  hramcfg->State = HAL_RAMCFG_STATE_READY;
-
-  return HAL_OK;
+  return status;
 }
 
 /**
-  * @brief  Check if an ECC single error was occurred.
+  * @brief  Check if an ECC single error has occurred.
   * @param  hramcfg       : Pointer to a RAMCFG_HandleTypeDef structure that
   *                         contains the configuration information for the
   *                         specified RAMCFG instance.
@@ -604,7 +586,7 @@ uint32_t HAL_RAMCFG_GetDoubleErrorAddress(RAMCFG_HandleTypeDef *hramcfg)
     [..]
     The HAL_RAMCFG_ConfigWaitState() function allows configuring the wait state
     value.
-    The HAL_RAMCFG_GetWaitState() function allows get the current wait state
+    The HAL_RAMCFG_GetWaitState() function allows getting the current wait state
     value.
 
 @endverbatim
@@ -621,11 +603,12 @@ uint32_t HAL_RAMCFG_GetDoubleErrorAddress(RAMCFG_HandleTypeDef *hramcfg)
   */
 HAL_StatusTypeDef HAL_RAMCFG_ConfigWaitState(RAMCFG_HandleTypeDef *hramcfg, uint32_t WaitState)
 {
+  HAL_StatusTypeDef status = HAL_OK;
   /* Check the parameters */
   assert_param(IS_RAMCFG_ALL_INSTANCE(hramcfg->Instance));
   assert_param(IS_RAMCFG_WAITSTATE(WaitState));
 
-  /* Get RAMCFG state */
+  /* Check RAMCFG state */
   if (hramcfg->State == HAL_RAMCFG_STATE_READY)
   {
     /* Update RAMCFG peripheral state */
@@ -633,19 +616,18 @@ HAL_StatusTypeDef HAL_RAMCFG_ConfigWaitState(RAMCFG_HandleTypeDef *hramcfg, uint
 
     /* Set the SRAM wait state */
     hramcfg->Instance->CR = WaitState;
+
+    /* Update RAMCFG peripheral state */
+    hramcfg->State = HAL_RAMCFG_STATE_READY;
   }
   else
   {
-    /* Update the RAMCFG error code */
+    /* Update the RAMCFG error code and return error */
     hramcfg->ErrorCode = HAL_RAMCFG_ERROR_BUSY;
-
-    return HAL_ERROR;
+    status = HAL_ERROR;
   }
 
-  /* Update RAMCFG peripheral state */
-  hramcfg->State = HAL_RAMCFG_STATE_READY;
-
-  return HAL_OK;
+  return status;
 }
 
 /**
@@ -674,10 +656,10 @@ uint32_t HAL_RAMCFG_GetWaitState(RAMCFG_HandleTypeDef *hramcfg)
                       ##### Write Protection Functions  #####
  ===============================================================================
     [..]
-    This section provides functions allowing enable write protection feature for
+    This section provides functions to enable write protection feature for
     the page(s) of SRAM2.
     [..]
-    The HAL_RAMCFG_EnableWriteProtection() function allows to enable the write
+    The HAL_RAMCFG_EnableWriteProtection() function allows the user to enable the write
     protection for the page(s) of SRAM2.
     The HAL_RAMCFG_GetWaitState() function allows get the current wait state
     value. Disabling SRAM2 page(s) protection is performed only by a glabal
@@ -689,7 +671,7 @@ uint32_t HAL_RAMCFG_GetWaitState(RAMCFG_HandleTypeDef *hramcfg)
 
 /**
   * @brief  Enable write protection for the given page(s).
-  *         Write protection feature could be disabled only by system reset.
+  *         Write protection feature can be disabled only by system reset.
   * @param  hramcfg       : Pointer to a RAMCFG_HandleTypeDef structure that
   *                         contains the configuration information for the
   *                         specified RAMCFG instance.
@@ -699,6 +681,7 @@ uint32_t HAL_RAMCFG_GetWaitState(RAMCFG_HandleTypeDef *hramcfg)
   */
 HAL_StatusTypeDef HAL_RAMCFG_EnableWriteProtection(RAMCFG_HandleTypeDef *hramcfg, uint32_t StartPage, uint32_t NbPage)
 {
+  HAL_StatusTypeDef status = HAL_OK;
   uint32_t page_mask_0 = 0U;
   uint32_t page_mask_1 = 0U;
 
@@ -728,20 +711,18 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableWriteProtection(RAMCFG_HandleTypeDef *hramcfg
     /* Apply mask to protect pages */
     SET_BIT(hramcfg->Instance->WPR1, page_mask_0);
     SET_BIT(hramcfg->Instance->WPR2, page_mask_1);
+
+    /* Update the RAMCFG state */
+    hramcfg->State = HAL_RAMCFG_STATE_READY;
   }
   else
   {
-    /* Update the error code */
+    /* Update the RAMCFG error code and return error  */
     hramcfg->ErrorCode = HAL_RAMCFG_ERROR_BUSY;
-
-    /* Return error status */
-    return HAL_ERROR;
+    status = HAL_ERROR;
   }
 
-  /* Update the RAMCFG state */
-  hramcfg->State = HAL_RAMCFG_STATE_READY;
-
-  return HAL_OK;
+  return status;
 }
 /**
   * @}
@@ -764,15 +745,17 @@ HAL_StatusTypeDef HAL_RAMCFG_EnableWriteProtection(RAMCFG_HandleTypeDef *hramcfg
   */
 
 /**
-  * @brief  launch a Mass Erase for the given SRAM.
+  * @brief  Launch a Mass Erase for the given SRAM.
   * @param  hramcfg       : Pointer to a RAMCFG_HandleTypeDef structure that
   *                         contains the configuration information for the
   *                         specified RAMCFG instance.
+
   * @retval HAL status.
   */
 HAL_StatusTypeDef HAL_RAMCFG_Erase(RAMCFG_HandleTypeDef *hramcfg)
 {
-  uint32_t Timeout = RAMCFG_TIMEOUT_VALUE, tickstart = HAL_GetTick();
+  uint32_t timeout = RAMCFG_TIMEOUT_VALUE;
+  uint32_t tickstart = HAL_GetTick();
 
   /* Check the parameters */
   assert_param(IS_RAMCFG_ALL_INSTANCE(hramcfg->Instance));
@@ -796,17 +779,15 @@ HAL_StatusTypeDef HAL_RAMCFG_Erase(RAMCFG_HandleTypeDef *hramcfg)
     */
     while (__HAL_RAMCFG_GET_FLAG(hramcfg, RAMCFG_FLAG_SRAMBUSY) != 0U)
     {
-      if (Timeout != HAL_MAX_DELAY)
+      if (timeout != HAL_MAX_DELAY)
       {
-        if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0U))
+        if (((HAL_GetTick() - tickstart) > timeout) || (timeout == 0U))
         {
           /* Update the RAMCFG error code */
           hramcfg->ErrorCode = HAL_RAMCFG_ERROR_TIMEOUT;
 
-          /* Update the RAMCFG state */
+          /* Update the RAMCFG state and return error status */
           hramcfg->State = HAL_RAMCFG_STATE_ERROR;
-
-          /* Return error status */
           return HAL_ERROR;
         }
       }
@@ -814,10 +795,8 @@ HAL_StatusTypeDef HAL_RAMCFG_Erase(RAMCFG_HandleTypeDef *hramcfg)
   }
   else
   {
-    /* Update the error code */
+    /* Update the error code and return error status */
     hramcfg->ErrorCode = HAL_RAMCFG_ERROR_BUSY;
-
-    /* Return error status */
     return HAL_ERROR;
   }
 
@@ -837,14 +816,14 @@ HAL_StatusTypeDef HAL_RAMCFG_Erase(RAMCFG_HandleTypeDef *hramcfg)
                ##### Handle Interrupt and Callbacks Functions  #####
  ===============================================================================
     [..]
-    This section provides functions allowing to handle RAMCFG interrupts and
+    This section provides functions to handle RAMCFG interrupts and
     Register / UnRegister the different callbacks.
     [..]
-    The HAL_RAMCFG_IRQHandler() function allows to handle the active RAMCFG
+    The HAL_RAMCFG_IRQHandler() function allows the user to handle the active RAMCFG
     interrupt request.
-    The HAL_RAMCFG_RegisterCallback() function allows to register the selected
+    The HAL_RAMCFG_RegisterCallback() function allows the user to register the selected
     RAMCFG callbacks.
-    The HAL_RAMCFG_UnRegisterCallback() function allows to unregister the
+    The HAL_RAMCFG_UnRegisterCallback() function allows the user to unregister the
     selected RAMCFG callbacks.
 @endverbatim
   * @{
@@ -914,7 +893,7 @@ __weak void HAL_RAMCFG_DetectSingleErrorCallback(RAMCFG_HandleTypeDef *hramcfg)
   UNUSED(hramcfg);
 
   /* NOTE : This function should not be modified, when the callback is needed,
-            the HAL_RAMCFG_DetectSingleErrorCallback could be implemented in
+            the HAL_RAMCFG_DetectSingleErrorCallback can be implemented in
             the user file.                                                    */
 }
 
@@ -930,7 +909,7 @@ __weak void HAL_RAMCFG_DetectDoubleErrorCallback(RAMCFG_HandleTypeDef *hramcfg)
   UNUSED(hramcfg);
 
   /* NOTE : This function should not be modified, when the callback is needed,
-            the HAL_RAMCFG_DetectDoubleErrorCallback could be implemented in
+            the HAL_RAMCFG_DetectDoubleErrorCallback can be implemented in
             the user file.                                                    */
 }
 
@@ -953,10 +932,8 @@ HAL_StatusTypeDef HAL_RAMCFG_RegisterCallback(RAMCFG_HandleTypeDef *hramcfg,
 
   if (pCallback == NULL)
   {
-    /* Update the error code */
+    /* Update the error code and return error */
     hramcfg->ErrorCode |= HAL_RAMCFG_ERROR_INVALID_CALLBACK;
-
-    /* Return error status */
     return HAL_ERROR;
   }
 
@@ -989,10 +966,8 @@ HAL_StatusTypeDef HAL_RAMCFG_RegisterCallback(RAMCFG_HandleTypeDef *hramcfg,
         break;
 
       default:
-        /* Update the error code */
+        /* Update the error code and return error */
         hramcfg->ErrorCode |= HAL_RAMCFG_ERROR_INVALID_CALLBACK;
-
-        /* Update return status */
         status = HAL_ERROR;
         break;
     }
@@ -1012,20 +987,16 @@ HAL_StatusTypeDef HAL_RAMCFG_RegisterCallback(RAMCFG_HandleTypeDef *hramcfg,
         break;
 
       default :
-        /* Update the error code */
+        /* Update the error code and return error */
         hramcfg->ErrorCode |= HAL_RAMCFG_ERROR_INVALID_CALLBACK;
-
-        /* Update return status */
         status =  HAL_ERROR;
         break;
     }
   }
   else
   {
-    /* Update the error code */
+    /* Update the error code and return error  */
     hramcfg->ErrorCode = HAL_RAMCFG_ERROR_INVALID_CALLBACK;
-
-    /* Update return status */
     status = HAL_ERROR;
   }
 
@@ -1118,10 +1089,8 @@ HAL_StatusTypeDef HAL_RAMCFG_UnRegisterCallback(RAMCFG_HandleTypeDef *hramcfg, H
   }
   else
   {
-    /* Update the error code */
+    /* Update the error code and return error */
     hramcfg->ErrorCode = HAL_RAMCFG_ERROR_INVALID_CALLBACK;
-
-    /* Update return status */
     status = HAL_ERROR;
   }
 
@@ -1139,12 +1108,12 @@ HAL_StatusTypeDef HAL_RAMCFG_UnRegisterCallback(RAMCFG_HandleTypeDef *hramcfg, H
                     ##### State and Error Functions  #####
  ===============================================================================
     [..]
-    This section provides functions allowing to check and get the RAMCFG state
+    This section provides functions to check and get the RAMCFG state
     and the error code .
     [..]
-    The HAL_RAMCFG_GetState() function allows to get the RAMCFG peripheral
+    The HAL_RAMCFG_GetState() function allows the user to get the RAMCFG peripheral
     state.
-    The HAL_RAMCFG_GetError() function allows to Get the RAMCFG peripheral error
+    The HAL_RAMCFG_GetError() function allows the user to get the RAMCFG peripheral error
     code.
 
 @endverbatim

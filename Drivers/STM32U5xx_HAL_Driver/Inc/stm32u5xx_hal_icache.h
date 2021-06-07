@@ -187,7 +187,7 @@ typedef struct
   * @retval The state of __INTERRUPT__ (0 or 1).
   */
 #define __HAL_ICACHE_GET_IT_SOURCE(__INTERRUPT__)  \
-          ((READ_BIT(ICACHE->IER, (__INTERRUPT__)) == (__INTERRUPT__)) ? 1U : 0U)
+  ((READ_BIT(ICACHE->IER, (__INTERRUPT__)) == (__INTERRUPT__)) ? 1U : 0U)
 
 /** @brief  Check whether the selected ICACHE flag is set or not.
   * @param  __FLAG__ specifies the flag to check.
@@ -266,47 +266,12 @@ void HAL_ICACHE_ErrorCallback(void);
   * @{
   */
 /******* Memory remapped regions functions */
-HAL_StatusTypeDef HAL_ICACHE_EnableRemapRegion(uint32_t Region, ICACHE_RegionConfigTypeDef *sRegionConfig);
+HAL_StatusTypeDef HAL_ICACHE_EnableRemapRegion(uint32_t Region, const ICACHE_RegionConfigTypeDef *const pRegionConfig);
 HAL_StatusTypeDef HAL_ICACHE_DisableRemapRegion(uint32_t Region);
 
 /**
   * @}
   */
-
-/**
-  * @}
-  */
-
-/* Private types -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private constants ---------------------------------------------------------*/
-/* Private macros ------------------------------------------------------------*/
-/** @defgroup ICACHE_Private_Macros ICACHE Private Macros
-  * @{
-  */
-
-#define IS_ICACHE_ASSOCIATIVITY_MODE(__MODE__) (((__MODE__) == ICACHE_1WAY) || \
-                                                ((__MODE__) == ICACHE_2WAYS))
-
-#define IS_ICACHE_MONITOR_TYPE(__TYPE__)    (((__TYPE__) == ICACHE_MONITOR_HIT_MISS) || \
-                                             ((__TYPE__) == ICACHE_MONITOR_HIT)      || \
-                                             ((__TYPE__) == ICACHE_MONITOR_MISS))
-
-#define IS_ICACHE_REGION_NUMBER(__NUMBER__) ((__NUMBER__) < 4U)
-
-#define IS_ICACHE_REGION_SIZE(__SIZE__)     (((__SIZE__) == ICACHE_REGIONSIZE_2MB)   || \
-                                             ((__SIZE__) == ICACHE_REGIONSIZE_4MB)   || \
-                                             ((__SIZE__) == ICACHE_REGIONSIZE_8MB)   || \
-                                             ((__SIZE__) == ICACHE_REGIONSIZE_16MB)  || \
-                                             ((__SIZE__) == ICACHE_REGIONSIZE_32MB)  || \
-                                             ((__SIZE__) == ICACHE_REGIONSIZE_64MB)  || \
-                                             ((__SIZE__) == ICACHE_REGIONSIZE_128MB))
-
-#define IS_ICACHE_REGION_TRAFFIC_ROUTE(__TRAFFICROUTE__)  (((__TRAFFICROUTE__) == ICACHE_MASTER1_PORT) || \
-                                                           ((__TRAFFICROUTE__) == ICACHE_MASTER2_PORT))
-
-#define IS_ICACHE_REGION_OUTPUT_BURST_TYPE(__OUTPUTBURSTTYPE_) (((__OUTPUTBURSTTYPE_) == ICACHE_OUTPUT_BURST_WRAP) || \
-                                                                ((__OUTPUTBURSTTYPE_) == ICACHE_OUTPUT_BURST_INCR))
 
 /**
   * @}

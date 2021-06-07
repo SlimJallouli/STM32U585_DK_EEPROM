@@ -98,8 +98,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private defines -----------------------------------------------------------*/
-#define FLASH_NB_WORDS_IN_BURST  32
-
 /* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /** @defgroup FLASH_Private_Variables FLASH Private Variables
@@ -473,7 +471,7 @@ HAL_StatusTypeDef HAL_FLASH_Unlock(void)
       }
     }
   }
-#endif
+#endif /* __ARM_FEATURE_CMSE */
 
   return status;
 }
@@ -506,7 +504,7 @@ HAL_StatusTypeDef HAL_FLASH_Lock(void)
       status = HAL_OK;
     }
   }
-#endif
+#endif /* __ARM_FEATURE_CMSE */
 
   return status;
 }
@@ -621,15 +619,17 @@ uint32_t HAL_FLASH_GetError(void)
   */
 HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout)
 {
-  /* Wait for the FLASH operation to complete by polling on BUSY flag to be reset.
-     Even if the FLASH operation fails, the BUSY flag will be reset and an error
-     flag will be set */
+  /* Wait for the FLASH operation to complete by polling on BUSY and WDW flags to be reset.
+     Even if the FLASH operation fails, the BUSY & WDW flags will be reset, and an error flag will be set */
 
   uint32_t timeout = HAL_GetTick() + Timeout;
   uint32_t error;
   __IO uint32_t *reg_sr;
 
-  while (__HAL_FLASH_GET_FLAG(FLASH_FLAG_BSY))
+  /* Access to SECSR or NSSR registers depends on operation type */
+  reg_sr = IS_FLASH_SECURE_OPERATION() ? &(FLASH->SECSR) : &(FLASH_NS->NSSR);
+
+  while (((*reg_sr) & (FLASH_FLAG_BSY | FLASH_FLAG_WDW)) != 0U)
   {
     if (Timeout != HAL_MAX_DELAY)
     {
@@ -639,9 +639,6 @@ HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout)
       }
     }
   }
-
-  /* Access to SECSR or NSSR registers depends on operation type */
-  reg_sr = IS_FLASH_SECURE_OPERATION() ? &(FLASH->SECSR) : &(FLASH_NS->NSSR);
 
   /* Check FLASH operation error flags */
   error = ((*reg_sr) & FLASH_FLAG_SR_ERRORS);

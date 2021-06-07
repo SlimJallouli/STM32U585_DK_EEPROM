@@ -42,68 +42,43 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Private types -------------------------------------------------------------*/
-/** @defgroup CRYPEx_Private_Types CRYPEx Private Types
-  * @{
-  */
-
-/**
-  * @}
-  */
-
 /* Private variables ---------------------------------------------------------*/
-/** @defgroup CRYPEx_Private_Variables CRYPEx Private Variables
-  * @{
-  */
-
-/**
-  * @}
-  */
-
 /* Private constants ---------------------------------------------------------*/
-/** @defgroup CRYPEx_Private_Constants CRYPEx Private Constants
-  * @{
-  */
-
-/**
-  * @}
-  */
-
 /* Private macros ------------------------------------------------------------*/
-/** @defgroup CRYPEx_Private_Macros CRYPEx Private Macros
-  * @{
-  */
-
-/**
-  * @}
-  */
-
 /* Private functions ---------------------------------------------------------*/
-/** @defgroup CRYPEx_Private_Functions CRYPEx Private Functions
-  * @{
-  */
-
-/**
-  * @}
-  */
-
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup CRYPEx_Exported_Functions CRYPEx Exported Functions
   * @{
   */
 
-/** @addtogroup CRYPEx_Exported_Functions_Group1
+/** @addtogroup CRYPEx_Exported_Functions_Group1 Extended AES processing functions
   * @{
   */
 HAL_StatusTypeDef HAL_CRYPEx_AESGCM_GenerateAuthTAG(CRYP_HandleTypeDef *hcryp, uint32_t *pAuthTag, uint32_t Timeout);
 HAL_StatusTypeDef HAL_CRYPEx_AESCCM_GenerateAuthTAG(CRYP_HandleTypeDef *hcryp, uint32_t *pAuthTag, uint32_t Timeout);
-HAL_StatusTypeDef HAL_CRYPEx_EncryptSharedKey(CRYP_HandleTypeDef *hcryp, uint32_t *pKey, uint32_t *pOutput, uint32_t ID,
-                                              uint32_t Timeout);
-HAL_StatusTypeDef HAL_CRYPEx_DecryptSharedKey(CRYP_HandleTypeDef *hcryp, uint32_t *pKey, uint32_t ID, uint32_t Timeout);
+/**
+  * @}
+  */
+
+/** @addtogroup CRYPEx_Exported_Functions_Group2 Wrap and Unwrap key functions
+  * @{
+  */
 HAL_StatusTypeDef HAL_CRYPEx_UnwrapKey(CRYP_HandleTypeDef *hcryp, uint32_t *pInput, uint32_t Timeout);
 HAL_StatusTypeDef HAL_CRYPEx_WrapKey(CRYP_HandleTypeDef *hcryp, uint32_t *pInput, uint32_t *pOutput, uint32_t Timeout);
 /**
   * @}
   */
+
+/** @addtogroup CRYPEx_Exported_Functions_Group3 Encrypt/Decrypt Shared key functions
+  * @{
+  */
+HAL_StatusTypeDef HAL_CRYPEx_EncryptSharedKey(CRYP_HandleTypeDef *hcryp, uint32_t *pKey, uint32_t *pOutput, uint32_t ID,
+                                              uint32_t Timeout);
+HAL_StatusTypeDef HAL_CRYPEx_DecryptSharedKey(CRYP_HandleTypeDef *hcryp, uint32_t *pKey, uint32_t ID, uint32_t Timeout);
+/**
+  * @}
+  */
+
 /**
   * @}
   */

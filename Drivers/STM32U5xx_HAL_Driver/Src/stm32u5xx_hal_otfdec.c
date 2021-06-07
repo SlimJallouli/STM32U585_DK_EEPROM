@@ -152,8 +152,6 @@
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
-
-
 /* Exported functions --------------------------------------------------------*/
 /** @addtogroup OTFDEC_Exported_Functions
   * @{

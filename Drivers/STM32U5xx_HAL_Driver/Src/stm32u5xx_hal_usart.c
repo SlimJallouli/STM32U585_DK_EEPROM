@@ -125,7 +125,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -1445,7 +1445,7 @@ HAL_StatusTypeDef HAL_USART_Transmit_DMA(USART_HandleTypeDef *husart, uint8_t *p
 
           /* Set DMA destination address */
           husart->hdmatx->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-         (uint32_t)&husart->Instance->TDR;
+            (uint32_t)&husart->Instance->TDR;
 
           /* Enable the USART transmit DMA channel */
           status = HAL_DMAEx_List_Start_IT(husart->hdmatx);
@@ -1563,7 +1563,7 @@ HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pR
 
           /* Set DMA source address */
           husart->hdmarx->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-          (uint32_t)&husart->Instance->RDR;
+            (uint32_t)&husart->Instance->RDR;
 
           /* Set DMA destination address */
           husart->hdmarx->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = *(uint32_t *)tmp;
@@ -1611,7 +1611,7 @@ HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pR
 
             /* Set DMA destination address */
             husart->hdmatx->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-           (uint32_t)&husart->Instance->TDR;
+              (uint32_t)&husart->Instance->TDR;
 
             /* Enable the USART transmit DMA channel */
             status = HAL_DMAEx_List_Start_IT(husart->hdmatx);
@@ -1652,7 +1652,7 @@ HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pR
     }
     else
     {
-      if (husart->hdmarx != NULL)
+      if ((husart->hdmarx != NULL) && ((husart->hdmarx->Mode & DMA_LINKEDLIST) != DMA_LINKEDLIST))
       {
         status = HAL_DMA_Abort(husart->hdmarx);
       }
@@ -1753,7 +1753,7 @@ HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, uin
 
           /* Set DMA source address */
           husart->hdmarx->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-          (uint32_t)&husart->Instance->RDR;
+            (uint32_t)&husart->Instance->RDR;
 
           /* Set DMA destination address */
           husart->hdmarx->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = *(uint32_t *)tmp;
@@ -1791,7 +1791,7 @@ HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, uin
 
             /* Set DMA destination address */
             husart->hdmatx->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-           (uint32_t)&husart->Instance->TDR;
+              (uint32_t)&husart->Instance->TDR;
 
             /* Enable the USART transmit DMA channel */
             status = HAL_DMAEx_List_Start_IT(husart->hdmatx);
@@ -1839,7 +1839,7 @@ HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, uin
     }
     else
     {
-      if (husart->hdmarx != NULL)
+      if ((husart->hdmarx != NULL) && ((husart->hdmarx->Mode & DMA_LINKEDLIST) != DMA_LINKEDLIST))
       {
         status = HAL_DMA_Abort(husart->hdmarx);
       }

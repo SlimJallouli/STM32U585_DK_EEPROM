@@ -168,10 +168,10 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
 /** @defgroup COMP_WindowOutput COMP Window output
   * @{
   */
-#define COMP_WINDOWOUTPUT_EACH_COMP             (0x00000000UL)                            /*!< Window output default mode: Comparators output are indicating each their own state. To know window mode state: each comparator output must be read, if "((COMPx exclusive or COMPy) == 1)" then monitored signal is within comparators window.  */
-#define COMP_WINDOWOUTPUT_COMP1                 (COMP_CSR_WINOUT)                         /*!< Window output synthetized on COMP1 output: COMP1 output is no more indicating its own state, but global window mode state (logical high means monitored signal is within comparators window). */
-#define COMP_WINDOWOUTPUT_COMP2                 (COMP_CSR_WINOUT | COMP_WINDOWMODE_COMP2) /*!< Window output synthetized on COMP2 output: COMP2 output is no more indicating its own state, but global window mode state (logical high means monitored signal is within comparators window). */
-#define COMP_WINDOWOUTPUT_BOTH                  (0x00000001UL)                            /*!< Window output synthetized on both comparators output of pair of comparator selected (COMP1 and COMP2): both comparators outputs are no more indicating their own state, but global window mode state (logical high means monitored signal is within comparators window). This is a specific configuration (technically possible but not relevant from application point of view: 2 comparators output used for the same signal level), standard configuration for window mode is one of the settings above. */
+#define COMP_WINDOWOUTPUT_EACH_COMP (0x00000000UL)                            /*!< Window output default mode: Comparators output are indicating each their own state. To know window mode state: each comparator output must be read, if "((COMPx exclusive or COMPy) == 1)" then monitored signal is within comparators window.  */
+#define COMP_WINDOWOUTPUT_COMP1     (COMP_CSR_WINOUT)                         /*!< Window output synthetized on COMP1 output: COMP1 output is no more indicating its own state, but global window mode state (logical high means monitored signal is within comparators window). */
+#define COMP_WINDOWOUTPUT_COMP2     (COMP_CSR_WINOUT | COMP_WINDOWMODE_COMP2) /*!< Window output synthetized on COMP2 output: COMP2 output is no more indicating its own state, but global window mode state (logical high means monitored signal is within comparators window). */
+#define COMP_WINDOWOUTPUT_BOTH      (0x00000001UL)                            /*!< Window output synthetized on both comparators output of pair of comparator selected (COMP1 and COMP2): both comparators outputs are no more indicating their own state, but global window mode state (logical high means monitored signal is within comparators window). This is a specific configuration (technically possible but not relevant from application point of view: 2 comparators output used for the same signal level), standard configuration for window mode is one of the settings above. */
 /**
   * @}
   */
@@ -182,9 +182,9 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
 /* Note: For the characteristics of comparator power modes                    */
 /*       (propagation delay and power consumption),                           */
 /*       refer to device datasheet.                                           */
-#define COMP_POWERMODE_HIGHSPEED       (0x00000000UL)                                 /*!< High Speed */
-#define COMP_POWERMODE_MEDIUMSPEED     (COMP_CSR_PWRMODE_0)                           /*!< Medium Speed */
-#define COMP_POWERMODE_ULTRALOWPOWER   (COMP_CSR_PWRMODE_1 | COMP_CSR_PWRMODE_0)      /*!< Ultra-low power */
+#define COMP_POWERMODE_HIGHSPEED     (0x00000000UL)                            /*!< High Speed      */
+#define COMP_POWERMODE_MEDIUMSPEED   (COMP_CSR_PWRMODE_0)                      /*!< Medium Speed    */
+#define COMP_POWERMODE_ULTRALOWPOWER (COMP_CSR_PWRMODE_1 | COMP_CSR_PWRMODE_0) /*!< Ultra-low power */
 /**
   * @}
   */
@@ -192,9 +192,9 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
 /** @defgroup COMP_InputPlus COMP input plus (non-inverting input)
   * @{
   */
-#define COMP_INPUT_PLUS_IO1            ((uint32_t)0x00000000) /*!< Comparator input plus connected to IO1 (pin PC5 for COMP1, pin PB4 for COMP2) */
-#define COMP_INPUT_PLUS_IO2            (COMP_CSR_INPSEL_0)    /*!< Comparator input plus connected to IO2 (pin PB2 for COMP1, pin PB6 for COMP2) */
-#define COMP_INPUT_PLUS_IO3            (COMP_CSR_INPSEL_1)    /*!< Comparator input plus connected to IO3 (pin PA2 for COMP1)                    */
+#define COMP_INPUT_PLUS_IO1 ((uint32_t)0x00000000) /*!< Comparator input plus connected to IO1 (pin PC5 for COMP1, pin PB4 for COMP2) */
+#define COMP_INPUT_PLUS_IO2 (COMP_CSR_INPSEL_0)    /*!< Comparator input plus connected to IO2 (pin PB2 for COMP1, pin PB6 for COMP2) */
+#define COMP_INPUT_PLUS_IO3 (COMP_CSR_INPSEL_1)    /*!< Comparator input plus connected to IO3 (pin PA2 for COMP1)                    */
 /**
   * @}
   */
@@ -202,14 +202,14 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
 /** @defgroup COMP_InputMinus COMP input minus (inverting input)
   * @{
   */
-#define COMP_INPUT_MINUS_1_4VREFINT     ((uint32_t)0x00000000                                     )  /*!< Comparator input minus connected to 1/4 VrefInt                                */
-#define COMP_INPUT_MINUS_1_2VREFINT     (                                        COMP_CSR_INMSEL_0)  /*!< Comparator input minus connected to 1/2 VrefInt                                */
-#define COMP_INPUT_MINUS_3_4VREFINT     (                    COMP_CSR_INMSEL_1                    )  /*!< Comparator input minus connected to 3/4 VrefInt                                */
-#define COMP_INPUT_MINUS_VREFINT        (                    COMP_CSR_INMSEL_1 | COMP_CSR_INMSEL_0)  /*!< Comparator input minus connected to VrefInt                                    */
-#define COMP_INPUT_MINUS_DAC1_CH1       (COMP_CSR_INMSEL_2                                        )  /*!< Comparator input minus connected to DAC1 channel 1 (DAC_OUT1)                  */
-#define COMP_INPUT_MINUS_DAC1_CH2       (COMP_CSR_INMSEL_2                     | COMP_CSR_INMSEL_0)  /*!< Comparator input minus connected to DAC1 channel 2 (DAC_OUT2)                  */
-#define COMP_INPUT_MINUS_IO1            (COMP_CSR_INMSEL_2 | COMP_CSR_INMSEL_1                    )  /*!< Comparator input minus connected to IO1 (pin PB1 for COMP1, pin PB3 for COMP2) */
-#define COMP_INPUT_MINUS_IO2            (COMP_CSR_INMSEL_2 | COMP_CSR_INMSEL_1 | COMP_CSR_INMSEL_0)  /*!< Comparator input minus connected to IO2 (pin PC4 for COMP1, pin PB7 for COMP2) */
+#define COMP_INPUT_MINUS_1_4VREFINT ((uint32_t)0x00000000                                     ) /*!< Comparator input minus connected to 1/4 VrefInt                                */
+#define COMP_INPUT_MINUS_1_2VREFINT (                                        COMP_CSR_INMSEL_0) /*!< Comparator input minus connected to 1/2 VrefInt                                */
+#define COMP_INPUT_MINUS_3_4VREFINT (                    COMP_CSR_INMSEL_1                    ) /*!< Comparator input minus connected to 3/4 VrefInt                                */
+#define COMP_INPUT_MINUS_VREFINT    (                    COMP_CSR_INMSEL_1 | COMP_CSR_INMSEL_0) /*!< Comparator input minus connected to VrefInt                                    */
+#define COMP_INPUT_MINUS_DAC1_CH1   (COMP_CSR_INMSEL_2                                        ) /*!< Comparator input minus connected to DAC1 channel 1 (DAC_OUT1)                  */
+#define COMP_INPUT_MINUS_DAC1_CH2   (COMP_CSR_INMSEL_2                     | COMP_CSR_INMSEL_0) /*!< Comparator input minus connected to DAC1 channel 2 (DAC_OUT2)                  */
+#define COMP_INPUT_MINUS_IO1        (COMP_CSR_INMSEL_2 | COMP_CSR_INMSEL_1                    ) /*!< Comparator input minus connected to IO1 (pin PB1 for COMP1, pin PB7 for COMP2) */
+#define COMP_INPUT_MINUS_IO2        (COMP_CSR_INMSEL_2 | COMP_CSR_INMSEL_1 | COMP_CSR_INMSEL_0) /*!< Comparator input minus connected to IO2 (pin PC4 for COMP1, pin PB3 for COMP2) */
 /**
   * @}
   */
@@ -217,10 +217,10 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
 /** @defgroup COMP_Hysteresis COMP hysteresis
   * @{
   */
-#define COMP_HYSTERESIS_NONE           ((uint32_t)0x00000000)   /*!< No hysteresis           */
-#define COMP_HYSTERESIS_LOW            (COMP_CSR_HYST_0)        /*!< Hysteresis level low    */
-#define COMP_HYSTERESIS_MEDIUM         (COMP_CSR_HYST_1)        /*!< Hysteresis level medium */
-#define COMP_HYSTERESIS_HIGH           (COMP_CSR_HYST  )        /*!< Hysteresis level high   */
+#define COMP_HYSTERESIS_NONE   ((uint32_t)0x00000000) /*!< No hysteresis           */
+#define COMP_HYSTERESIS_LOW    (COMP_CSR_HYST_0)      /*!< Hysteresis level low    */
+#define COMP_HYSTERESIS_MEDIUM (COMP_CSR_HYST_1)      /*!< Hysteresis level medium */
+#define COMP_HYSTERESIS_HIGH   (COMP_CSR_HYST  )      /*!< Hysteresis level high   */
 /**
   * @}
   */
@@ -228,8 +228,8 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
 /** @defgroup COMP_OutputPolarity COMP Output Polarity
   * @{
   */
-#define COMP_OUTPUTPOL_NONINVERTED     (0x00000000UL)         /*!< COMP output level is not inverted (comparator output is high when the input plus is at a higher voltage than the input minus) */
-#define COMP_OUTPUTPOL_INVERTED        (COMP_CSR_POLARITY)    /*!< COMP output level is inverted     (comparator output is low  when the input plus is at a higher voltage than the input minus) */
+#define COMP_OUTPUTPOL_NONINVERTED (0x00000000UL)      /*!< COMP output level is not inverted (comparator output is high when the input plus is at a higher voltage than the input minus) */
+#define COMP_OUTPUTPOL_INVERTED    (COMP_CSR_POLARITY) /*!< COMP output level is inverted     (comparator output is low  when the input plus is at a higher voltage than the input minus) */
 /**
   * @}
   */
@@ -238,14 +238,13 @@ typedef  void (*pCOMP_CallbackTypeDef)(COMP_HandleTypeDef *hcomp); /*!< pointer 
 /** @defgroup COMP_BlankingSrce  COMP Blanking Source
   * @{
   */
-/* Any blanking source can be selected for all comparators */
-#define COMP_BLANKINGSRC_NONE             ((uint32_t)0x00000000)    /*!< No blanking source                                   */
-#define COMP_BLANKINGSRC_TIM1_OC5         (COMP_CSR_BLANKSEL_0)     /*!< TIM1 OC5 selected as blanking source for comparator  */
-#define COMP_BLANKINGSRC_TIM2_OC3         (COMP_CSR_BLANKSEL_1)     /*!< TIM2 OC3 selected as blanking source for comparator  */
-#define COMP_BLANKINGSRC_TIM3_OC3         (COMP_CSR_BLANKSEL_2)     /*!< TIM3 OC3 selected as blanking source for comparator  */
-#define COMP_BLANKINGSRC_TIM3_OC4         (COMP_CSR_BLANKSEL_0)     /*!< TIM3 OC4 selected as blanking source for comparator  */
-#define COMP_BLANKINGSRC_TIM8_OC5         (COMP_CSR_BLANKSEL_1)     /*!< TIM8 OC5 selected as blanking source for comparator  */
-#define COMP_BLANKINGSRC_TIM15_OC1        (COMP_CSR_BLANKSEL_2)     /*!< TIM15 OC1 selected as blanking source for comparator */
+#define COMP_BLANKINGSRC_NONE      ((uint32_t)0x00000000) /*!< No blanking source                              */
+#define COMP_BLANKINGSRC_TIM1_OC5  (COMP_CSR_BLANKSEL_0)  /*!< TIM1 OC5 selected as blanking source for COMP1  */
+#define COMP_BLANKINGSRC_TIM2_OC3  (COMP_CSR_BLANKSEL_1)  /*!< TIM2 OC3 selected as blanking source for COMP1  */
+#define COMP_BLANKINGSRC_TIM3_OC3  (COMP_CSR_BLANKSEL_2)  /*!< TIM3 OC3 selected as blanking source for COMP1  */
+#define COMP_BLANKINGSRC_TIM3_OC4  (COMP_CSR_BLANKSEL_0)  /*!< TIM3 OC4 selected as blanking source for COMP2  */
+#define COMP_BLANKINGSRC_TIM8_OC5  (COMP_CSR_BLANKSEL_1)  /*!< TIM8 OC5 selected as blanking source for COMP2  */
+#define COMP_BLANKINGSRC_TIM15_OC1 (COMP_CSR_BLANKSEL_2)  /*!< TIM15 OC1 selected as blanking source for COMP2 */
 /**
   * @}
   */

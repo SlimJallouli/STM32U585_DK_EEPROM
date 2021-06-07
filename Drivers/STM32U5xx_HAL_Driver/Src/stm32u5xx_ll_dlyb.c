@@ -51,14 +51,19 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u5xx_hal.h"
 
-/** @addtogroup stm32u5xx_LL_Driver
+/** @addtogroup STM32U5xx_LL_Driver
+  * @{
+  */
+
+/** @defgroup DLYB DLYB
+  * @brief DLYB LL module driver.
   * @{
   */
 
 #if defined(HAL_SD_MODULE_ENABLED) || defined(HAL_QSPI_MODULE_ENABLED)|| defined(HAL_OSPI_MODULE_ENABLED)
 
-/** @addtogroup DLYB_LL
-  * @{
+/**
+  @cond 0
   */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,13 +74,27 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
+
+/**
+  @endcond
+  */
+
 /* Exported functions --------------------------------------------------------*/
 
 /** @addtogroup DLYB_LL_Exported_Functions
+  *  @brief    Configuration and control functions
+  *
+@verbatim
+ ===============================================================================
+              ##### Control functions #####
+ ===============================================================================
+    [..]  This section provides functions allowing to
+      (+) Control the DLYB.
+@endverbatim
   * @{
   */
 
-/** @addtogroup LL_DLYB_LL_Group1 DLYB Configuration functions
+/** @addtogroup DLYB_Control_Functions DLYB Control functions
   * @{
   */
 
@@ -87,7 +106,7 @@
   *          - SUCCESS: the Delay value is set.
   *          - ERROR: the Delay value is not set.
   */
-void LL_DLYB_SetDelay (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef  *pdlyb_cfg)
+void LL_DLYB_SetDelay(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef  *pdlyb_cfg)
 {
   /* Check the DelayBlock instance */
   assert_param(IS_DLYB_ALL_INSTANCE(DLYBx));
@@ -96,7 +115,7 @@ void LL_DLYB_SetDelay (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef  *pdlyb_cfg)
   SET_BIT(DLYBx->CR, DLYB_CR_SEN);
 
   /* Update the UNIT and SEL field */
-  DLYBx->CFGR = (pdlyb_cfg->PhaseSel)|((pdlyb_cfg->Units) << DLYB_CFGR_UNIT_Pos);
+  DLYBx->CFGR = (pdlyb_cfg->PhaseSel) | ((pdlyb_cfg->Units) << DLYB_CFGR_UNIT_Pos);
 
   /* Disable the length sampling */
   CLEAR_BIT(DLYBx->CR, DLYB_CR_SEN);
@@ -107,17 +126,17 @@ void LL_DLYB_SetDelay (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef  *pdlyb_cfg)
   * @param  DLYBx: Pointer to DLYB instance.
   * @param  pdlyb_cfg: Pointer to DLYB configuration structure.
   * @retval An ErrorStatus enumeration value:
-  *          - SUCCESS: the Delay value is getted.
-  *          - ERROR: the Delay value is not getted.
+  *          - SUCCESS: the Delay value is received.
+  *          - ERROR: the Delay value is not received.
   */
-void LL_DLYB_GetDelay (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg)
+void LL_DLYB_GetDelay(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg)
 {
   /* Check the DelayBlock instance */
   assert_param(IS_DLYB_ALL_INSTANCE(DLYBx));
 
   /* Fill the DelayBlock configuration structure with SEL and UNIT value */
-  pdlyb_cfg->Units = ((DLYBx->CFGR & DLYB_CFGR_UNIT)>> DLYB_CFGR_UNIT_Pos);
-  pdlyb_cfg->PhaseSel =  (DLYBx->CFGR & DLYB_CFGR_SEL);
+  pdlyb_cfg->Units = ((DLYBx->CFGR & DLYB_CFGR_UNIT) >> DLYB_CFGR_UNIT_Pos);
+  pdlyb_cfg->PhaseSel = (DLYBx->CFGR & DLYB_CFGR_SEL);
 }
 
 /**
@@ -128,7 +147,7 @@ void LL_DLYB_GetDelay (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg)
   *          - SUCCESS: there is a valid period detected and stored in pdlyb_cfg.
   *          - ERROR: there is no valid period detected.
   */
-uint32_t LL_DLYB_GetClockPeriod (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg)
+uint32_t LL_DLYB_GetClockPeriod(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg)
 {
   uint32_t i = 0U;
   uint32_t nb ;
@@ -142,7 +161,7 @@ uint32_t LL_DLYB_GetClockPeriod (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_
   SET_BIT(DLYBx->CR, DLYB_CR_SEN);
 
   /* Delay line length detection */
-  while(i < DLYB_MAX_UNIT)
+  while (i < DLYB_MAX_UNIT)
   {
     /* Set the Delay of the UNIT(s)*/
     DLYBx->CFGR = DLYB_MAX_SELECT | (i << DLYB_CFGR_UNIT_Pos);
@@ -151,13 +170,17 @@ uint32_t LL_DLYB_GetClockPeriod (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_
     tickstart =  HAL_GetTick();
     while ((DLYBx->CFGR & DLYB_CFGR_LNGF) == 0U)
     {
-      if((HAL_GetTick() - tickstart) >=  DLYB_TIMEOUT)
+      if ((HAL_GetTick() - tickstart) >=  DLYB_TIMEOUT)
       {
-        return (uint32_t) HAL_TIMEOUT;
+        /* New check to avoid false timeout detection in case of preemption */
+        if ((DLYBx->CFGR & DLYB_CFGR_LNGF) == 0U)
+        {
+          return (uint32_t) HAL_TIMEOUT;
+        }
       }
     }
 
-    if((DLYBx->CFGR & DLYB_LNG_10_0_MASK) != 0U)
+    if ((DLYBx->CFGR & DLYB_LNG_10_0_MASK) != 0U)
     {
       if ((DLYBx->CFGR & (DLYB_CFGR_LNG_11 | DLYB_CFGR_LNG_10)) != DLYB_LNG_11_10_MASK)
       {
@@ -168,16 +191,16 @@ uint32_t LL_DLYB_GetClockPeriod (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_
     i++;
   }
 
-  if(DLYB_MAX_UNIT != i)
+  if (DLYB_MAX_UNIT != i)
   {
     /* Determine how many unit delays (nb) span one input clock period */
     lng = (DLYBx->CFGR & DLYB_CFGR_LNG) >> 16U;
     nb = 10U;
-    while((nb > 0U) && ((lng >> nb) == 0U))
+    while ((nb > 0U) && ((lng >> nb) == 0U))
     {
       nb--;
     }
-    if(nb != 0U )
+    if (nb != 0U)
     {
       pdlyb_cfg->PhaseSel = nb ;
       pdlyb_cfg->Units = i ;
@@ -207,8 +230,11 @@ uint32_t LL_DLYB_GetClockPeriod (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_
 /**
   * @}
   */
-
 #endif /* HAL_SD_MODULE_ENABLED || HAL_QSPI_MODULE_ENABLED || HAL_OSPI_MODULE_ENABLED */
+
+/**
+  * @}
+  */
 
 /**
   * @}

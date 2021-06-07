@@ -68,12 +68,14 @@ extern "C" {
                                                                   DHR12Rx channel 1 (shifted left of 20 bits)   */
 #define DAC_REG_DHR8R1_REGOFFSET       0x02000000UL            /* Register offset of DHR8Rx  channel 1 versus
                                                                   DHR12Rx channel 1 (shifted left of 24 bits)   */
+
 #define DAC_REG_DHR12R2_REGOFFSET      0x30000000UL            /* Register offset of DHR12Rx channel 2 versus
                                                                   DHR12Rx channel 1 (shifted left of 28 bits)   */
 #define DAC_REG_DHR12L2_REGOFFSET      0x00400000UL            /* Register offset of DHR12Lx channel 2 versus
                                                                   DHR12Rx channel 1 (shifted left of 20 bits)   */
 #define DAC_REG_DHR8R2_REGOFFSET       0x05000000UL            /* Register offset of DHR8Rx  channel 2 versus
                                                                   DHR12Rx channel 1 (shifted left of 24 bits)   */
+
 #define DAC_REG_DHR12RX_REGOFFSET_MASK 0xF0000000UL
 #define DAC_REG_DHR12LX_REGOFFSET_MASK 0x00F00000UL
 #define DAC_REG_DHR8RX_REGOFFSET_MASK  0x0F000000UL
@@ -81,9 +83,11 @@ extern "C" {
                                         | DAC_REG_DHR12LX_REGOFFSET_MASK | DAC_REG_DHR8RX_REGOFFSET_MASK)
 
 #define DAC_REG_DOR1_REGOFFSET         0x00000000UL            /* Register DORx channel 1 taken as reference */
+
 #define DAC_REG_DOR2_REGOFFSET         0x00000020UL            /* Register offset of DORx channel 1 versus
                                                                   DORx channel 2 (shifted left of 5 bits)    */
 #define DAC_REG_DORX_REGOFFSET_MASK    (DAC_REG_DOR1_REGOFFSET | DAC_REG_DOR2_REGOFFSET)
+
 #define DAC_REG_SHSR1_REGOFFSET        0x00000000UL            /* Register SHSRx channel 1 taken as reference */
 #define DAC_REG_SHSR2_REGOFFSET        0x00000040UL            /* Register offset of SHSRx channel 1 versus
                                                                   SHSRx channel 2 (shifted left of 6 bits)    */
@@ -233,6 +237,7 @@ typedef struct
 #define LL_DAC_FLAG_BWST2                  (DAC_SR_BWST2)     /*!< DAC channel 2 flag busy writing sample time */
 #define LL_DAC_FLAG_DAC2RDY                (DAC_SR_DAC2RDY)   /*!< DAC channel 2 flag ready */
 #define LL_DAC_FLAG_DORSTAT2               (DAC_SR_DORSTAT2)  /*!< DAC channel 2 flag output register */
+
 /**
   * @}
   */
@@ -242,7 +247,9 @@ typedef struct
   * @{
   */
 #define LL_DAC_IT_DMAUDRIE1                (DAC_CR_DMAUDRIE1) /*!< DAC channel 1 interruption DMA underrun */
+
 #define LL_DAC_IT_DMAUDRIE2                (DAC_CR_DMAUDRIE2) /*!< DAC channel 2 interruption DMA underrun */
+
 /**
   * @}
   */
@@ -1794,7 +1801,6 @@ __STATIC_INLINE uint32_t LL_DAC_IsActiveFlag_BWST1(DAC_TypeDef *DACx)
   return ((READ_BIT(DACx->SR, LL_DAC_FLAG_BWST1) == (LL_DAC_FLAG_BWST1)) ? 1UL : 0UL);
 }
 
-
 /**
   * @brief  Get DAC busy writing sample time flag for DAC channel 2
   * @rmtoll SR       BWST2          LL_DAC_IsActiveFlag_BWST2
@@ -1853,7 +1859,6 @@ __STATIC_INLINE uint32_t LL_DAC_IsActiveFlag_DORSTAT2(DAC_TypeDef *DACx)
 {
   return ((READ_BIT(DACx->SR, LL_DAC_FLAG_DORSTAT2) == (LL_DAC_FLAG_DORSTAT2)) ? 1UL : 0UL);
 }
-
 
 /**
   * @brief  Get DAC underrun flag for DAC channel 1

@@ -25,13 +25,14 @@
 #include "stm32_assert.h"
 #else
 #define assert_param(expr) ((void)0U)
-#endif
+#endif /* USE_FULL_ASSERT */
 
 /** @addtogroup STM32U5xx_LL_Driver
   * @{
   */
 
-#if defined (GPIOA) || defined (GPIOB) || defined (GPIOC) || defined (GPIOD) || defined (GPIOE) || defined (GPIOF) || defined (GPIOG) || defined (GPIOH) || defined (GPIOI)
+#if defined (GPIOA) || defined (GPIOB) || defined (GPIOC) || defined (GPIOD) || defined (GPIOE) || defined (GPIOF) || \
+    defined (GPIOG) || defined (GPIOH) || defined (GPIOI)
 
 /** @addtogroup GPIO_LL
   * @{
@@ -185,8 +186,8 @@ ErrorStatus LL_GPIO_DeInit(GPIO_TypeDef *GPIOx)
   */
 ErrorStatus LL_GPIO_Init(GPIO_TypeDef *GPIOx, LL_GPIO_InitTypeDef *GPIO_InitStruct)
 {
-  uint32_t pinpos     = 0x00000000U;
-  uint32_t currentpin = 0x00000000U;
+  uint32_t pinpos;
+  uint32_t currentpin;
 
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
@@ -199,12 +200,12 @@ ErrorStatus LL_GPIO_Init(GPIO_TypeDef *GPIOx, LL_GPIO_InitTypeDef *GPIO_InitStru
   pinpos = POSITION_VAL(GPIO_InitStruct->Pin);
 
   /* Configure the port pins */
-  while (((GPIO_InitStruct->Pin) >> pinpos) != 0x00000000U)
+  while (((GPIO_InitStruct->Pin) >> pinpos) != 0U)
   {
     /* Get current io position */
-    currentpin = (GPIO_InitStruct->Pin) & (0x00000001U << pinpos);
+    currentpin = (GPIO_InitStruct->Pin) & (1UL << pinpos);
 
-    if (currentpin)
+    if (currentpin != 0U)
     {
       /* Pin Mode configuration */
       LL_GPIO_SetPinMode(GPIOx, currentpin, GPIO_InitStruct->Mode);
@@ -227,7 +228,7 @@ ErrorStatus LL_GPIO_Init(GPIO_TypeDef *GPIOx, LL_GPIO_InitTypeDef *GPIO_InitStru
         assert_param(IS_LL_GPIO_ALTERNATE(GPIO_InitStruct->Alternate));
 
         /* Speed mode configuration */
-        if (POSITION_VAL(currentpin) < 0x00000008U)
+        if (POSITION_VAL(currentpin) < 8U)
         {
           LL_GPIO_SetAFPin_0_7(GPIOx, currentpin, GPIO_InitStruct->Alternate);
         }
@@ -282,7 +283,8 @@ void LL_GPIO_StructInit(LL_GPIO_InitTypeDef *GPIO_InitStruct)
   * @}
   */
 
-#endif /* defined (GPIOA) || defined (GPIOB) || defined (GPIOC) || defined (GPIOD) || defined (GPIOE) || defined (GPIOF) || defined (GPIOG) || defined (GPIOH) || defined (GPIOI) */
+#endif /* defined (GPIOA) || defined (GPIOB) || defined (GPIOC) || defined (GPIOD) || defined (GPIOE) || \
+          defined (GPIOF) || defined (GPIOG) || defined (GPIOH) || defined (GPIOI) */
 
 /**
   * @}

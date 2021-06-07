@@ -37,12 +37,12 @@ extern "C" {
   */
 
 /* Exported types ------------------------------------------------------------*/
-/** @addtogroup FLASH_Exported_Types FLASH Exported Types
+/** @addtogroup FLASHEx_Exported_Types FLASHEx Exported Types
   * @{
   */
 
 /**
-  * @brief  FLASH Block-based attributes structure definition
+  * @brief  FLASHEx Block-based attributes structure definition
   */
 #define FLASH_BLOCKBASED_NB_REG (4U)                    /*!< 4 Block-based registers for each Flash bank */
 
@@ -50,18 +50,17 @@ typedef struct
 {
   uint32_t Bank;                                        /*!< Selection of the associated bank of Block-based Area.
                                                              This parameter must be a value of @ref FLASH_Banks */
-  uint32_t BBAttributesType;                            /*!< Block-Based Attributes type.
-                                                             This parameter must be a value of @ref FLASH_BB_Attributes */
-  uint32_t BBAttributes_array[FLASH_BLOCKBASED_NB_REG]; /*!< Each bit specifies the block-based attribute configuration of a page:
-                                                             0 means page non-protected, 1 means page protected.
-                                                             Protection (secure or privilege) depends on BBAttributesType value */
+  uint32_t BBAttributesType;                            /*!< Block-Based Attributes type. This parameter must
+                                                             be a value of @ref FLASH_BB_Attributes */
+  uint32_t BBAttributes_array[FLASH_BLOCKBASED_NB_REG]; /*!< Each bit specifies the block-based attribute configuration
+                                                             of a page: 0 means page non-protected, 1 means page
+                                                             protected. Protection (secure or privilege) depends
+                                                             on BBAttributesType value */
 } FLASH_BBAttributesTypeDef;
-/**
-  * @}
-  */
+
 
 /**
-  * @brief  FLASH Operation structure definition
+  * @brief  FLASHEx Operation structure definition
   */
 typedef struct
 {
@@ -72,6 +71,7 @@ typedef struct
   uint32_t Address;          /*!< Flash operation Address offset.
                                   This parameter is given by bank, and must be a value between 0x0 and 0xFFFF0 */
 } FLASH_OperationTypeDef;
+
 /**
   * @}
   */
@@ -83,11 +83,14 @@ typedef struct
 /** @defgroup PRIV_MODE_CFG FLASH privilege mode configuration
   * @{
   */
-#define FLASH_NSPRIV_GRANTED   0x00000000U           /*!< access to non-secure Flash registers is granted to privileged or unprivileged access */
-#define FLASH_NSPRIV_DENIED    FLASH_PRIVCFGR_NSPRIV /*!< access to non-secure Flash registers is denied to non-privilege access */
-
-#define FLASH_SPRIV_GRANTED    0x00000000U           /*!< access to secure Flash registers is granted to privileged or unprivileged access */
-#define FLASH_SPRIV_DENIED     FLASH_PRIVCFGR_SPRIV  /*!< access to secure Flash registers is denied to non-privilege access */
+#define FLASH_NSPRIV_GRANTED   0x00000000U           /*!< access to non-secure Flash registers is granted
+                                                          to privileged or unprivileged access */
+#define FLASH_NSPRIV_DENIED    FLASH_PRIVCFGR_NSPRIV /*!< access to non-secure Flash registers is denied
+                                                          to non-privilege access */
+#define FLASH_SPRIV_GRANTED    0x00000000U           /*!< access to secure Flash registers is granted to privileged
+                                                          or unprivileged access */
+#define FLASH_SPRIV_DENIED     FLASH_PRIVCFGR_SPRIV  /*!< access to secure Flash registers is denied
+                                                          to non-privilege access */
 /**
   * @}
   */
@@ -101,7 +104,7 @@ typedef struct
 /**
   * @}
   */
-#endif
+#endif /* __ARM_FEATURE_CMSE */
 
 /** @defgroup FLASH_LPM_CFG FLASH LPM configuration
   * @{

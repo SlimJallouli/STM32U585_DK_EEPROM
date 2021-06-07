@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -113,7 +113,6 @@ typedef void (*pIWDG_CallbackTypeDef)(IWDG_HandleTypeDef *hppp);  /*!< pointer t
 #define IWDG_PRESCALER_256              (IWDG_PR_PR_2 | IWDG_PR_PR_1)                   /*!< IWDG prescaler set to 256 */
 #define IWDG_PRESCALER_512              (IWDG_PR_PR_2 | IWDG_PR_PR_1 | IWDG_PR_PR_0)    /*!< IWDG prescaler set to 512 */
 #define IWDG_PRESCALER_1024             IWDG_PR_PR_3                                    /*!< IWDG prescaler set to 1024 */
-
 /**
   * @}
   */
@@ -129,7 +128,7 @@ typedef void (*pIWDG_CallbackTypeDef)(IWDG_HandleTypeDef *hppp);  /*!< pointer t
 /** @defgroup IWDG_EWI_Mode IWDG Early Wakeup Interrupt Mode
   * @{
   */
-#define IWDG_EWI_DISABLE                    0x00000000u       /*!< EWI Disable */
+#define IWDG_EWI_DISABLE                0x00000000u       /*!< EWI Disable */
 /**
   * @}
   */
@@ -152,7 +151,7 @@ typedef void (*pIWDG_CallbackTypeDef)(IWDG_HandleTypeDef *hppp);  /*!< pointer t
 
 /**
   * @brief  Reload IWDG counter with value defined in the reload register
-  *         (write access to IWDG_PR, IWDG_RLR, IWDG_EWCR and IWDG_WINR registers disabled).
+  *         (write access to IWDG_PR, IWDG_RLR, IWDG_WINR and EWCR registers disabled).
   * @param  __HANDLE__  IWDG handle
   * @retval None
   */
@@ -171,7 +170,7 @@ typedef void (*pIWDG_CallbackTypeDef)(IWDG_HandleTypeDef *hppp);  /*!< pointer t
   * @{
   */
 /* Initialization/Start functions  ********************************************/
-HAL_StatusTypeDef HAL_IWDG_Init(IWDG_HandleTypeDef *hiwdg);
+HAL_StatusTypeDef     HAL_IWDG_Init(IWDG_HandleTypeDef *hiwdg);
 void                  HAL_IWDG_MspInit(IWDG_HandleTypeDef *hiwdg);
 /* Callbacks Register/UnRegister functions  ***********************************/
 #if (USE_HAL_IWDG_REGISTER_CALLBACKS == 1)
@@ -187,7 +186,7 @@ HAL_StatusTypeDef     HAL_IWDG_UnRegisterCallback(IWDG_HandleTypeDef *hiwdg, HAL
   * @{
   */
 /* I/O operation functions ****************************************************/
-HAL_StatusTypeDef HAL_IWDG_Refresh(IWDG_HandleTypeDef *hiwdg);
+HAL_StatusTypeDef     HAL_IWDG_Refresh(IWDG_HandleTypeDef *hiwdg);
 void                  HAL_IWDG_IRQHandler(IWDG_HandleTypeDef *hiwdg);
 void                  HAL_IWDG_EarlyWakeupCallback(IWDG_HandleTypeDef *hiwdg);
 /**
@@ -221,14 +220,14 @@ void                  HAL_IWDG_EarlyWakeupCallback(IWDG_HandleTypeDef *hiwdg);
   */
 
 /**
-  * @brief  Enable write access to IWDG_PR, IWDG_RLR, IWDG_EWCR and IWDG_WINR registers.
+  * @brief  Enable write access to IWDG_PR, IWDG_RLR, IWDG_WINR and EWCR registers.
   * @param  __HANDLE__  IWDG handle
   * @retval None
   */
 #define IWDG_ENABLE_WRITE_ACCESS(__HANDLE__)  WRITE_REG((__HANDLE__)->Instance->KR, IWDG_KEY_WRITE_ACCESS_ENABLE)
 
 /**
-  * @brief  Disable write access to IWDG_PR, IWDG_RLR, IWDG_EWCR and IWDG_WINR registers.
+  * @brief  Disable write access to IWDG_PR, IWDG_RLR, IWDG_WINR and EWCR registers.
   * @param  __HANDLE__  IWDG handle
   * @retval None
   */

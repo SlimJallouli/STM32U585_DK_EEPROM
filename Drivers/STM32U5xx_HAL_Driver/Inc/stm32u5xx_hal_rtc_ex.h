@@ -28,7 +28,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u5xx_hal_def.h"
 
-/** @addtogroup STM32UL5xx_HAL_Driver
+/** @addtogroup STM32U5xx_HAL_Driver
   * @{
   */
 
@@ -62,16 +62,19 @@ typedef struct
                                              This parameter can be a value of @ref RTCEx_Tamper_Filter */
 
   uint32_t SamplingFrequency;           /*!< Specifies the sampling frequency.
-                                             This parameter can be a value of @ref RTCEx_Tamper_Sampling_Frequencies */
+                                             This parameter can be a value of
+                                             @ref RTCEx_Tamper_Sampling_Frequencies */
 
   uint32_t PrechargeDuration;           /*!< Specifies the Precharge Duration .
-                                             This parameter can be a value of @ref RTCEx_Tamper_Pin_Precharge_Duration */
+                                             This parameter can be a value of
+                                             @ref RTCEx_Tamper_Pin_Precharge_Duration */
 
   uint32_t TamperPullUp;                /*!< Specifies the Tamper PullUp .
                                              This parameter can be a value of @ref RTCEx_Tamper_Pull_UP */
 
   uint32_t TimeStampOnTamperDetection;  /*!< Specifies the TimeStampOnTamperDetection.
-                                             This parameter can be a value of @ref RTCEx_Tamper_TimeStampOnTamperDetection */
+                                             This parameter can be a value of
+                                              @ref RTCEx_Tamper_TimeStampOnTamperDetection */
 } RTC_TamperTypeDef;
 /**
   * @}
@@ -117,17 +120,19 @@ typedef struct
                                              This parameter can be a value of @ref RTCEx_ActiveTamper_Filter */
 
   uint32_t ActiveAsyncPrescaler;        /*!< Specifies the Active Tamper asynchronous Prescaler clock.
-                                             This parameter can be a value of @ref RTCEx_ActiveTamper_Async_prescaler */
+                                             This parameter can be a value of
+                                             @ref RTCEx_ActiveTamper_Async_prescaler */
 
   uint32_t TimeStampOnTamperDetection;  /*!< Specifies the timeStamp on tamper detection.
-                                             This parameter can be a value of @ref RTCEx_Tamper_TimeStampOnTamperDetection */
+                                             This parameter can be a value of
+                                             @ref RTCEx_Tamper_TimeStampOnTamperDetection */
 
   uint32_t ActiveOutputChangePeriod;    /*!< Specifies the Active Tamper output change period .
                                              This parameter can be a value from 0 to 7. */
 
   uint32_t Seed[RTC_ATAMP_SEED_NB_UINT32];
- /*!< Specifies the RNG Seed value.
-       This parameter is an array of value from 0 to 0xFFFFFFFF. */
+  /*!< Specifies the RNG Seed value.
+        This parameter is an array of value from 0 to 0xFFFFFFFF. */
 
   RTC_ATampInputTypeDef TampInput[RTC_TAMP_NB];
   /*!< Specifies configuration of all active tampers.
@@ -146,7 +151,8 @@ typedef struct
                                              This parameter can be a value of @ref RTCEx_Internal_Tamper_Pins */
 
   uint32_t TimeStampOnTamperDetection;  /*!< Specifies the TimeStampOnTamperDetection.
-                                             This parameter can be a value of @ref RTCEx_Tamper_TimeStampOnTamperDetection */
+                                             This parameter can be a value of
+                                             @ref RTCEx_Tamper_TimeStampOnTamperDetection */
 
   uint32_t NoErase;                     /*!< Specifies the internal Tamper no erase mode.
                                              This parameter can be a value of @ref RTCEx_Tamper_EraseBackUp */
@@ -165,26 +171,32 @@ typedef struct
                                              This parameter can be a value of @ref RTCEx_RTC_Secure_Full */
 
   uint32_t rtcNonSecureFeatures;        /*!< Specifies the non-secure features.
-                                             This parameter is only relevant if RTC is not fully secure (rtcSecureFull == RTC_SECURE_FULL_NO).
-                                             This parameter can be a combination of @ref RTCEx_RTC_NonSecure_Features. */
+                                             This parameter is only relevant if RTC is not fully secure
+                                              (rtcSecureFull == RTC_SECURE_FULL_NO).
+                                             This parameter can be a combination of
+                                             @ref RTCEx_RTC_NonSecure_Features. */
 
-  uint32_t tampSecureFull;              /*!< Specifies If the TAMP is fully secure or not execpt monotonic counters and BackUp registers.
+  uint32_t tampSecureFull;              /*!< Specifies If the TAMP is fully secure or not execpt monotonic counters
+  and BackUp registers.
                                              This parameter can be a value of @ref RTCEx_TAMP_Secure_Full */
 
   uint32_t backupRegisterStartZone2;    /*!< Specifies the backup register start zone 2
                                              Zone 1 : read secure write secure.
                                              Zone 2 : read non-secure  write secure.
-                                             This parameter can be RTC_BKP_DRx where x can be from 0 to 31 to specify the register.
+                                             This parameter can be RTC_BKP_DRx where x can be from 0 to 31 to specify
+                                              the register.
                                              Warning : this parameter is shared with RTC_PrivilegeStateTypeDef. */
 
   uint32_t backupRegisterStartZone3;    /*!< Specifies the backup register start zone 3
                                              Zone 3 : read non-secure  write non-secure
-                                             This parameter can be RTC_BKP_DRx where x can be from 0 to 31 to specify the register.
+                                             This parameter can be RTC_BKP_DRx where x can be from 0 to 31 to
+                                             specify the register.
                                              Warning : this parameter is shared with RTC_PrivilegeStateTypeDef. */
 
   uint32_t MonotonicCounterSecure;      /*!< Specifies If the monotonic counter is secure or not
-                                             This parameter can be a value of @ref RTCEx_TAMP_Monotonic_Counter_Secure */
-} RTC_SecureStateTypeDef ;
+                                             This parameter can be a value of
+                                              @ref RTCEx_TAMP_Monotonic_Counter_Secure */
+} RTC_SecureStateTypeDef;
 /**
   * @}
   */
@@ -198,32 +210,41 @@ typedef struct
                                              This parameter can be a value of @ref RTCEx_RTC_Privilege_Full. */
 
   uint32_t rtcPrivilegeFeatures;        /*!< Specifies the privileged features.
-                                             This parameter is only relevant if RTC is not fully privileged (rtcPrivilegeFull == RTC_PRIVILEGE_FULL_NO).
-                                             This parameter can be a combination of @ref RTCEx_RTC_Privilege_Features. */
+                                             This parameter is only relevant if RTC is not fully privileged
+                                             (rtcPrivilegeFull == RTC_PRIVILEGE_FULL_NO).
+                                             This parameter can be a combination of
+                                             @ref RTCEx_RTC_Privilege_Features. */
 
-  uint32_t tampPrivilegeFull;           /*!< Specifies If the TAMP is fully privileged or not execpt monotonic counters and BackUp registers.
+  uint32_t tampPrivilegeFull;           /*!< Specifies If the TAMP is fully privileged or not execpt monotonic
+                                             counters and BackUp registers.
                                              This parameter can be a value of @ref RTCEx_TAMP_Privilege_Full. */
 
   uint32_t backupRegisterPrivZone;      /*!< Specifies backup register zone to be privileged.
-                                             This parameter can be a combination of @ref RTCEx_Backup_Reg_Privilege_zone.
-                                             Warning : this parameter is writable in secure mode or if trustzone is disabled. */
-
+                                             This parameter can be a combination of
+                                             @ref RTCEx_Backup_Reg_Privilege_zone.
+                                             Warning : this parameter is writable in secure mode or if trustzone is
+                                             disabled. */
 
   uint32_t backupRegisterStartZone2;    /*!< Specifies the backup register start zone 2.
                                              Zone 1 : read secure write secure.
                                              Zone 2 : read non-secure  write secure.
-                                             This parameter can be RTC_BKP_DRx where x can be from 0 to 31 to specify the register .
-                                             Warning : this parameter is writable in secure mode or if trustzone is disabled.
+                                             This parameter can be RTC_BKP_DRx where x can be from 0 to 31 to specify
+                                             the register .
+                                             Warning : this parameter is writable in secure mode or if trustzone is
+                                             disabled.
                                              Warning : this parameter is shared with RTC_SecureStateTypeDef */
 
   uint32_t backupRegisterStartZone3;    /*!< Specifies the backup register start zone 3.
                                              Zone 3 : read non-secure  write non-secure.
-                                             This parameter can be RTC_BKP_DRx where x can be from 0 to 31 to specify the register.
-                                             Warning : this parameter is writable in secure mode or if trustzone is disabled.
+                                             This parameter can be RTC_BKP_DRx where x can be from 0 to 31 to specify
+                                             the register.
+                                             Warning : this parameter is writable in secure mode or if trustzone is
+                                             disabled.
                                              Warning : this parameter is shared with RTC_SecureStateTypeDef. */
 
   uint32_t MonotonicCounterPrivilege;  /*!< Specifies If the monotonic counter is privileged or not
-                                             This parameter can be a value of @ref RTCEx_TAMP_Monotonic_Counter_Privilege */
+                                             This parameter can be a value of
+                                             @ref RTCEx_TAMP_Monotonic_Counter_Privilege */
 } RTC_PrivilegeStateTypeDef;
 /**
   * @}
@@ -308,8 +329,8 @@ typedef struct
   */
 
 /** @defgroup RTCEx_Calib_Output_selection_Definitions RTCEx Calib Output selection Definitions
- * @{
- */
+  * @{
+  */
 #define RTC_CALIBOUTPUT_512HZ            0x00000000u
 #define RTC_CALIBOUTPUT_1HZ              RTC_CR_COSEL
 
@@ -398,8 +419,8 @@ typedef struct
   */
 
 /** @defgroup RTCEx_Tamper_EraseBackUp  RTCEx Tamper EraseBackUp
-* @{
-*/
+  * @{
+  */
 #define RTC_TAMPER_ERASE_BACKUP_ENABLE      0x00u
 #define RTC_TAMPER_ERASE_BACKUP_DISABLE     0x01u
 /**
@@ -423,23 +444,15 @@ typedef struct
 /** @defgroup RTCEx_Tamper_Sampling_Frequencies  RTCEx Tamper Sampling Frequencies
   * @{
   */
-#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV32768  0x00000000U                                     /*!< Each of the tamper inputs are sampled
-                                                                                                      with a frequency =  RTCCLK / 32768 */
-#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV16384  TAMP_FLTCR_TAMPFREQ_0                           /*!< Each of the tamper inputs are sampled
-                                                                                                      with a frequency =  RTCCLK / 16384 */
-#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV8192   TAMP_FLTCR_TAMPFREQ_1                           /*!< Each of the tamper inputs are sampled
-                                                                                                      with a frequency =  RTCCLK / 8192  */
-#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV4096   (TAMP_FLTCR_TAMPFREQ_0 | TAMP_FLTCR_TAMPFREQ_1) /*!< Each of the tamper inputs are sampled
-                                                                                                      with a frequency =  RTCCLK / 4096  */
-#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV2048   TAMP_FLTCR_TAMPFREQ_2                           /*!< Each of the tamper inputs are sampled
-                                                                                                      with a frequency =  RTCCLK / 2048  */
-#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV1024   (TAMP_FLTCR_TAMPFREQ_0 | TAMP_FLTCR_TAMPFREQ_2) /*!< Each of the tamper inputs are sampled
-                                                                                                      with a frequency =  RTCCLK / 1024  */
-#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV512    (TAMP_FLTCR_TAMPFREQ_1 | TAMP_FLTCR_TAMPFREQ_2) /*!< Each of the tamper inputs are sampled
-                                                                                                      with a frequency =  RTCCLK / 512   */
+#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV32768  0x00000000U                                     /*!< Each of the tamper inputs are sampled with a frequency =  RTCCLK / 32768 */
+#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV16384  TAMP_FLTCR_TAMPFREQ_0                           /*!< Each of the tamper inputs are sampled with a frequency =  RTCCLK / 16384 */
+#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV8192   TAMP_FLTCR_TAMPFREQ_1                           /*!< Each of the tamper inputs are sampled with a frequency =  RTCCLK / 8192  */
+#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV4096   (TAMP_FLTCR_TAMPFREQ_0 | TAMP_FLTCR_TAMPFREQ_1) /*!< Each of the tamper inputs are sampled with a frequency =  RTCCLK / 4096  */
+#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV2048   TAMP_FLTCR_TAMPFREQ_2                           /*!< Each of the tamper inputs are sampled with a frequency =  RTCCLK / 2048  */
+#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV1024   (TAMP_FLTCR_TAMPFREQ_0 | TAMP_FLTCR_TAMPFREQ_2) /*!< Each of the tamper inputs are sampled with a frequency =  RTCCLK / 1024  */
+#define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV512    (TAMP_FLTCR_TAMPFREQ_1 | TAMP_FLTCR_TAMPFREQ_2) /*!< Each of the tamper inputs are sampled with a frequency =  RTCCLK / 512   */
 #define RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV256    (TAMP_FLTCR_TAMPFREQ_0 | TAMP_FLTCR_TAMPFREQ_1 | \
-                                                  TAMP_FLTCR_TAMPFREQ_2)                         /*!< Each of the tamper inputs are sampled
-                                                                                                      with a frequency =  RTCCLK / 256   */
+                                                 TAMP_FLTCR_TAMPFREQ_2)                         /*!< Each of the tamper inputs are sampled with a frequency =  RTCCLK / 256   */
 /**
   * @}
   */
@@ -447,14 +460,10 @@ typedef struct
 /** @defgroup RTCEx_Tamper_Pin_Precharge_Duration  RTCEx Tamper Pin Precharge Duration
   * @{
   */
-#define RTC_TAMPERPRECHARGEDURATION_1RTCCLK     0x00000000U                                       /*!< Tamper pins are pre-charged before
-                                                                                                        sampling during 1 RTCCLK cycle  */
-#define RTC_TAMPERPRECHARGEDURATION_2RTCCLK     TAMP_FLTCR_TAMPPRCH_0                             /*!< Tamper pins are pre-charged before
-                                                                                                        sampling during 2 RTCCLK cycles */
-#define RTC_TAMPERPRECHARGEDURATION_4RTCCLK     TAMP_FLTCR_TAMPPRCH_1                             /*!< Tamper pins are pre-charged before
-                                                                                                        sampling during 4 RTCCLK cycles */
-#define RTC_TAMPERPRECHARGEDURATION_8RTCCLK     (TAMP_FLTCR_TAMPPRCH_0 | TAMP_FLTCR_TAMPPRCH_1)   /*!< Tamper pins are pre-charged before
-                                                                                                        sampling during 8 RTCCLK cycles */
+#define RTC_TAMPERPRECHARGEDURATION_1RTCCLK     0x00000000U                                       /*!< Tamper pins are pre-charged before sampling during 1 RTCCLK cycle  */
+#define RTC_TAMPERPRECHARGEDURATION_2RTCCLK     TAMP_FLTCR_TAMPPRCH_0                             /*!< Tamper pins are pre-charged before sampling during 2 RTCCLK cycles */
+#define RTC_TAMPERPRECHARGEDURATION_4RTCCLK     TAMP_FLTCR_TAMPPRCH_1                             /*!< Tamper pins are pre-charged before sampling during 4 RTCCLK cycles */
+#define RTC_TAMPERPRECHARGEDURATION_8RTCCLK     (TAMP_FLTCR_TAMPPRCH_0 | TAMP_FLTCR_TAMPPRCH_1)   /*!< Tamper pins are pre-charged before sampling during 8 RTCCLK cycles */
 /**
   * @}
   */
@@ -667,7 +676,8 @@ typedef struct
   * @}
   */
 
-/** @defgroup RTCEx_Binary_mix_BCDU If Binary mode is RTC_BINARY_MIX, the BCD calendar second is incremented using the SSR Least Significant Bits.
+/** @defgroup RTCEx_Binary_mix_BCDU If Binary mode is RTC_BINARY_MIX, the BCD calendar second is incremented
+  *  using the SSR Least Significant Bits.
   * @{
   */
 #define RTC_BINARY_MIX_BCDU_0  0x00000000u                   /*!<  The 1s BCD calendar increment is generated each time SS[7:0] = 0 */
@@ -685,82 +695,49 @@ typedef struct
 /** @defgroup RTCEx_Alarm_Sub_Seconds_binary_Masks_Definitions RTC Alarm Sub Seconds with binary mode Masks Definitions
   * @{
   */
-#define RTC_ALARMSUBSECONDBINMASK_ALL           0x00000000u                                                             /*!< All Alarm SS fields are masked.
-                                                                                                                          There is no comparison on sub seconds for Alarm */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_1        (1UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:1] are don't care in Alarm
-                                                                                                                          comparison. Only SS[0] is compared.    */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_2        (2UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:2] are don't care in Alarm
-                                                                                                                          comparison. Only SS[1:0] are compared  */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_3        (3UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:3] are don't care in Alarm
-                                                                                                                          comparison. Only SS[2:0] are compared  */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_4        (4UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:4] are don't care in Alarm
-                                                                                                                          comparison. Only SS[3:0] are compared  */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_5        (5UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:5] are don't care in Alarm
-                                                                                                                          comparison. Only SS[4:0] are compared  */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_6        (6UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:6] are don't care in Alarm
-                                                                                                                          comparison. Only SS[5:0] are compared  */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_7        (7UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:7] are don't care in Alarm
-                                                                                                                          comparison. Only SS[6:0] are compared  */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_8        (8UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:8] are don't care in Alarm
-                                                                                                                          comparison. Only SS[7:0] are compared  */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_9        (9UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:9] are don't care in Alarm
-                                                                                                                          comparison. Only SS[8:0] are compared  */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_10      (10UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:10] are don't care in Alarm
-                                                                                                                          comparison. Only SS[9:0] are compared  */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_11      (11UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:11] are don't care in Alarm
-                                                                                                                          comparison. Only SS[10:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_12      (12UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:12] are don't care in Alarm
-                                                                                                                          comparison.Only SS[11:0] are compared  */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_13      (13UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:13] are don't care in Alarm
-                                                                                                                          comparison. Only SS[12:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_14      (14UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:14] are don't care in Alarm
-                                                                                                                          comparison. Only SS[13:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_15      (15UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:15] are don't care in Alarm
-                                                                                                                          comparison. Only SS[14:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_16      (16UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:16] are don't care in Alarm
-                                                                                                                          comparison. Only SS[15:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_17      (17UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:17] are don't care in Alarm
-                                                                                                                          comparison. Only SS[16:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_18      (18UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:18] are don't care in Alarm
-                                                                                                                          comparison. Only SS[17:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_19      (19UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:19] are don't care in Alarm
-                                                                                                                          comparison. Only SS[18:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_20      (20UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:20] are don't care in Alarm
-                                                                                                                          comparison. Only SS[19:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_21      (21UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:21] are don't care in Alarm
-                                                                                                                          comparison. Only SS[20:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_22      (22UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:22] are don't care in Alarm
-                                                                                                                          comparison. Only SS[21:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_23      (23UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:23] are don't care in Alarm
-                                                                                                                          comparison. Only SS[22:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_24      (24UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:24] are don't care in Alarm
-                                                                                                                          comparison. Only SS[23:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_25      (25UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:25] are don't care in Alarm
-                                                                                                                          comparison. Only SS[24:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_26      (26UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:26] are don't care in Alarm
-                                                                                                                          comparison. Only SS[25:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_27      (27UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:27] are don't care in Alarm
-                                                                                                                          comparison. Only SS[26:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_28      (28UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:28] are don't care in Alarm
-                                                                                                                          comparison. Only SS[27:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_29      (29UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:29] are don't care in Alarm
-                                                                                                                          comparison. Only SS[28:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31_30      (30UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:30] are don't care in Alarm
-                                                                                                                          comparison. Only SS[29:0] are compared */
-#define RTC_ALARMSUBSECONDBINMASK_SS31         (31UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31] is don't care in Alarm
-                                                                                                                          comparison. Only SS[30:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_ALL           0x00000000u                                                             /*!< All Alarm SS fields are masked.There is no comparison on sub seconds for Alarm */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_1        (1UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:1] are don't care in Alarm comparison. Only SS[0] is compared.    */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_2        (2UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:2] are don't care in Alarm comparison. Only SS[1:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_3        (3UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:3] are don't care in Alarm comparison. Only SS[2:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_4        (4UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:4] are don't care in Alarm comparison. Only SS[3:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_5        (5UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:5] are don't care in Alarm comparison. Only SS[4:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_6        (6UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:6] are don't care in Alarm comparison. Only SS[5:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_7        (7UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:7] are don't care in Alarm comparison. Only SS[6:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_8        (8UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:8] are don't care in Alarm comparison. Only SS[7:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_9        (9UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:9] are don't care in Alarm comparison. Only SS[8:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_10      (10UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:10] are don't care in Alarm comparison. Only SS[9:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_11      (11UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:11] are don't care in Alarm comparison. Only SS[10:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_12      (12UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:12] are don't care in Alarm comparison.Only SS[11:0] are compared  */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_13      (13UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:13] are don't care in Alarm comparison. Only SS[12:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_14      (14UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:14] are don't care in Alarm comparison. Only SS[13:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_15      (15UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:15] are don't care in Alarm comparison. Only SS[14:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_16      (16UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:16] are don't care in Alarm comparison. Only SS[15:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_17      (17UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:17] are don't care in Alarm comparison. Only SS[16:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_18      (18UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:18] are don't care in Alarm comparison. Only SS[17:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_19      (19UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:19] are don't care in Alarm comparison. Only SS[18:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_20      (20UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:20] are don't care in Alarm comparison. Only SS[19:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_21      (21UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:21] are don't care in Alarm comparison. Only SS[20:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_22      (22UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:22] are don't care in Alarm comparison. Only SS[21:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_23      (23UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:23] are don't care in Alarm comparison. Only SS[22:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_24      (24UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:24] are don't care in Alarm comparison. Only SS[23:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_25      (25UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:25] are don't care in Alarm comparison. Only SS[24:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_26      (26UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:26] are don't care in Alarm comparison. Only SS[25:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_27      (27UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:27] are don't care in Alarm comparison. Only SS[26:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_28      (28UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:28] are don't care in Alarm comparison. Only SS[27:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_29      (29UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:29] are don't care in Alarm comparison. Only SS[28:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31_30      (30UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:30] are don't care in Alarm comparison. Only SS[29:0] are compared */
+#define RTC_ALARMSUBSECONDBINMASK_SS31         (31UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31] is don't care in Alarm comparison. Only SS[30:0] are compared  */
 #define RTC_ALARMSUBSECONDBINMASK_NONE         (32UL << RTC_ALRMASSR_MASKSS_Pos)                                        /*!< SS[31:0] are compared and must match to activate alarm. */
 /**
   * @}
   */
 
-/** @defgroup RTCEx_Alarm_Sub_Seconds_binary_Clear_Definitions RTC Alarm Sub Seconds with binary mode auto clear Definitions
+/** @defgroup RTCEx_Alarm_Sub_Seconds_binary_Clear_Definitions RTC Alarm Sub Seconds
+  *  with binary mode auto clear Definitions
   * @{
   */
 #define RTC_ALARMSUBSECONDBIN_AUTOCLR_NO    0UL                  /*!<  The synchronous Binary counter (SS[31:0] in RTC_SSR) is free-running. */
-#define RTC_ALARMSUBSECONDBIN_AUTOCLR_YES   RTC_ALRMASSR_SSCLR   /*!<  The synchronous Binary counter (SS[31:0] in RTC_SSR) is running from 0xFFFF FFFF to
-                                                                          RTC_ALRMABINR -> SS[31:0] value and is automatically reloaded with 0xFFFF FFFF
-                                                                          whenreaching RTC_ALRMABINR -> SS[31:0]. */
+#define RTC_ALARMSUBSECONDBIN_AUTOCLR_YES   RTC_ALRMASSR_SSCLR   /*!<  The synchronous Binary counter (SS[31:0] in RTC_SSR) is running from 0xFFFF FFFF to RTC_ALRMABINR -> SS[31:0] value and is automatically reloaded with 0xFFFF FFFF whenreaching RTC_ALRMABINR -> SS[31:0]. */
 /**
   * @}
   */
@@ -809,7 +786,7 @@ typedef struct
 /**
   * @}
   */
-/** @defgroup RTCEx_RTC_Privilege_Full  RTCEx Privilege Features Definition
+/** @defgroup RTCEx_RTC_Privilege_Full  RTCEx Privilege Full Definition
   * @{
   */
 #define RTC_PRIVILEGE_FULL_YES               RTC_PRIVCFGR_PRIV
@@ -824,13 +801,13 @@ typedef struct
 #define RTC_PRIVILEGE_FEATURE_NONE           0u
 #define RTC_PRIVILEGE_FEATURE_INIT           RTC_PRIVCFGR_INITPRIV  /*!< Initialization */
 #define RTC_PRIVILEGE_FEATURE_CAL            RTC_PRIVCFGR_CALPRIV   /*!< Calibration */
-#define RTC_PRIVILEGE_FEATURE_TS             RTC_PRIVCFGR_TSDPRIV   /*!< Time stamp */
+#define RTC_PRIVILEGE_FEATURE_TS             RTC_PRIVCFGR_TSPRIV   /*!< Time stamp */
 #define RTC_PRIVILEGE_FEATURE_WUT            RTC_PRIVCFGR_WUTPRIV   /*!< Wake up timer */
 #define RTC_PRIVILEGE_FEATURE_ALRA           RTC_PRIVCFGR_ALRAPRIV  /*!< Alarm A */
 #define RTC_PRIVILEGE_FEATURE_ALRB           RTC_PRIVCFGR_ALRBPRIV  /*!< Alarm B */
 #define RTC_PRIVILEGE_FEATURE_ALL            (RTC_PRIVCFGR_INITPRIV |  RTC_PRIVCFGR_CALPRIV | \
-                                             RTC_PRIVCFGR_TSPRIV | RTC_PRIVCFGR_WUTPRIV | \
-                                             RTC_PRIVCFGR_ALRAPRIV | RTC_PRIVCFGR_ALRBPRIV)
+                                              RTC_PRIVCFGR_TSPRIV | RTC_PRIVCFGR_WUTPRIV | \
+                                              RTC_PRIVCFGR_ALRAPRIV | RTC_PRIVCFGR_ALRBPRIV)
 /**
   * @}
   */
@@ -916,7 +893,8 @@ typedef struct
   *            @arg @ref RTC_FLAG_ALRAF               Alarm A flag
   * @retval None
   */
-#define __HAL_RTC_GET_FLAG(__HANDLE__, __FLAG__)    (((((__FLAG__)) >> 8U) == 1U) ? (RTC->ICSR & (1U << (((uint16_t)(__FLAG__)) & RTC_FLAG_MASK))) : \
+#define __HAL_RTC_GET_FLAG(__HANDLE__, __FLAG__)    (((((__FLAG__)) >> 8U) == 1U) ? (RTC->ICSR &\
+                                                     (1U << (((uint16_t)(__FLAG__)) & RTC_FLAG_MASK))) : \
                                                      (RTC->SR & (1U << (((uint16_t)(__FLAG__)) & RTC_FLAG_MASK))))
 
 /* ---------------------------------WAKEUPTIMER---------------------------------*/
@@ -966,7 +944,8 @@ typedef struct
   *            @arg @ref RTC_IT_WUT  WakeUpTimer interrupt
   * @retval None
   */
-#define __HAL_RTC_WAKEUPTIMER_GET_IT(__HANDLE__, __INTERRUPT__)       ((((RTC->MISR) & ((__INTERRUPT__)>> 12U)) != 0UL) ? 1UL : 0UL)
+#define __HAL_RTC_WAKEUPTIMER_GET_IT(__HANDLE__, __INTERRUPT__)       ((((RTC->MISR) & ((__INTERRUPT__)>> 12U)) !=\
+                                                                        0UL) ? 1UL : 0UL)
 /**
   * @brief  Check whether the specified RTC Wake Up timer interrupt has been enabled or not.
   * @param  __HANDLE__ specifies the RTC handle.
@@ -975,7 +954,8 @@ typedef struct
   *            @arg @ref RTC_IT_WUT  WakeUpTimer interrupt
   * @retval None
   */
-#define __HAL_RTC_WAKEUPTIMER_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)   ((((RTC->CR) & (__INTERRUPT__)) != 0UL) ? 1UL : 0UL)
+#define __HAL_RTC_WAKEUPTIMER_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)   ((((RTC->CR) & (__INTERRUPT__)) != \
+                                                                           0UL) ? 1UL : 0UL)
 
 /**
   * @brief  Get the selected RTC WakeUpTimers flag status.
@@ -996,8 +976,10 @@ typedef struct
   *            @arg @ref RTC_FLAG_WUTF
   * @retval None
   */
-#define __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(__HANDLE__, __FLAG__)     (__HAL_RTC_CLEAR_FLAG((__HANDLE__), RTC_CLEAR_WUTF))
-
+#define __HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(__HANDLE__, __FLAG__)  (__HAL_RTC_CLEAR_FLAG((__HANDLE__), RTC_CLEAR_WUTF))
+/**
+  * @}
+  */
 /* ---------------------------------TIMESTAMP---------------------------------*/
 /** @defgroup RTCEx_Timestamp RTC Timestamp
   * @{
@@ -1044,7 +1026,8 @@ typedef struct
   *            @arg @ref RTC_IT_TS TimeStamp interrupt
   * @retval None
   */
-#define __HAL_RTC_TIMESTAMP_GET_IT(__HANDLE__, __INTERRUPT__)        ((((RTC->MISR) & ((__INTERRUPT__)>> 12U)) != 0U) ? 1UL : 0UL)
+#define __HAL_RTC_TIMESTAMP_GET_IT(__HANDLE__, __INTERRUPT__)        ((((RTC->MISR) & ((__INTERRUPT__)>> 12U)) != \
+                                                                       0U) ? 1UL : 0UL)
 /**
   * @brief  Check whether the specified RTC Time Stamp interrupt has been enabled or not.
   * @param  __HANDLE__ specifies the RTC handle.
@@ -1053,7 +1036,8 @@ typedef struct
   *            @arg @ref RTC_IT_TS TimeStamp interrupt
   * @retval None
   */
-#define __HAL_RTC_TIMESTAMP_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)     ((((RTC->CR) & (__INTERRUPT__)) != 0U) ? 1UL : 0UL)
+#define __HAL_RTC_TIMESTAMP_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)     ((((RTC->CR) & (__INTERRUPT__)) != 0U) ?\
+                                                                          1UL : 0UL)
 
 /**
   * @brief  Get the selected RTC TimeStamps flag status.
@@ -1075,7 +1059,8 @@ typedef struct
   *             @arg @ref RTC_FLAG_TSOVF
   * @retval None
   */
-#define __HAL_RTC_TIMESTAMP_CLEAR_FLAG(__HANDLE__, __FLAG__)   (((__FLAG__) == RTC_FLAG_TSF) ? (__HAL_RTC_CLEAR_FLAG((__HANDLE__), RTC_CLEAR_TSF)) : \
+#define __HAL_RTC_TIMESTAMP_CLEAR_FLAG(__HANDLE__, __FLAG__)   (((__FLAG__) == RTC_FLAG_TSF) ? \
+                                                                (__HAL_RTC_CLEAR_FLAG((__HANDLE__), RTC_CLEAR_TSF)) : \
                                                                 (__HAL_RTC_CLEAR_FLAG((__HANDLE__), RTC_CLEAR_TSOVF)))
 
 /**
@@ -1100,7 +1085,8 @@ typedef struct
   *            @arg @ref RTC_FLAG_ITSF
   * @retval None
   */
-#define __HAL_RTC_INTERNAL_TIMESTAMP_GET_FLAG(__HANDLE__, __FLAG__)     (__HAL_RTC_GET_FLAG((__HANDLE__),(__FLAG__)))
+#define __HAL_RTC_INTERNAL_TIMESTAMP_GET_FLAG(__HANDLE__, __FLAG__)     (__HAL_RTC_GET_FLAG((__HANDLE__),\
+                                                                         (__FLAG__)))
 
 /**
   * @brief  Clear the RTC Internal Time Stamps pending flags.
@@ -1110,7 +1096,8 @@ typedef struct
   *             @arg @ref RTC_FLAG_ITSF
   * @retval None
   */
-#define __HAL_RTC_INTERNAL_TIMESTAMP_CLEAR_FLAG(__HANDLE__, __FLAG__)     (__HAL_RTC_CLEAR_FLAG((__HANDLE__), RTC_CLEAR_ITSF))
+#define __HAL_RTC_INTERNAL_TIMESTAMP_CLEAR_FLAG(__HANDLE__, __FLAG__)     (__HAL_RTC_CLEAR_FLAG((__HANDLE__),\
+                                                                           RTC_CLEAR_ITSF))
 
 /**
   * @brief  Enable the RTC TimeStamp on Tamper detection.
@@ -1144,7 +1131,6 @@ typedef struct
 /**
   * @}
   */
-
 
 /* ------------------------------Calibration----------------------------------*/
 /** @defgroup RTCEx_Calibration RTC Calibration
@@ -1189,11 +1175,10 @@ typedef struct
   *             @arg @ref RTC_FLAG_SHPF
   * @retval None
   */
-#define __HAL_RTC_SHIFT_GET_FLAG(__HANDLE__, __FLAG__)                (__HAL_RTC_GET_FLAG((__HANDLE__), (__FLAG__)))
+#define __HAL_RTC_SHIFT_GET_FLAG(__HANDLE__, __FLAG__)               (__HAL_RTC_GET_FLAG((__HANDLE__), (__FLAG__)))
 /**
   * @}
   */
-
 
 /* ------------------------------Tamper----------------------------------*/
 /** @defgroup RTCEx_Tamper RTCEx tamper
@@ -1234,7 +1219,6 @@ typedef struct
   */
 #define __HAL_RTC_TAMPER_DISABLE(__HANDLE__, __TAMPER__)           (TAMP->CR1 &= ~(__TAMPER__))
 
-
 /**************************************************************************************************/
 /**
   * @brief  Enable the TAMP Tamper interrupt.
@@ -1272,7 +1256,6 @@ typedef struct
   */
 #define __HAL_RTC_TAMPER_DISABLE_IT(__HANDLE__, __INTERRUPT__)       (TAMP->IER &= ~(__INTERRUPT__))
 
-
 /**************************************************************************************************/
 /**
   * @brief  Check whether the specified RTC Tamper interrupt has occurred or not.
@@ -1302,8 +1285,7 @@ typedef struct
   *            @arg  RTC_IT_INT_TAMP_13: Internal Tamper13 interrupt
   * @retval None
   */
-#define __HAL_RTC_TAMPER_GET_IT(__HANDLE__, __INTERRUPT__)     ((((TAMP->MISR) & (__INTERRUPT__)) != 0U) ? 1UL : 0UL)
-
+#define __HAL_RTC_TAMPER_GET_IT(__HANDLE__, __INTERRUPT__)    ((((TAMP->MISR) & (__INTERRUPT__)) != 0U) ? 1UL : 0UL)
 
 /**
   * @brief  Check whether the specified RTC Tamper interrupt has been enabled or not.
@@ -1333,8 +1315,8 @@ typedef struct
   *            @arg  RTC_IT_INT_TAMP_13: Internal Tamper13 interrupt
   * @retval None
   */
-#define __HAL_RTC_TAMPER_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)    ((((TAMP->IER) & (__INTERRUPT__)) != 0U) ? 1UL : 0UL)
-
+#define __HAL_RTC_TAMPER_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)   ((((TAMP->IER) & (__INTERRUPT__)) != \
+                                                                      0U) ? 1UL : 0UL)
 
 /**
   * @brief  Get the selected RTC Tampers flag status.
@@ -1424,7 +1406,6 @@ typedef struct
   */
 #define __HAL_RTC_SSRU_DISABLE_IT(__HANDLE__, __INTERRUPT__)   (RTC->CR &= ~(__INTERRUPT__))
 
-
 /**
   * @brief  Check whether the specified RTC SSRU interrupt has occurred or not.
   * @param  __HANDLE__ specifies the RTC handle.
@@ -1433,7 +1414,8 @@ typedef struct
   *            @arg @ref RTC_IT_SSRU  SSRU interrupt
   * @retval None
   */
-#define __HAL_RTC_SSRU_GET_IT(__HANDLE__, __INTERRUPT__)       (((RTC->MISR) & ((__INTERRUPT__) >> 1) != 0U) ? 1U : 0U)
+#define __HAL_RTC_SSRU_GET_IT(__HANDLE__, __INTERRUPT__)       (((RTC->MISR) & ((__INTERRUPT__) >> 1) != 0U) \
+                                                                ? 1U : 0U)
 /**
   * @brief  Check whether the specified RTC Wake Up timer interrupt has been enabled or not.
   * @param  __HANDLE__ specifies the RTC handle.
@@ -1467,7 +1449,9 @@ typedef struct
 /**
   * @}
   */
-
+/**
+  * @}
+  */
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup RTCEx_Exported_Functions RTCEx Exported Functions
   * @{
@@ -1478,12 +1462,15 @@ typedef struct
   * @{
   */
 
-HAL_StatusTypeDef HAL_RTCEx_SetTimeStamp(RTC_HandleTypeDef *hrtc, uint32_t TimeStampEdge, uint32_t RTC_TimeStampPin);
-HAL_StatusTypeDef HAL_RTCEx_SetTimeStamp_IT(RTC_HandleTypeDef *hrtc, uint32_t TimeStampEdge, uint32_t RTC_TimeStampPin);
+HAL_StatusTypeDef HAL_RTCEx_SetTimeStamp(RTC_HandleTypeDef *hrtc, uint32_t TimeStampEdge,
+                                         uint32_t RTC_TimeStampPin);
+HAL_StatusTypeDef HAL_RTCEx_SetTimeStamp_IT(RTC_HandleTypeDef *hrtc, uint32_t TimeStampEdge,
+                                            uint32_t RTC_TimeStampPin);
 HAL_StatusTypeDef HAL_RTCEx_DeactivateTimeStamp(RTC_HandleTypeDef *hrtc);
 HAL_StatusTypeDef HAL_RTCEx_SetInternalTimeStamp(RTC_HandleTypeDef *hrtc);
 HAL_StatusTypeDef HAL_RTCEx_DeactivateInternalTimeStamp(RTC_HandleTypeDef *hrtc);
-HAL_StatusTypeDef HAL_RTCEx_GetTimeStamp(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTimeStamp, RTC_DateTypeDef *sTimeStampDate, uint32_t Format);
+HAL_StatusTypeDef HAL_RTCEx_GetTimeStamp(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTimeStamp,
+                                         RTC_DateTypeDef *sTimeStampDate, uint32_t Format);
 void              HAL_RTCEx_TimeStampIRQHandler(RTC_HandleTypeDef *hrtc);
 HAL_StatusTypeDef HAL_RTCEx_PollForTimeStampEvent(RTC_HandleTypeDef *hrtc, uint32_t Timeout);
 void              HAL_RTCEx_TimeStampEventCallback(RTC_HandleTypeDef *hrtc);
@@ -1493,11 +1480,12 @@ void              HAL_RTCEx_TimeStampEventCallback(RTC_HandleTypeDef *hrtc);
   */
 /* RTC Wake-up functions ******************************************************/
 /** @defgroup RTCEx_Exported_Functions_Group2 Extended RTC Wake-up functions
- * @{
- */
+  * @{
+  */
 
 HAL_StatusTypeDef HAL_RTCEx_SetWakeUpTimer(RTC_HandleTypeDef *hrtc, uint32_t WakeUpCounter, uint32_t WakeUpClock);
-HAL_StatusTypeDef HAL_RTCEx_SetWakeUpTimer_IT(RTC_HandleTypeDef *hrtc, uint32_t WakeUpCounter, uint32_t WakeUpClock, uint32_t WakeUpAutoClr);
+HAL_StatusTypeDef HAL_RTCEx_SetWakeUpTimer_IT(RTC_HandleTypeDef *hrtc, uint32_t WakeUpCounter, uint32_t WakeUpClock,
+                                              uint32_t WakeUpAutoClr);
 HAL_StatusTypeDef HAL_RTCEx_DeactivateWakeUpTimer(RTC_HandleTypeDef *hrtc);
 uint32_t          HAL_RTCEx_GetWakeUpTimer(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_WakeUpTimerIRQHandler(RTC_HandleTypeDef *hrtc);
@@ -1509,10 +1497,11 @@ HAL_StatusTypeDef HAL_RTCEx_PollForWakeUpTimerEvent(RTC_HandleTypeDef *hrtc, uin
 
 /* Extended Control functions ************************************************/
 /** @defgroup RTCEx_Exported_Functions_Group3 Extended Peripheral Control functions
- * @{
- */
+  * @{
+  */
 
-HAL_StatusTypeDef HAL_RTCEx_SetSmoothCalib(RTC_HandleTypeDef *hrtc, uint32_t SmoothCalibPeriod, uint32_t SmoothCalibPlusPulses, uint32_t SmoothCalibMinusPulsesValue);
+HAL_StatusTypeDef HAL_RTCEx_SetSmoothCalib(RTC_HandleTypeDef *hrtc, uint32_t SmoothCalibPeriod,
+                                           uint32_t SmoothCalibPlusPulses, uint32_t SmoothCalibMinusPulsesValue);
 HAL_StatusTypeDef HAL_RTCEx_SetLowPowerCalib(RTC_HandleTypeDef *hrtc, uint32_t LowPowerCalib);
 HAL_StatusTypeDef HAL_RTCEx_SetSynchroShift(RTC_HandleTypeDef *hrtc, uint32_t ShiftAdd1S, uint32_t ShiftSubFS);
 HAL_StatusTypeDef HAL_RTCEx_SetCalibrationOutPut(RTC_HandleTypeDef *hrtc, uint32_t CalibOutput);
@@ -1557,6 +1546,8 @@ HAL_StatusTypeDef HAL_RTCEx_SetInternalTamper_IT(RTC_HandleTypeDef *hrtc, RTC_In
 HAL_StatusTypeDef HAL_RTCEx_DeactivateInternalTamper(RTC_HandleTypeDef *hrtc, uint32_t IntTamper);
 HAL_StatusTypeDef HAL_RTCEx_PollForInternalTamperEvent(RTC_HandleTypeDef *hrtc, uint32_t IntTamper, uint32_t Timeout);
 HAL_StatusTypeDef HAL_RTCEx_SetBoothardwareKey(RTC_HandleTypeDef *hrtc);
+void              HAL_RTCEx_GetActiveTampers(RTC_ActiveTampersTypeDef *sAllTamper);
+void              HAL_RTCEx_GetInternalTampers(RTC_InternalTamperTypeDef *sIntTamper);
 void              HAL_RTCEx_TamperIRQHandler(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_Tamper1EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_Tamper2EventCallback(RTC_HandleTypeDef *hrtc);
@@ -1582,33 +1573,34 @@ void              HAL_RTCEx_InternalTamper13EventCallback(RTC_HandleTypeDef *hrt
   */
 
 /** @defgroup RTCEx_Exported_Functions_Group6 Extended RTC Backup register functions
- * @{
- */
+  * @{
+  */
 void              HAL_RTCEx_BKUPWrite(RTC_HandleTypeDef *hrtc, uint32_t BackupRegister, uint32_t Data);
 uint32_t          HAL_RTCEx_BKUPRead(RTC_HandleTypeDef *hrtc, uint32_t BackupRegister);
 void              HAL_RTCEx_BKUPErase(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_BKUPBlock_Enable(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_BKUPBlock_Disable(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_Erase_SecretDev_Conf(RTC_HandleTypeDef *hrtc, uint32_t SecretDeviceConf);
+uint32_t          HAL_RTCEx_Get_Erase_SecretDev_Conf(void);
 /**
   * @}
   */
 
 /** @defgroup RTCEx_Exported_Functions_Group7 Extended RTC secure functions
- * @{
- */
+  * @{
+  */
 HAL_StatusTypeDef HAL_RTCEx_SecureModeGet(RTC_HandleTypeDef *hrtc, RTC_SecureStateTypeDef  *secureState);
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 HAL_StatusTypeDef HAL_RTCEx_SecureModeSet(RTC_HandleTypeDef *hrtc, RTC_SecureStateTypeDef  *secureState);
-#endif
+#endif /* defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
 
 /**
   * @}
   */
 
 /** @defgroup RTCEx_Exported_Functions_Group8 Extended RTC privilege functions
- * @{
- */
+  * @{
+  */
 HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeSet(RTC_HandleTypeDef *hrtc, RTC_PrivilegeStateTypeDef *privilegeState);
 HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(RTC_HandleTypeDef *hrtc, RTC_PrivilegeStateTypeDef *privilegeState);
 /**
@@ -1697,16 +1689,16 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(RTC_HandleTypeDef *hrtc, RTC_Privil
                                                   ((__FREQ__) == RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV512)  || \
                                                   ((__FREQ__) == RTC_TAMPERSAMPLINGFREQ_RTCCLK_DIV256))
 
-#define IS_RTC_TAMPER_PRECHARGE_DURATION(__DURATION__)   (((__DURATION__) == RTC_TAMPERPRECHARGEDURATION_1RTCCLK) || \
-                                                          ((__DURATION__) == RTC_TAMPERPRECHARGEDURATION_2RTCCLK) || \
-                                                          ((__DURATION__) == RTC_TAMPERPRECHARGEDURATION_4RTCCLK) || \
-                                                          ((__DURATION__) == RTC_TAMPERPRECHARGEDURATION_8RTCCLK))
+#define IS_RTC_TAMPER_PRECHARGE_DURATION(__DURATION__) (((__DURATION__) == RTC_TAMPERPRECHARGEDURATION_1RTCCLK) || \
+                                                        ((__DURATION__) == RTC_TAMPERPRECHARGEDURATION_2RTCCLK) || \
+                                                        ((__DURATION__) == RTC_TAMPERPRECHARGEDURATION_4RTCCLK) || \
+                                                        ((__DURATION__) == RTC_TAMPERPRECHARGEDURATION_8RTCCLK))
 
 #define IS_RTC_TAMPER_PULLUP_STATE(__STATE__)    (((__STATE__) == RTC_TAMPER_PULLUP_ENABLE) || \
                                                   ((__STATE__) == RTC_TAMPER_PULLUP_DISABLE))
 
-#define IS_RTC_TAMPER_TIMESTAMPONTAMPER_DETECTION(DETECTION) (((DETECTION) == RTC_TIMESTAMPONTAMPERDETECTION_ENABLE) || \
-                                                              ((DETECTION) == RTC_TIMESTAMPONTAMPERDETECTION_DISABLE))
+#define IS_RTC_TAMPER_TIMESTAMPONTAMPER_DETECTION(DETECTION) (((DETECTION) == RTC_TIMESTAMPONTAMPERDETECTION_ENABLE)\
+                                                              ||((DETECTION) == RTC_TIMESTAMPONTAMPERDETECTION_DISABLE))
 
 #define IS_RTC_BKP(__BKP__)   ((__BKP__) < RTC_BKP_NUMBER)
 
@@ -1727,7 +1719,7 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(RTC_HandleTypeDef *hrtc, RTC_Privil
                                         ((__STATE__) == TAMP_SECURE_FULL_NO))
 
 #define IS_TAMP_MONOTONIC_CNT_SECURE(__STATE__) (((__STATE__) == TAMP_MONOTONIC_CNT_SECURE_YES) || \
-                                        ((__STATE__) == TAMP_MONOTONIC_CNT_SECURE_NO))
+                                                 ((__STATE__) == TAMP_MONOTONIC_CNT_SECURE_NO))
 
 #define IS_RTC_PRIVILEGE_FULL(__STATE__) (((__STATE__) == RTC_PRIVILEGE_FULL_YES) || \
                                           ((__STATE__) == RTC_PRIVILEGE_FULL_NO))
@@ -1738,13 +1730,13 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(RTC_HandleTypeDef *hrtc, RTC_Privil
                                            ((__STATE__) == TAMP_PRIVILEGE_FULL_NO))
 
 #define IS_TAMP_MONOTONIC_CNT_PRIVILEGE(__STATE__) (((__STATE__) == TAMP_MONOTONIC_CNT_PRIVILEGE_YES) || \
-                                        ((__STATE__) == TAMP_MONOTONIC_CNT_PRIVILEGE_NO))
+                                                    ((__STATE__) == TAMP_MONOTONIC_CNT_PRIVILEGE_NO))
 
 #define IS_RTC_PRIVILEGE_BKUP_ZONE(__ZONES__) (((__ZONES__) & ~RTC_PRIVILEGE_BKUP_ZONE_ALL) == 0u)
 
 #define IS_RTC_BINARY_MODE(MODE) (((MODE) == RTC_BINARY_NONE) || \
                                   ((MODE) == RTC_BINARY_ONLY) || \
-                                   ((MODE) == RTC_BINARY_MIX ))
+                                  ((MODE) == RTC_BINARY_MIX ))
 
 #define IS_RTC_BINARY_MIX_BCDU(BDCU) (((BDCU) == RTC_BINARY_MIX_BCDU_0) || \
                                       ((BDCU) == RTC_BINARY_MIX_BCDU_1) || \
@@ -1756,7 +1748,8 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(RTC_HandleTypeDef *hrtc, RTC_Privil
                                       ((BDCU) == RTC_BINARY_MIX_BCDU_7))
 
 #define IS_RTC_ALARM_SUB_SECOND_BINARY_MASK(MASK)   (((MASK) == 0u) || \
-                                                    (((MASK) >= RTC_ALARMSUBSECONDBINMASK_SS31_1) && ((MASK) <= RTC_ALARMSUBSECONDBINMASK_NONE)))
+                                                     (((MASK) >= RTC_ALARMSUBSECONDBINMASK_SS31_1) &&\
+                                                      ((MASK) <= RTC_ALARMSUBSECONDBINMASK_NONE)))
 
 #define IS_RTC_ALARMSUBSECONDBIN_AUTOCLR(SEL) (((SEL) == RTC_ALARMSUBSECONDBIN_AUTOCLR_NO) || \
                                                ((SEL) == RTC_ALARMSUBSECONDBIN_AUTOCLR_YES))
@@ -1775,7 +1768,7 @@ HAL_StatusTypeDef HAL_RTCEx_PrivilegeModeGet(RTC_HandleTypeDef *hrtc, RTC_Privil
 /**
   * @}
   */
-  
+
 /**
   * @}
   */

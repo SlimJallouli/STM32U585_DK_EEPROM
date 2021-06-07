@@ -124,6 +124,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u5xx_hal.h"
+#ifdef HAL_DCMI_MODULE_ENABLED
+#if defined (DCMI)
 
 /** @addtogroup STM32U5xx_HAL_Driver
   * @{
@@ -133,19 +135,35 @@
   * @{
   */
 
-#ifdef HAL_DCMI_MODULE_ENABLED
-#if defined (DCMI)
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define HAL_TIMEOUT_DCMI_STOP    ((uint32_t)1000) /* Set timeout to 1s  */
+/** @defgroup DCMI_Private_Constants DCMI Private Constants
+  * @{
+  */
 
+/** @defgroup DCMI_Stop_TimeOut DCMI Stop Time Out
+  * @{
+  */
+#define HAL_TIMEOUT_DCMI_STOP    ((uint32_t)1000) /* Set timeout to 1s  */
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
+/** @addtogroup DCMI_Private_Functions DCMI Private Functions
+  * @{
+  */
 static void       DCMI_DMAXferCplt(DMA_HandleTypeDef *hdma);
 static void       DCMI_DMAError(DMA_HandleTypeDef *hdma);
 
+/**
+  * @}
+  */
 /* Exported functions --------------------------------------------------------*/
 
 /** @defgroup DCMI_Exported_Functions DCMI Exported Functions
@@ -360,6 +378,7 @@ __weak void HAL_DCMI_MspDeInit(DCMI_HandleTypeDef *hdcmi)
   */
 HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mode, uint32_t pData, uint32_t Length)
 {
+  uint32_t tmp_length = Length;
   HAL_StatusTypeDef status = HAL_OK;
   uint32_t cllr_offset;
   uint32_t tmp1;
@@ -396,10 +415,10 @@ HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mo
   hdcmi->XferSize = 0;
   hdcmi->pBuffPtr = 0;
 
-  /* Length shoud be converted to number of bytes */
-  Length = Length * 4U;
+  /* Length should be converted to number of bytes */
+  tmp_length = tmp_length * 4U;
 
-  if (Length <= 0xFFFFU)
+  if (tmp_length <= 0xFFFFU)
   {
     /* Continuoues Mode */
     /* Enable the DMA Stream */
@@ -410,9 +429,10 @@ HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mo
         /* Set Source , Destination , Length for DMA Xfer */
 
         /* Set DMA data size           */
-        hdcmi->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = Length;
+        hdcmi->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = tmp_length;
         /* Set DMA source address      */
-        hdcmi->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = (uint32_t)&hdcmi->Instance->DR;
+        hdcmi->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = \
+            (uint32_t)&hdcmi->Instance->DR;
         /* Set DMA destination address */
         hdcmi->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = (uint32_t)pData;
 
@@ -432,7 +452,7 @@ HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mo
     }
     else
     {
-      status = HAL_DMA_Start_IT(hdcmi->DMA_Handle, (uint32_t)&hdcmi->Instance->DR, (uint32_t)pData, Length);
+      status = HAL_DMA_Start_IT(hdcmi->DMA_Handle, (uint32_t)&hdcmi->Instance->DR, (uint32_t)pData, tmp_length);
     }
   }
   else /* DCMI_DOUBLE_BUFFER Mode */
@@ -442,7 +462,7 @@ HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mo
 
     /* Initialize transfer parameters */
     hdcmi->XferCount = 1;
-    hdcmi->XferSize = Length;
+    hdcmi->XferSize = tmp_length;
     hdcmi->pBuffPtr = pData;
 
     /* Get the number of buffer */
@@ -464,8 +484,11 @@ HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mo
 
         /* Set DMA Data size */
         hdcmi->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = hdcmi->XferSize ;
+
         /* Set DMA Source address */
-        hdcmi->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = (uint32_t)&hdcmi->Instance->DR;
+        hdcmi->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = \
+            (uint32_t)&hdcmi->Instance->DR;
+
         /* Set DMA Destination address */
         hdcmi->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = (uint32_t)pData;
 
@@ -480,11 +503,18 @@ HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mo
           /* Update second node */
 
           /* Set DMA Data size */
-          ((DMA_NodeTypeDef *)((tmp1 & DMA_CLBAR_LBA) + (tmp2 & DMA_CLLR_LA)))->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = hdcmi->XferSize;
+          ((DMA_NodeTypeDef *)((tmp1 & DMA_CLBAR_LBA) + \
+                               (tmp2 & DMA_CLLR_LA)))->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = hdcmi->XferSize;
+
           /* Set DMA Source address */
-          ((DMA_NodeTypeDef *)((tmp1 & DMA_CLBAR_LBA) + (tmp2 & DMA_CLLR_LA)))->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = (uint32_t)&hdcmi->Instance->DR;
+          ((DMA_NodeTypeDef *)((tmp1 & DMA_CLBAR_LBA) + \
+                               (tmp2 & DMA_CLLR_LA)))->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = \
+                                   (uint32_t)&hdcmi->Instance->DR;
+
           /* Set DMA Destination address */
-          ((DMA_NodeTypeDef *)((tmp1 & DMA_CLBAR_LBA) + (tmp2 & DMA_CLLR_LA)))->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = (uint32_t)pData + hdcmi->XferSize;
+          ((DMA_NodeTypeDef *)((tmp1 & DMA_CLBAR_LBA) + \
+                               (tmp2 & DMA_CLLR_LA)))->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = \
+                                   (uint32_t)pData + hdcmi->XferSize;
 
           if (HAL_DMAEx_List_Start_IT(hdcmi->DMA_Handle) != HAL_OK)
           {
@@ -1158,15 +1188,15 @@ HAL_StatusTypeDef HAL_DCMI_UnRegisterCallback(DCMI_HandleTypeDef *hdcmi, HAL_DCM
         break;
 
       case HAL_DCMI_VSYNC_EVENT_CB_ID :
-        hdcmi->VsyncEventCallback = HAL_DCMI_VsyncEventCallback;  /* Legacy weak VsyncEventCallback       */
+        hdcmi->VsyncEventCallback = HAL_DCMI_VsyncEventCallback;  /* Legacy weak VsyncEventCallback   */
         break;
 
       case HAL_DCMI_LINE_EVENT_CB_ID :
-        hdcmi->LineEventCallback = HAL_DCMI_LineEventCallback;    /* Legacy weak LineEventCallback   */
+        hdcmi->LineEventCallback = HAL_DCMI_LineEventCallback;    /* Legacy weak LineEventCallback    */
         break;
 
       case HAL_DCMI_ERROR_CB_ID :
-        hdcmi->ErrorCallback = HAL_DCMI_ErrorCallback;           /* Legacy weak ErrorCallback        */
+        hdcmi->ErrorCallback = HAL_DCMI_ErrorCallback;           /* Legacy weak ErrorCallback         */
         break;
 
       case HAL_DCMI_MSPINIT_CB_ID :
@@ -1237,7 +1267,7 @@ static void DCMI_DMAXferCplt(DMA_HandleTypeDef *hdma)
   uint32_t tmp1;
   uint32_t tmp2;
   DMA_NodeTypeDef *pnode;
-  uint32_t pbuffptr;
+  uint32_t pbuff;
   uint32_t transfernumber;
   uint32_t transfercount;
   uint32_t transfersize ;
@@ -1245,7 +1275,7 @@ static void DCMI_DMAXferCplt(DMA_HandleTypeDef *hdma)
   /* Update Nodes destinations */
   if (hdcmi->XferSize != 0U)
   {
-    pbuffptr       = hdcmi->pBuffPtr;
+    pbuff          = hdcmi->pBuffPtr;
     transfernumber = hdcmi->XferTransferNumber;
     transfercount  = hdcmi->XferCount;
     transfersize   = hdcmi->XferSize;
@@ -1256,7 +1286,7 @@ static void DCMI_DMAXferCplt(DMA_HandleTypeDef *hdma)
 
     if (hdcmi->XferCount > 1U)
     {
-      pnode->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = pbuffptr + ((transfernumber - transfercount + 2U) * transfersize);
+      pnode->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = pbuff + ((transfernumber - transfercount + 2U) * transfersize);
       hdcmi->XferCount--;
     }
 

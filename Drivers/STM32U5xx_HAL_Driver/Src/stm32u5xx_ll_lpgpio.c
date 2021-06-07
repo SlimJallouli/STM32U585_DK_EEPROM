@@ -6,7 +6,7 @@
   *****************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -19,19 +19,19 @@
 #if defined(USE_FULL_LL_DRIVER)
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32u5xx_ll_bus.h"
 #include "stm32u5xx_ll_lpgpio.h"
+#include "stm32u5xx_ll_bus.h"
 #ifdef  USE_FULL_ASSERT
 #include "stm32_assert.h"
 #else
 #define assert_param(expr) ((void)0U)
-#endif
+#endif /* USE_FULL_ASSERT */
 
 /** @addtogroup STM32U5xx_LL_Driver
   * @{
   */
 
-#if defined (LPGPIO)
+#if defined (LPGPIO1)
 
 /** @addtogroup LPGPIO_LL
   * @{
@@ -79,7 +79,7 @@ ErrorStatus LL_LPGPIO_DeInit(GPIO_TypeDef *LPGPIOx)
   assert_param(IS_LPGPIO_ALL_INSTANCE(LPGPIOx));
 
   /* Force and Release reset on clock of LPGPIOx Port */
-  if (LPGPIOx == LPGPIO)
+  if (LPGPIOx == LPGPIO1)
   {
     LL_AHB3_GRP1_ForceReset(LL_AHB3_GRP1_PERIPH_LPGPIO1);
     LL_AHB3_GRP1_ReleaseReset(LL_AHB3_GRP1_PERIPH_LPGPIO1);
@@ -101,10 +101,10 @@ ErrorStatus LL_LPGPIO_DeInit(GPIO_TypeDef *LPGPIOx)
   *          - SUCCESS: LPGPIO registers are initialized according to LPGPIO_InitStruct content
   *          - ERROR:   Not applicable
   */
-ErrorStatus LL_LPGPIO_Init(GPIO_TypeDef *LPGPIOx, LL_LPGPIO_InitTypeDef *LPGPIO_InitStruct)
+ErrorStatus LL_LPGPIO_Init(GPIO_TypeDef *LPGPIOx, const LL_LPGPIO_InitTypeDef *const LPGPIO_InitStruct)
 {
-  uint32_t pinpos     = 0x00000000U;
-  uint32_t currentpin = 0x00000000U;
+  uint32_t pinpos;
+  uint32_t currentpin;
 
   /* Check the parameters */
   assert_param(IS_LPGPIO_ALL_INSTANCE(LPGPIOx));
@@ -115,18 +115,18 @@ ErrorStatus LL_LPGPIO_Init(GPIO_TypeDef *LPGPIOx, LL_LPGPIO_InitTypeDef *LPGPIO_
   /* Initialize  pinpos on first pin set */
   pinpos = POSITION_VAL(LPGPIO_InitStruct->Pin);
 
-    /* Configure the port pins */
-  while (((LPGPIO_InitStruct->Pin) >> pinpos) != 0x00000000U)
+  /* Configure the port pins */
+  while (((LPGPIO_InitStruct->Pin) >> pinpos) != 0U)
   {
-  /* Get current io position */
-  currentpin = (LPGPIO_InitStruct->Pin) & (0x00000001UL << pinpos);
+    /* Get current io position */
+    currentpin = (LPGPIO_InitStruct->Pin) & (1UL << pinpos);
 
-  if (currentpin)
-  {
-    /* Pin Mode configuration */
-    LL_LPGPIO_SetPinMode(LPGPIOx, currentpin, LPGPIO_InitStruct->Mode);
-  }
-  pinpos++;
+    if (currentpin != 0U)
+    {
+      /* Pin Mode configuration */
+      LL_LPGPIO_SetPinMode(LPGPIOx, currentpin, LPGPIO_InitStruct->Mode);
+    }
+    pinpos++;
   }
   return (SUCCESS);
 }
@@ -142,7 +142,7 @@ void LL_LPGPIO_StructInit(LL_LPGPIO_InitTypeDef *LPGPIO_InitStruct)
 {
   /* Reset LPGPIO init structure parameters values */
   LPGPIO_InitStruct->Pin        = LL_LPGPIO_PIN_ALL;
-  LPGPIO_InitStruct->Mode       = LL_LPGPIO_MODE_OUTPUT;
+  LPGPIO_InitStruct->Mode       = LL_LPGPIO_MODE_INPUT;
 }
 
 /**
@@ -157,7 +157,7 @@ void LL_LPGPIO_StructInit(LL_LPGPIO_InitTypeDef *LPGPIO_InitStruct)
   * @}
   */
 
-#endif /* defined (LPGPIO) */
+#endif /* defined (LPGPIO1) */
 
 /**
   * @}

@@ -287,7 +287,7 @@ typedef  void (*pOTFDEC_CallbackTypeDef)(OTFDEC_HandleTypeDef *hotfdec); /*!< po
   *            @arg @ref OTFDEC_EXE_KEY_ERROR_INT    OTFDEC execution and key errors interrupts flag
   *            @arg @ref OTFDEC_ALL_INT              OTFDEC all interrupts flags
   * @retval The state of __FLAG__ (TRUE or FALSE).
-*/
+  */
 #define __HAL_OTFDEC_GET_FLAG(__HANDLE__, __FLAG__) (((__HANDLE__)->Instance->ISR & (__FLAG__)) == (__FLAG__))
 
 /** @brief  Clear the specified combination of OTFDEC interrupt flags.
@@ -436,8 +436,9 @@ HAL_StatusTypeDef HAL_OTFDEC_RegionGetConfig(OTFDEC_HandleTypeDef *hotfdec, uint
   * @param __MODE__ OTFDEC region operating mode parameter.
   * @retval SET (__MODE__ is valid) or RESET (__MODE__ is invalid)
   */
-#define IS_OTFDEC_REGION_OPERATING_MODE(__MODE__) (((__MODE__) == OTFDEC_REG_MODE_INSTRUCTION_OR_DATA_ACCESSES) || \
-                                                   ((__MODE__) == OTFDEC_REG_MODE_INSTRUCTION_ACCESSES_ONLY_WITH_CIPHER))
+#define IS_OTFDEC_REGION_OPERATING_MODE(__MODE__) \
+  (((__MODE__)== OTFDEC_REG_MODE_INSTRUCTION_OR_DATA_ACCESSES) || \
+   ((__MODE__) == OTFDEC_REG_MODE_INSTRUCTION_ACCESSES_ONLY_WITH_CIPHER))
 
 /**
   * @brief Verify the OTFDEC region index.

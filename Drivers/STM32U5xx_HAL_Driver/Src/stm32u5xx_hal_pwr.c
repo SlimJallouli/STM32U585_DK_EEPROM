@@ -9,6 +9,18 @@
   *           + Peripheral Control Functions.
   *           + PWR Attributes Functions.
   *
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                         ##### PWR peripheral overview #####
@@ -110,17 +122,6 @@
 
   @endverbatim
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -176,7 +177,8 @@
               ##### Initialization and De-Initialization Functions #####
  ===============================================================================
     [..]
-      This section provides functions allowing to deinitialize power peripheral.
+      This section provides functions allowing to deinitialize power peripheral
+      and to manage backup domain access.
 
     [..]
       After system reset, the backup domain (RCC Backup domain control register
@@ -324,12 +326,12 @@ void HAL_PWR_DisableBkUpAccess(void)
           The Stop mode is entered using the HAL_PWR_EnterSTOPMode() function
           with :
 
-      -@@- The Regulator parameter is not used for the STM32U5 family and is
-           kept as parameter just to maintain compatibility with other families.
-
-         (++) STOPEntry:
+         (++) StopEntry:
           (+++) PWR_STOPENTRY_WFI: enter Stop mode with WFI instruction.
           (+++) PWR_STOPENTRY_WFE: enter Stop mode with WFE instruction.
+
+      -@@- The Regulator parameter is not used for the STM32U5 family and is
+           kept as parameter just to maintain compatibility with other families.
 
       (+) Exit:
           Any EXTI line configured in interrupt mode (the corresponding EXTI
@@ -359,7 +361,7 @@ void HAL_PWR_DisableBkUpAccess(void)
       retention mode).
       The BORL (Brownout reset detector low) can be configured in ultra low
       power mode to further reduce power consumption during Standby mode.
-      The device exits Standby mode when an external reset (NRST pin), an IWDG
+      The device exits Standby mode upon an external reset (NRST pin), an IWDG
       reset, WKUP pin event (configurable rising or falling edge), an RTC event
       occurs (alarm, periodic wakeup, timestamp), or a tamper detection.
       The system clock after wakeup is MSIS up to 4 MHz.
@@ -379,18 +381,24 @@ void HAL_PWR_DisableBkUpAccess(void)
 /**
   * @brief  Configure the voltage threshold detected by the Programmed Voltage
   *         Detector (PVD).
-  * @param  sConfigPVD : Pointer to a PWR_PVDTypeDef structure that contains the
+  * @param  pConfigPVD : Pointer to a PWR_PVDTypeDef structure that contains the
   *                      PVD configuration information (PVDLevel and EventMode).
-  * @retval None.
+  * @retval HAL Status.
   */
-HAL_StatusTypeDef HAL_PWR_ConfigPVD(PWR_PVDTypeDef *sConfigPVD)
+HAL_StatusTypeDef HAL_PWR_ConfigPVD(PWR_PVDTypeDef *pConfigPVD)
 {
-  /* Check the parameters */
-  assert_param(IS_PWR_PVD_LEVEL(sConfigPVD->PVDLevel));
-  assert_param(IS_PWR_PVD_MODE(sConfigPVD->Mode));
+  /* Check the PVD parameter */
+  if (pConfigPVD == NULL)
+  {
+    return HAL_ERROR;
+  }
 
-  /* Set PLS[7:5] bits according to PVDLevel value */
-  MODIFY_REG(PWR->SVMCR, PWR_SVMCR_PVDLS, sConfigPVD->PVDLevel);
+  /* Check the parameters */
+  assert_param(IS_PWR_PVD_LEVEL(pConfigPVD->PVDLevel));
+  assert_param(IS_PWR_PVD_MODE(pConfigPVD->Mode));
+
+  /* Set PVDLS[2:0] bits according to PVDLevel value */
+  MODIFY_REG(PWR->SVMCR, PWR_SVMCR_PVDLS, pConfigPVD->PVDLevel);
 
   /* Disable PVD Event/Interrupt */
   __HAL_PWR_PVD_EXTI_DISABLE_EVENT();
@@ -399,25 +407,25 @@ HAL_StatusTypeDef HAL_PWR_ConfigPVD(PWR_PVDTypeDef *sConfigPVD)
   __HAL_PWR_PVD_EXTI_DISABLE_FALLING_EDGE();
 
   /* Configure the PVD in interrupt mode */
-  if ((sConfigPVD->Mode & PVD_MODE_IT) == PVD_MODE_IT)
+  if ((pConfigPVD->Mode & PVD_MODE_IT) == PVD_MODE_IT)
   {
     __HAL_PWR_PVD_EXTI_ENABLE_IT();
   }
 
   /* Configure the PVD in event mode */
-  if ((sConfigPVD->Mode & PVD_MODE_EVT) == PVD_MODE_EVT)
+  if ((pConfigPVD->Mode & PVD_MODE_EVT) == PVD_MODE_EVT)
   {
     __HAL_PWR_PVD_EXTI_ENABLE_EVENT();
   }
 
   /* Configure the PVD in rising edge */
-  if ((sConfigPVD->Mode & PVD_RISING_EDGE) == PVD_RISING_EDGE)
+  if ((pConfigPVD->Mode & PVD_RISING_EDGE) == PVD_RISING_EDGE)
   {
     __HAL_PWR_PVD_EXTI_ENABLE_RISING_EDGE();
   }
 
   /* Configure the PVD in falling edge */
-  if ((sConfigPVD->Mode & PVD_FALLING_EDGE) == PVD_FALLING_EDGE)
+  if ((pConfigPVD->Mode & PVD_FALLING_EDGE) == PVD_FALLING_EDGE)
   {
     __HAL_PWR_PVD_EXTI_ENABLE_FALLING_EDGE();
   }
@@ -450,7 +458,7 @@ void HAL_PWR_DisablePVD(void)
   * @param  WakeUpPin : Specifies which wake up line to enable. This parameter
   *                     can be one of PWR_WakeUp_Pins_High_Polarity define
   *                     group where every param select the wake up line, the
-  *                     wake up source with high polatiry detection and the wake
+  *                     wake up source with high polarity detection and the wake
   *                     up selected I/O or can be one of
   *                     PWR_WakeUp_Pins_Low_Polarity define group where every
   *                     param select the wake up line, the wake up source with
@@ -513,7 +521,7 @@ void HAL_PWR_DisableWakeUpPin(uint32_t WakeUpPin)
   * @note   This parameter is not available in this product.
   *         The parameter is kept just to maintain compatibility with other
   *         products.
-  * @param  SLEEPEntry : Specifies if Sleep mode is entered with WFI or WFE
+  * @param  SleepEntry : Specifies if Sleep mode is entered with WFI or WFE
   *                      instruction.
   *                      This parameter can be one of the following values :
   *                      @arg @ref PWR_SLEEPENTRY_WFI enter Sleep mode with Wait
@@ -524,18 +532,18 @@ void HAL_PWR_DisableWakeUpPin(uint32_t WakeUpPin)
   *         unexpected CPU wake up.
   * @retval None.
   */
-void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SLEEPEntry)
+void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SleepEntry)
 {
   UNUSED(Regulator);
 
   /* Check the parameter */
-  assert_param(IS_PWR_SLEEP_ENTRY(SLEEPEntry));
+  assert_param(IS_PWR_SLEEP_ENTRY(SleepEntry));
 
   /* Clear SLEEPDEEP bit of Cortex System Control Register */
   CLEAR_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPDEEP_Msk));
 
   /* Select Sleep mode entry */
-  if (SLEEPEntry == PWR_SLEEPENTRY_WFI)
+  if (SleepEntry == PWR_SLEEPENTRY_WFI)
   {
     /* Wait For Interrupt Request */
     __WFI();
@@ -570,7 +578,7 @@ void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SLEEPEntry)
   * @note   This parameter is not available in this product.
   *         The parameter is kept just to maintain compatibility with other
   *         products.
-  * @param  STOPEntry : Specifies if Stop mode is entered with WFI or WFE
+  * @param  StopEntry : Specifies if Stop mode is entered with WFI or WFE
   *                     instruction.
   *                     This parameter can be one of the following values :
   *                     @arg @ref PWR_STOPENTRY_WFI enter Stop mode with Wait
@@ -579,12 +587,12 @@ void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SLEEPEntry)
   *                               For Event request.
   * @retval None.
   */
-void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
+void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t StopEntry)
 {
   UNUSED(Regulator);
 
   /* Check the parameter */
-  assert_param(IS_PWR_STOP_ENTRY(STOPEntry));
+  assert_param(IS_PWR_STOP_ENTRY(StopEntry));
 
   /* Select Stop 0 mode */
   MODIFY_REG(PWR->CR1, PWR_CR1_LPMS, 0U);
@@ -593,7 +601,7 @@ void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
   SET_BIT(SCB->SCR, ((uint32_t)SCB_SCR_SLEEPDEEP_Msk));
 
   /* Select Stop mode entry */
-  if (STOPEntry == PWR_STOPENTRY_WFI)
+  if (StopEntry == PWR_STOPENTRY_WFI)
   {
     /* Wait For Interrupt Request */
     __WFI();
@@ -621,7 +629,7 @@ void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
   *         Standby circuitry. Optionally, the full SRAM2 or 8 Kbytes or 56
   *         Kbytes can be retained in Standby mode, supplied by the low-power
   *         regulator (Standby with RAM2 retention mode) through
-  *         HAL_PWREx_EnableSRAM2ContentRetention().
+  *         HAL_PWREx_EnableSRAM2ContentStandbyRetention().
   * @note   The state of each I/O during Standby mode can be selected by
   *         software : I/O with internal pull-up through
   *         HAL_PWREx_EnableGPIOPullUp() and internal pull-down through
@@ -688,8 +696,8 @@ void HAL_PWR_EnableSEVOnPend(void)
 
 /**
   * @brief  Disable CORTEX SEVONPEND feature.
-  * @note   Resets SEVONPEND bit of SCR register. When this bit is reset, only
-  *         enabled pending causes exception entry wakes up the Cortex-M33.
+  * @note   Resets SEVONPEND bit of SCR register. When this bit is reset, only enabled
+  *         pending event / interrupt to cause exception entry wakes up the Cortex-M33.
   * @retval None.
   */
 void HAL_PWR_DisableSEVOnPend(void)
@@ -815,13 +823,13 @@ __weak void HAL_PWR_PVDCallback(void)
   * @note   Available attributes are security and privilege protection.
   * @note   Security attribute can only be set only by secure access.
   * @note   Privilege attribute for secure items can be managed only by a secure
-  *         priliged access.
+  *         privileged access.
   * @note   Privilege attribute for nsecure items can be managed  by a secure
-  *         priliged access or by a nsecure priliged access.
+  *         privileged access or by a nsecure privileged access.
   * @param  Item       : Specifies the item(s) to set attributes on.
-  *                      This parameter can be a combination of PWR_ITEMS.
+  *                      This parameter can be a combination of @ref PWR_Items.
   * @param  Attributes : Specifies the available attribute(s).
-  *                      This parameter can be one of PWR_ATTRIBUTES.
+  *                      This parameter can be one of @ref PWR_Attributes.
   * @retval None.
   */
 void HAL_PWR_ConfigAttributes(uint32_t Item, uint32_t Attributes)
@@ -837,12 +845,12 @@ void HAL_PWR_ConfigAttributes(uint32_t Item, uint32_t Attributes)
     /* Privilege item management */
     if ((Attributes & PWR_SEC_PRIV) == PWR_SEC_PRIV)
     {
-      SET_BIT(PWR_S->SECCFGR, Item);
+      SET_BIT(PWR->SECCFGR, Item);
       SET_BIT(PWR->PRIVCFGR, PWR_PRIVCFGR_SPRIV);
     }
     else
     {
-      SET_BIT(PWR_S->SECCFGR, Item);
+      SET_BIT(PWR->SECCFGR, Item);
       CLEAR_BIT(PWR->PRIVCFGR, PWR_PRIVCFGR_SPRIV);
     }
   }
@@ -852,12 +860,12 @@ void HAL_PWR_ConfigAttributes(uint32_t Item, uint32_t Attributes)
     /* Privilege item management */
     if ((Attributes & PWR_NSEC_PRIV) == PWR_NSEC_PRIV)
     {
-      CLEAR_BIT(PWR_S->SECCFGR, Item);
+      CLEAR_BIT(PWR->SECCFGR, Item);
       SET_BIT(PWR->PRIVCFGR, PWR_PRIVCFGR_NSPRIV);
     }
     else
     {
-      CLEAR_BIT(PWR_S->SECCFGR, Item);
+      CLEAR_BIT(PWR->SECCFGR, Item);
       CLEAR_BIT(PWR->PRIVCFGR, PWR_PRIVCFGR_NSPRIV);
     }
   }
@@ -878,13 +886,12 @@ void HAL_PWR_ConfigAttributes(uint32_t Item, uint32_t Attributes)
 #endif /* __ARM_FEATURE_CMSE */
 }
 
-
 /**
   * @brief  Get attribute(s) of a PWR item.
-  * @param  Item        : Specifies the item(s) to set attributes on.
-  *                       This parameter can be one of PWR_ITEMS.
+  * @param  Item        : Specifies the item(s) to get attributes of.
+  *                       This parameter can be one of @ref PWR_Items.
   * @param  pAttributes : Pointer to return attribute(s).
-  *                       Returned value could be on of PWR_ATTRIBUTES.
+  *                       Returned value could be one of @ref PWR_Attributes.
   * @retval HAL Status.
   */
 HAL_StatusTypeDef HAL_PWR_GetConfigAttributes(uint32_t Item, uint32_t *pAttributes)

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -37,6 +37,9 @@ extern "C" {
   */
 
 /* Exported types ------------------------------------------------------------*/
+/** @defgroup USARTEx_Exported_Types USARTEx Exported Types
+  * @{
+  */
 /**
   * @brief  USART Autonomous mode parameters
   */
@@ -57,6 +60,9 @@ typedef struct
                                       This parameter can be a value of @ref USARTEx_Autonomous_IDLE_FRAME. */
 
 } USART_AutonomousModeConfTypeDef;
+/**
+  * @}
+  */
 
 /* Exported constants --------------------------------------------------------*/
 /** @defgroup USARTEx_Exported_Constants USARTEx Exported Constants

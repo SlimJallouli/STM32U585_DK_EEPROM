@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -108,9 +108,6 @@ typedef struct __PSSI_HandleTypeDef
 typedef  void (*pPSSI_CallbackTypeDef)(PSSI_HandleTypeDef *hpssi);  /*!< Pointer to a PSSI common callback function */
 
 /**
-  * @}
-  */
-/**
   * @brief  HAL PSSI Callback ID enumeration definition
   */
 typedef enum
@@ -124,6 +121,11 @@ typedef enum
   HAL_PSSI_MSPDEINIT_CB_ID   = 0x06U  /*!< PSSI Msp DeInit callback ID             */
 
 } HAL_PSSI_CallbackIDTypeDef;
+
+
+/**
+  * @}
+  */
 
 /* Exported constants --------------------------------------------------------*/
 /** @defgroup PSSI_Exported_Constants PSSI Exported Constants
@@ -175,7 +177,7 @@ typedef enum
   * @}
   */
 
-/** @defgroup ControlSignal Configuration
+/** @defgroup ControlSignal_Configuration ControlSignal Configuration
   * @{
   */
 #define HAL_PSSI_DE_RDY_DISABLE           (0x0U << PSSI_CR_DERDYCFG_Pos) /*!< Neither DE nor RDY are enabled */
@@ -192,7 +194,7 @@ typedef enum
   */
 
 
-/** @defgroup Data Enable Polarity
+/** @defgroup Data_Enable_Polarity Data Enable Polarity
   * @{
   */
 #define HAL_PSSI_DEPOL_ACTIVE_LOW         0x0U            /*!< Active Low */
@@ -200,7 +202,7 @@ typedef enum
 /**
   * @}
   */
-/** @defgroup Reday Polarity
+/** @defgroup Reday_Polarity Reday Polarity
   * @{
   */
 #define HAL_PSSI_RDYPOL_ACTIVE_LOW        0x0U            /*!< Active Low */
@@ -209,7 +211,7 @@ typedef enum
   * @}
   */
 
-/** @defgroup Clock Polarity
+/** @defgroup Clock_Polarity Clock Polarity
   * @{
   */
 #define HAL_PSSI_FALLING_EDGE             0x0U            /*!< Fallling Edge */
@@ -232,7 +234,7 @@ typedef enum
 #define PSSI_CR_OUTEN_OUTPUT        PSSI_CR_OUTEN    /*!< Output Mode     */
 
 #define PSSI_CR_DMA_ENABLE          PSSI_CR_DMAEN    /*!< DMA Mode Enable */
-#define PSSI_CR_DMA_DISABLE         (~PSSI_CR_DMAEN) /*!< DMA Mode Disble */
+#define PSSI_CR_DMA_DISABLE         (~PSSI_CR_DMAEN) /*!< DMA Mode Disable*/
 
 #define PSSI_CR_16BITS              PSSI_CR_EDM      /*!< 16 Lines Mode   */
 #define PSSI_CR_8BITS               (~PSSI_CR_EDM)   /*!< 8 Lines Mode    */
@@ -358,10 +360,6 @@ typedef enum
   */
 #define HAL_PSSI_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) ((__HANDLE__)->Instance->IER & (__INTERRUPT__))
 
-/**
-  * @}
-  */
-
 
 /**
   * @brief  Check whether the PSSI Control signal is valid.
@@ -378,9 +376,7 @@ typedef enum
                                              ((__CONTROL__) == HAL_PSSI_DE_MAP_ENABLE         ) || \
                                              ((__CONTROL__) == HAL_PSSI_MAP_DE_BIDIR_ENABLE   ))
 
-/**
-  * @}
-  */
+
 
 /**
   * @brief  Check whether the PSSI Bus Width is valid.
@@ -391,10 +387,6 @@ typedef enum
 #define IS_PSSI_BUSWIDTH(__BUSWIDTH__) (((__BUSWIDTH__) == HAL_PSSI_8LINES    ) || \
                                         ((__BUSWIDTH__) == HAL_PSSI_16LINES   ))
 
-
-/**
-  * @}
-  */
 /**
   * @brief  Check whether the PSSI Clock Polarity is valid.
   * @param  __CLOCKPOL__ PSSI Clock Polarity
@@ -403,9 +395,7 @@ typedef enum
 
 #define IS_PSSI_CLOCK_POLARITY(__CLOCKPOL__) (((__CLOCKPOL__) == HAL_PSSI_FALLING_EDGE   ) || \
                                               ((__CLOCKPOL__) == HAL_PSSI_RISING_EDGE    ))
-/**
-  * @}
-  */
+
 
 /**
   * @brief  Check whether the PSSI Data Enable Polarity is valid.
@@ -415,9 +405,6 @@ typedef enum
 
 #define IS_PSSI_DE_POLARITY(__DEPOL__) (((__DEPOL__) == HAL_PSSI_DEPOL_ACTIVE_LOW    ) || \
                                         ((__DEPOL__) == HAL_PSSI_DEPOL_ACTIVE_HIGH   ))
-/**
-  * @}
-  */
 
 /**
   * @brief  Check whether the PSSI Ready Polarity is valid.
@@ -426,7 +413,7 @@ typedef enum
   */
 
 #define IS_PSSI_RDY_POLARITY(__RDYPOL__) (((__RDYPOL__) == HAL_PSSI_RDYPOL_ACTIVE_LOW   ) || \
-                                         ((__RDYPOL__) == HAL_PSSI_RDYPOL_ACTIVE_HIGH   ))
+                                          ((__RDYPOL__) == HAL_PSSI_RDYPOL_ACTIVE_HIGH   ))
 /**
   * @}
   */
@@ -448,7 +435,8 @@ void              HAL_PSSI_MspInit(PSSI_HandleTypeDef *hpssi);
 void              HAL_PSSI_MspDeInit(PSSI_HandleTypeDef *hpssi);
 /* Callbacks Register/UnRegister functions  ***********************************/
 
-HAL_StatusTypeDef HAL_PSSI_RegisterCallback(PSSI_HandleTypeDef *hpssi, HAL_PSSI_CallbackIDTypeDef CallbackID, pPSSI_CallbackTypeDef pCallback);
+HAL_StatusTypeDef HAL_PSSI_RegisterCallback(PSSI_HandleTypeDef *hpssi, HAL_PSSI_CallbackIDTypeDef CallbackID,
+                                            pPSSI_CallbackTypeDef pCallback);
 HAL_StatusTypeDef HAL_PSSI_UnRegisterCallback(PSSI_HandleTypeDef *hpssi, HAL_PSSI_CallbackIDTypeDef CallbackID);
 
 
@@ -457,7 +445,7 @@ HAL_StatusTypeDef HAL_PSSI_UnRegisterCallback(PSSI_HandleTypeDef *hpssi, HAL_PSS
   */
 
 
-/** @addtogroup PSSI_Exported_Functions_Group2 IO operation functions
+/** @addtogroup PSSI_Exported_Functions_Group2 Input and Output operation functions
   * @{
   */
 
@@ -467,27 +455,12 @@ HAL_StatusTypeDef HAL_PSSI_Receive(PSSI_HandleTypeDef *hpssi, uint8_t *pData, ui
 HAL_StatusTypeDef HAL_PSSI_Transmit_DMA(PSSI_HandleTypeDef *hpssi, uint32_t *pData, uint32_t Size);
 HAL_StatusTypeDef HAL_PSSI_Receive_DMA(PSSI_HandleTypeDef *hpssi, uint32_t *pData, uint32_t Size);
 HAL_StatusTypeDef HAL_PSSI_Abort_DMA(PSSI_HandleTypeDef *hpssi);
-void HAL_PSSI_IRQHandler(PSSI_HandleTypeDef *hpssi);
 
 /**
   * @}
   */
 
-/** @addtogroup PSSI_Exported_Functions_Group3 Peripheral Control functions
-  * @{
-  */
-
-void HAL_PSSI_TxCpltCallback(PSSI_HandleTypeDef *hpssi);
-void HAL_PSSI_RxCpltCallback(PSSI_HandleTypeDef *hpssi);
-void HAL_PSSI_ErrorCallback(PSSI_HandleTypeDef *hpssi);
-void HAL_PSSI_AbortCpltCallback(PSSI_HandleTypeDef *hpssi);
-
-
-/**
-  * @}
-  */
-
-/** @addtogroup PSSI_Exported_Functions_Group4 Peripheral State and Error functions
+/** @addtogroup PSSI_Exported_Functions_Group3 Peripheral State and Error functions
   * @{
   */
 
@@ -498,6 +471,23 @@ uint32_t               HAL_PSSI_GetError(PSSI_HandleTypeDef *hpssi);
 /**
   * @}
   */
+
+/** @addtogroup PSSI_IRQ_Handler_and_Callbacks IRQ Handler and Callbacks
+  * @{
+  */
+
+void HAL_PSSI_IRQHandler(PSSI_HandleTypeDef *hpssi);
+void HAL_PSSI_TxCpltCallback(PSSI_HandleTypeDef *hpssi);
+void HAL_PSSI_RxCpltCallback(PSSI_HandleTypeDef *hpssi);
+void HAL_PSSI_ErrorCallback(PSSI_HandleTypeDef *hpssi);
+void HAL_PSSI_AbortCpltCallback(PSSI_HandleTypeDef *hpssi);
+
+
+/**
+  * @}
+  */
+
+
 
 /**
   * @}

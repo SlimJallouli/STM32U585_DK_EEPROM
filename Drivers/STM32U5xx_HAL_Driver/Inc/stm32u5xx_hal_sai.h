@@ -41,23 +41,6 @@ extern "C" {
   * @{
   */
 
-/**
-  * @brief  HAL State structures definition
-  */
-typedef enum
-{
-  HAL_SAI_STATE_RESET   = 0x00U, /*!< SAI not yet initialized or disabled  */
-  HAL_SAI_STATE_READY   = 0x01U, /*!< SAI initialized and ready for use    */
-  HAL_SAI_STATE_BUSY    = 0x02U, /*!< SAI internal process is ongoing      */
-  HAL_SAI_STATE_BUSY_TX = 0x12U, /*!< Data transmission process is ongoing */
-  HAL_SAI_STATE_BUSY_RX = 0x22U, /*!< Data reception process is ongoing    */
-} HAL_SAI_StateTypeDef;
-
-/**
-  * @brief  SAI Callback prototype
-  */
-typedef void (*SAIcallback)(void);
-
 /** @defgroup SAI_PDM_Structure_definition SAI PDM Structure definition
   * @brief  SAI PDM Init structure definition
   * @{
@@ -147,6 +130,24 @@ typedef struct
   uint32_t ClockStrobing;   /*!< Specifies the SAI Block clock strobing edge sensitivity.
                                  This parameter can be a value of @ref SAI_Block_Clock_Strobing */
 } SAI_InitTypeDef;
+
+/**
+  * @brief  HAL State structures definition
+  */
+typedef enum
+{
+  HAL_SAI_STATE_RESET   = 0x00U, /*!< SAI not yet initialized or disabled  */
+  HAL_SAI_STATE_READY   = 0x01U, /*!< SAI initialized and ready for use    */
+  HAL_SAI_STATE_BUSY    = 0x02U, /*!< SAI internal process is ongoing      */
+  HAL_SAI_STATE_BUSY_TX = 0x12U, /*!< Data transmission process is ongoing */
+  HAL_SAI_STATE_BUSY_RX = 0x22U, /*!< Data reception process is ongoing    */
+} HAL_SAI_StateTypeDef;
+
+/**
+  * @brief  SAI Callback prototype
+  */
+typedef void (*SAIcallback)(void);
+
 /**
   * @}
   */
@@ -252,9 +253,6 @@ typedef struct __SAI_HandleTypeDef
   void (*MspDeInitCallback)(struct __SAI_HandleTypeDef *hsai);   /*!< SAI MSP de-init callback */
 #endif /* USE_HAL_SAI_REGISTER_CALLBACKS */
 } SAI_HandleTypeDef;
-/**
-  * @}
-  */
 
 #if (USE_HAL_SAI_REGISTER_CALLBACKS == 1)
 /**
@@ -276,6 +274,9 @@ typedef enum
   */
 typedef void (*pSAI_CallbackTypeDef)(SAI_HandleTypeDef *hsai);
 #endif /* USE_HAL_SAI_REGISTER_CALLBACKS */
+/**
+  * @}
+  */
 
 /**
   * @}

@@ -124,20 +124,20 @@ typedef struct
 /** @defgroup PWR_Flags PWR Flags
   * @{
   */
-#define PWR_FLAG_VOSRDY    (0x01U) /*!< Voltage caling ready flag                                */
-#define PWR_FLAG_BOOSTRDY  (0x02U) /*!< EPOD booster ready flag                                  */
-#define PWR_FLAG_STOPF     (0x03U) /*!< Stop flag                                                */
-#define PWR_FLAG_SBF       (0x04U) /*!< Standby flag                                             */
-#define PWR_FLAG_VDDA2RDY  (0x05U) /*!< VDDA ready flag (versus 1.8 V threshold)                 */
-#define PWR_FLAG_VDDA1RDY  (0x06U) /*!< VDDA ready flag (versus 1.6 V threshold)                 */
-#define PWR_FLAG_VDDIO2RDY (0x07U) /*!< VDDIO2 ready flag                                        */
-#define PWR_FLAG_VDDUSBRDY (0x08U) /*!< VDDUSB ready flag                                        */
-#define PWR_FLAG_ACTVOSRDY (0x09U) /*!< Currently applied VOS ready flag                         */
-#define PWR_FLAG_PVDO      (0x0AU) /*!< VDD voltage detector output flag                         */
-#define PWR_FLAG_REGS      (0x0BU) /*!< Regulator selection flag                                 */
-#define PWR_FLAG_TEMPH     (0x0CU) /*!< Temperature level flag (versus high threshold)           */
-#define PWR_FLAG_TEMPL     (0x0DU) /*!< Temperature level flag (versus low threshold)            */
-#define PWR_FLAG_VBATH     (0x0EU) /*!< Backup domain voltage level flag (versus high threshold) */
+#define PWR_FLAG_VOSRDY      (0x01U) /*!< Voltage scaling ready flag                               */
+#define PWR_FLAG_BOOSTRDY    (0x02U) /*!< EPOD booster ready flag                                  */
+#define PWR_FLAG_STOPF       (0x03U) /*!< Stop flag                                                */
+#define PWR_FLAG_SBF         (0x04U) /*!< Standby flag                                             */
+#define PWR_FLAG_VDDA2RDY    (0x05U) /*!< VDDA ready flag (versus 1.8 V threshold)                 */
+#define PWR_FLAG_VDDA1RDY    (0x06U) /*!< VDDA ready flag (versus 1.6 V threshold)                 */
+#define PWR_FLAG_VDDIO2RDY   (0x07U) /*!< VDDIO2 ready flag                                        */
+#define PWR_FLAG_VDDUSBRDY   (0x08U) /*!< VDDUSB ready flag                                        */
+#define PWR_FLAG_ACTVOSRDY   (0x09U) /*!< Currently applied VOS ready flag                         */
+#define PWR_FLAG_PVDO        (0x0AU) /*!< VDD voltage detector output flag                         */
+#define PWR_FLAG_REGS        (0x0BU) /*!< Regulator selection flag                                 */
+#define PWR_FLAG_TEMPH       (0x0CU) /*!< Temperature level flag (versus high threshold)           */
+#define PWR_FLAG_TEMPL       (0x0DU) /*!< Temperature level flag (versus low threshold)            */
+#define PWR_FLAG_VBATH       (0x0EU) /*!< Backup domain voltage level flag (versus high threshold) */
 /**
   * @}
   */
@@ -243,14 +243,14 @@ typedef struct
 /** @defgroup PWR_WakeUp_Pins PWR Wake Up Pins (Default polarity and default pin selection)
   * @{
   */
-#define PWR_WAKEUP_PIN1 (PWR_WUCR1_WUPEN1) /*!< PA0  : Wakeup pin 1 (hign polarity) */
-#define PWR_WAKEUP_PIN2 (PWR_WUCR1_WUPEN2) /*!< PA4  : Wakeup pin 2 (hign polarity) */
-#define PWR_WAKEUP_PIN3 (PWR_WUCR1_WUPEN3) /*!< PE6  : Wakeup pin 3 (hign polarity) */
-#define PWR_WAKEUP_PIN4 (PWR_WUCR1_WUPEN4) /*!< PA2  : Wakeup pin 4 (hign polarity) */
-#define PWR_WAKEUP_PIN5 (PWR_WUCR1_WUPEN5) /*!< PC5  : Wakeup pin 5 (hign polarity) */
-#define PWR_WAKEUP_PIN6 (PWR_WUCR1_WUPEN6) /*!< PB5  : Wakeup pin 6 (hign polarity) */
-#define PWR_WAKEUP_PIN7 (PWR_WUCR1_WUPEN7) /*!< PB15 : Wakeup pin 7 (hign polarity) */
-#define PWR_WAKEUP_PIN8 (PWR_WUCR1_WUPEN8) /*!< PF2  : Wakeup pin 8 (hign polarity) */
+#define PWR_WAKEUP_PIN1 (PWR_WUCR1_WUPEN1) /*!< PA0  : Wakeup pin 1 (high polarity) */
+#define PWR_WAKEUP_PIN2 (PWR_WUCR1_WUPEN2) /*!< PA4  : Wakeup pin 2 (high polarity) */
+#define PWR_WAKEUP_PIN3 (PWR_WUCR1_WUPEN3) /*!< PE6  : Wakeup pin 3 (high polarity) */
+#define PWR_WAKEUP_PIN4 (PWR_WUCR1_WUPEN4) /*!< PA2  : Wakeup pin 4 (high polarity) */
+#define PWR_WAKEUP_PIN5 (PWR_WUCR1_WUPEN5) /*!< PC5  : Wakeup pin 5 (high polarity) */
+#define PWR_WAKEUP_PIN6 (PWR_WUCR1_WUPEN6) /*!< PB5  : Wakeup pin 6 (high polarity) */
+#define PWR_WAKEUP_PIN7 (PWR_WUCR1_WUPEN7) /*!< PB15 : Wakeup pin 7 (high polarity) */
+#define PWR_WAKEUP_PIN8 (PWR_WUCR1_WUPEN8) /*!< PF2  : Wakeup pin 8 (high polarity) */
 /**
   * @}
   */
@@ -302,105 +302,84 @@ typedef struct
 /** @brief  Check PWR flags are set or not.
   * @param  __FLAG__ : Specifies the flag to check.
   *                    This parameter can be one of the following values :
-  *                    @arg @ref PWR_FLAG_VOSRDY    : Voltage scaling ready flag.
-  *                                                   Indicates that the Vcore level at or above VOS selected level.
-  *                    @arg @ref PWR_FLAG_BOOSTRDY  : EPOD booster ready flag.
-  *                                                   Indicates that EPOD booster ready,
-  *                                                   frequency could be higher than 50 MHz.
-  *                    @arg @ref PWR_FLAG_STOPF     : Stop flag.
-  *                                                   Indicates that the device was resumed from Stop mode.
-  *                    @arg @ref PWR_FLAG_SBF       : Standby flag.
-  *                                                   Indicates that the device was resumed from Standby mode.
-  *                    @arg @ref PWR_FLAG_VDDA2RDY  : VDDA2 ready flag (versus 1.8 V threshold).
-  *                                                   Indicates that VDDA is equal or above the threshold
-  *                                                   of the VDDA voltage monitor 2 (around 1.8 V).
-  *                    @arg @ref PWR_FLAG_VDDA1RDY  : VDDA1 ready flag (versus 1.6 V threshold).
-  *                                                   Indicates that VDDA is equal or above the threshold
-  *                                                   of the VDDA voltage monitor 1 (around 1.6 V).
-  *                    @arg @ref PWR_FLAG_VDDIO2RDY : VDDIO2 ready flag (versus 0.9 V threshold).
-  *                                                   Indicates that VDDIO2 is equal or above the threshold
-  *                                                   of the VDDIO2 voltage monitor (around 0.9 V).
-  *                    @arg @ref PWR_FLAG_VDDUSBRDY : VDDUSB ready flag (versus 1.2 V threshold).
-  *                                                   Indicates that VDDUSB is equal or above the threshold
-  *                                                   of the VDDUSB voltage monitor (around 1.2 V).
-  *                    @arg @ref PWR_FLAG_ACTVOSRDY : Currently applied VOS ready flag.
-  *                                                   Indicates that Vcore is equal to the current
-  *                                                   voltage scaling provided by ACTVOS.
-  *                    @arg @ref PWR_FLAG_PVDO VDD  : Voltage detector output flag.
-  *                                                   Indicates that Vdd is equal or above
-  *                                                   the PVD threshold selected by PVDLS.
-  *                    @arg @ref PWR_FLAG_REGS      : Regulator selection flag.
-  *                                                   Indicates the regulator selected.
-  *                    @arg @ref PWR_FLAG_TEMPH     : Temperature level flag (versus high threshold).
-  *                                                   Indicates the temperature is equal or above high threshold.
-  *                    @arg @ref PWR_FLAG_TEMPL     : Temperature level flag (versus low threshold).
-  *                                                   Indicates the temperature is equal or above low threshold.
-  *                    @arg @ref PWR_FLAG_VBATH     : Backup domain voltage level flag (versus high threshold).
-  *                                                   Indicates the backup domain voltage
-  *                                                   level is equal or above high threshold.
-  *                    @arg @ref PWR_WAKEUP_FLAG1   : Wakeup flag 1.
-  *                                                   Indicates that a wakeup event was received from the WKUP line 1.
-  *                    @arg @ref PWR_WAKEUP_FLAG2   : Wakeup flag 2.
-  *                                                   Indicates that a wakeup event was received from the WKUP line 2.
-  *                    @arg @ref PWR_WAKEUP_FLAG3   : Wakeup flag 3.
-  *                                                   Indicates that a wakeup event was received from the WKUP line 3.
-  *                    @arg @ref PWR_WAKEUP_FLAG4   : Wakeup flag 4.
-  *                                                   Indicates that a wakeup event was received from the WKUP line 4.
-  *                    @arg @ref PWR_WAKEUP_FLAG5   : Wakeup flag 5.
-  *                                                   Indicates that a wakeup event was received from the WKUP line 5.
-  *                    @arg @ref PWR_WAKEUP_FLAG6   : Wakeup flag 6.
-  *                                                   Indicates that a wakeup event was received from the WKUP line 6.
-  *                    @arg @ref PWR_WAKEUP_FLAG7   : Wakeup flag 7.
-  *                                                   Indicates that a wakeup event was received from the WKUP line 7.
-  *                    @arg @ref PWR_WAKEUP_FLAG8   : Wakeup flag 8.
-  *                                                   Indicates that a wakeup event was received from the WKUP line 8.
+  *                    @arg @ref PWR_FLAG_VOSRDY      : Voltage scaling ready flag.
+  *                                                     Indicates that the Vcore level at or above VOS selected level.
+  *                    @arg @ref PWR_FLAG_BOOSTRDY    : EPOD booster ready flag.
+  *                                                     Indicates that EPOD booster ready,
+  *                                                     frequency could be higher than 50 MHz.
+  *                    @arg @ref PWR_FLAG_STOPF       : Stop flag.
+  *                                                     Indicates that the device was resumed from Stop mode.
+  *                    @arg @ref PWR_FLAG_SBF         : Standby flag.
+  *                                                     Indicates that the device was resumed from Standby mode.
+  *                    @arg @ref PWR_FLAG_VDDA2RDY    : VDDA2 ready flag (versus 1.8 V threshold).
+  *                                                     Indicates that VDDA is equal or above the threshold
+  *                                                     of the VDDA voltage monitor 2 (around 1.8 V).
+  *                    @arg @ref PWR_FLAG_VDDA1RDY    : VDDA1 ready flag (versus 1.6 V threshold).
+  *                                                     Indicates that VDDA is equal or above the threshold
+  *                                                     of the VDDA voltage monitor 1 (around 1.6 V).
+  *                    @arg @ref PWR_FLAG_VDDIO2RDY   : VDDIO2 ready flag (versus 0.9 V threshold).
+  *                                                     Indicates that VDDIO2 is equal or above the threshold
+  *                                                     of the VDDIO2 voltage monitor (around 0.9 V).
+  *                    @arg @ref PWR_FLAG_VDDUSBRDY   : VDDUSB ready flag (versus 1.2 V threshold).
+  *                                                     Indicates that VDDUSB is equal or above the threshold
+  *                                                     of the VDDUSB voltage monitor (around 1.2 V).
+  *                    @arg @ref PWR_FLAG_ACTVOSRDY   : Currently applied VOS ready flag.
+  *                                                     Indicates that Vcore is equal to the current
+  *                                                     voltage scaling provided by ACTVOS.
+  *                    @arg @ref PWR_FLAG_PVDO VDD    : Voltage detector output flag.
+  *                                                     Indicates that Vdd is equal or above
+  *                                                     the PVD threshold selected by PVDLS.
+  *                    @arg @ref PWR_FLAG_REGS        : Regulator selection flag.
+  *                                                     Indicates the regulator selected.
+  *                    @arg @ref PWR_FLAG_TEMPH       : Temperature level flag (versus high threshold).
+  *                                                     Indicates the temperature is equal or above high threshold.
+  *                    @arg @ref PWR_FLAG_TEMPL       : Temperature level flag (versus low threshold).
+  *                                                     Indicates the temperature is equal or above low threshold.
+  *                    @arg @ref PWR_FLAG_VBATH       : Backup domain voltage level flag (versus high threshold).
+  *                                                     Indicates the backup domain voltage
+  *                                                     level is equal or above high threshold.
+  *                    @arg @ref PWR_WAKEUP_FLAG1     : Wakeup flag 1.
+  *                                                     Indicates that a wakeup event was received from the WKUP line 1.
+  *                    @arg @ref PWR_WAKEUP_FLAG2     : Wakeup flag 2.
+  *                                                     Indicates that a wakeup event was received from the WKUP line 2.
+  *                    @arg @ref PWR_WAKEUP_FLAG3     : Wakeup flag 3.
+  *                                                     Indicates that a wakeup event was received from the WKUP line 3.
+  *                    @arg @ref PWR_WAKEUP_FLAG4     : Wakeup flag 4.
+  *                                                     Indicates that a wakeup event was received from the WKUP line 4.
+  *                    @arg @ref PWR_WAKEUP_FLAG5     : Wakeup flag 5.
+  *                                                     Indicates that a wakeup event was received from the WKUP line 5.
+  *                    @arg @ref PWR_WAKEUP_FLAG6     : Wakeup flag 6.
+  *                                                     Indicates that a wakeup event was received from the WKUP line 6.
+  *                    @arg @ref PWR_WAKEUP_FLAG7     : Wakeup flag 7.
+  *                                                     Indicates that a wakeup event was received from the WKUP line 7.
+  *                    @arg @ref PWR_WAKEUP_FLAG8     : Wakeup flag 8.
+  *                                                     Indicates that a wakeup event was received from the WKUP line 8.
   * @retval The state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_PWR_GET_FLAG(__FLAG__)( \
-                                      ((__FLAG__) == PWR_FLAG_VOSRDY)    ? \
-                                      (READ_BIT(PWR->VOSR, PWR_VOSR_VOSRDY)     == PWR_VOSR_VOSRDY)    : \
-                                      ((__FLAG__) == PWR_FLAG_BOOSTRDY)  ? \
-                                      (READ_BIT(PWR->VOSR, PWR_VOSR_BOOSTRDY)   == PWR_VOSR_BOOSTRDY)  : \
-                                      ((__FLAG__) == PWR_FLAG_STOPF)     ? \
-                                      (READ_BIT(PWR->SR, PWR_SR_STOPF)          == PWR_SR_STOPF)       : \
-                                      ((__FLAG__) == PWR_FLAG_SBF)       ? \
-                                      (READ_BIT(PWR->SR, PWR_SR_SBF)            == PWR_SR_SBF)         : \
-                                      ((__FLAG__) == PWR_FLAG_VDDA2RDY)  ? \
-                                      (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA2RDY) == PWR_SVMSR_VDDA2RDY) : \
-                                      ((__FLAG__) == PWR_FLAG_VDDA1RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA1RDY)== \
-                                                                            PWR_SVMSR_VDDA1RDY) : \
-                                      ((__FLAG__) == PWR_FLAG_VDDIO2RDY) ?(READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDIO2RDY)== \
-                                                                           PWR_SVMSR_VDDIO2RDY): \
-                                      ((__FLAG__) == PWR_FLAG_VDDUSBRDY) ?(READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDUSBRDY)== \
-                                                                           PWR_SVMSR_VDDUSBRDY): \
-                                      ((__FLAG__) == PWR_FLAG_ACTVOSRDY) ?(READ_BIT(PWR->SVMSR, PWR_SVMSR_ACTVOSRDY)== \
-                                                                           PWR_SVMSR_ACTVOSRDY): \
-                                      ((__FLAG__) == PWR_FLAG_PVDO)      ?(READ_BIT(PWR->SVMSR, PWR_SVMSR_PVDO)== \
-                                                                           PWR_SVMSR_PVDO)     : \
-                                      ((__FLAG__) == PWR_FLAG_REGS)      ?(READ_BIT(PWR->SVMSR, PWR_SVMSR_REGS)== \
-                                                                           PWR_SVMSR_REGS)     : \
-                                      ((__FLAG__) == PWR_FLAG_TEMPH)     ?(READ_BIT(PWR->BDSR, PWR_BDSR_TEMPH) == \
-                                                                           PWR_BDSR_TEMPH)     : \
-                                      ((__FLAG__) == PWR_FLAG_TEMPL)     ?(READ_BIT(PWR->BDSR, PWR_BDSR_TEMPL) == \
-                                                                           PWR_BDSR_TEMPL)     : \
-                                      ((__FLAG__) == PWR_FLAG_VBATH)     ?(READ_BIT(PWR->BDSR, PWR_BDSR_VBATH) == \
-                                                                           PWR_BDSR_VBATH)     : \
-                                      \
-                                      ((__FLAG__) == PWR_WAKEUP_FLAG1)   ?(READ_BIT(PWR->WUSR, PWR_WUSR_WUF1)  == \
-                                                                           PWR_WUSR_WUF1)      : \
-                                      ((__FLAG__) == PWR_WAKEUP_FLAG2)   ?(READ_BIT(PWR->WUSR, PWR_WUSR_WUF2)  == \
-                                                                           PWR_WUSR_WUF2)      : \
-                                      ((__FLAG__) == PWR_WAKEUP_FLAG3)   ?(READ_BIT(PWR->WUSR, PWR_WUSR_WUF3)  == \
-                                                                           PWR_WUSR_WUF3)      : \
-                                      ((__FLAG__) == PWR_WAKEUP_FLAG4)   ?(READ_BIT(PWR->WUSR, PWR_WUSR_WUF4)  == \
-                                                                           PWR_WUSR_WUF4)      : \
-                                      ((__FLAG__) == PWR_WAKEUP_FLAG5)   ?(READ_BIT(PWR->WUSR, PWR_WUSR_WUF5)  == \
-                                                                           PWR_WUSR_WUF5)      : \
-                                      ((__FLAG__) == PWR_WAKEUP_FLAG6)   ?(READ_BIT(PWR->WUSR, PWR_WUSR_WUF6)  == \
-                                                                           PWR_WUSR_WUF6)      : \
-                                      ((__FLAG__) == PWR_WAKEUP_FLAG7)   ?(READ_BIT(PWR->WUSR, PWR_WUSR_WUF7)  == \
-                                                                           PWR_WUSR_WUF7)      : \
-                                      (READ_BIT(PWR->WUSR, PWR_WUSR_WUF8)       == PWR_WUSR_WUF8))
+#define __HAL_PWR_GET_FLAG(__FLAG__)                                                                            \
+  (                                                                                                             \
+      ((__FLAG__) == PWR_FLAG_VOSRDY)    ? (READ_BIT(PWR->VOSR, PWR_VOSR_VOSRDY)      == PWR_VOSR_VOSRDY)     : \
+      ((__FLAG__) == PWR_FLAG_BOOSTRDY)  ? (READ_BIT(PWR->VOSR, PWR_VOSR_BOOSTRDY)    == PWR_VOSR_BOOSTRDY)   : \
+      ((__FLAG__) == PWR_FLAG_STOPF)     ? (READ_BIT(PWR->SR, PWR_SR_STOPF)           == PWR_SR_STOPF)        : \
+      ((__FLAG__) == PWR_FLAG_SBF)       ? (READ_BIT(PWR->SR, PWR_SR_SBF)             == PWR_SR_SBF)          : \
+      ((__FLAG__) == PWR_FLAG_VDDA2RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA2RDY)  == PWR_SVMSR_VDDA2RDY)  : \
+      ((__FLAG__) == PWR_FLAG_VDDA1RDY)  ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDA1RDY)  == PWR_SVMSR_VDDA1RDY)  : \
+      ((__FLAG__) == PWR_FLAG_VDDIO2RDY) ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDIO2RDY) == PWR_SVMSR_VDDIO2RDY) : \
+      ((__FLAG__) == PWR_FLAG_VDDUSBRDY) ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_VDDUSBRDY) == PWR_SVMSR_VDDUSBRDY) : \
+      ((__FLAG__) == PWR_FLAG_ACTVOSRDY) ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_ACTVOSRDY) == PWR_SVMSR_ACTVOSRDY) : \
+      ((__FLAG__) == PWR_FLAG_PVDO)      ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_PVDO)      == PWR_SVMSR_PVDO)      : \
+      ((__FLAG__) == PWR_FLAG_REGS)      ? (READ_BIT(PWR->SVMSR, PWR_SVMSR_REGS)      == PWR_SVMSR_REGS)      : \
+      ((__FLAG__) == PWR_FLAG_TEMPH)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_TEMPH)       == PWR_BDSR_TEMPH)      : \
+      ((__FLAG__) == PWR_FLAG_TEMPL)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_TEMPL)       == PWR_BDSR_TEMPL)      : \
+      ((__FLAG__) == PWR_FLAG_VBATH)     ? (READ_BIT(PWR->BDSR, PWR_BDSR_VBATH)       == PWR_BDSR_VBATH)      : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG1)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF1)        == PWR_WUSR_WUF1)       : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG2)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF2)        == PWR_WUSR_WUF2)       : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG3)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF3)        == PWR_WUSR_WUF3)       : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG4)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF4)        == PWR_WUSR_WUF4)       : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG5)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF5)        == PWR_WUSR_WUF5)       : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG6)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF6)        == PWR_WUSR_WUF6)       : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG7)   ? (READ_BIT(PWR->WUSR, PWR_WUSR_WUF7)        == PWR_WUSR_WUF7)       : \
+      (READ_BIT(PWR->WUSR, PWR_WUSR_WUF8) == PWR_WUSR_WUF8))
 
 /** @brief  Clear PWR flags.
   * @param  __FLAG__ : Specifies the flag to clear.
@@ -427,18 +406,19 @@ typedef struct
   *                                                   Indicates that a wakeup event was received from the WKUP line 8.
   * @retval None.
   */
-#define __HAL_PWR_CLEAR_FLAG(__FLAG__)  ( \
-                                          ((__FLAG__) == PWR_FLAG_STOPF)   ? (SET_BIT(PWR->SR, PWR_SR_CSSF))        : \
-                                          ((__FLAG__) == PWR_FLAG_SBF)     ? (SET_BIT(PWR->SR, PWR_SR_CSSF))        : \
-                                          ((__FLAG__) == PWR_WAKEUP_FLAG1) ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF1)) : \
-                                          ((__FLAG__) == PWR_WAKEUP_FLAG2) ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF2)) : \
-                                          ((__FLAG__) == PWR_WAKEUP_FLAG3) ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF3)) : \
-                                          ((__FLAG__) == PWR_WAKEUP_FLAG4) ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF4)) : \
-                                          ((__FLAG__) == PWR_WAKEUP_FLAG5) ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF5)) : \
-                                          ((__FLAG__) == PWR_WAKEUP_FLAG6) ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF6)) : \
-                                          ((__FLAG__) == PWR_WAKEUP_FLAG7) ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF7)) : \
-                                          ((__FLAG__) == PWR_WAKEUP_FLAG8) ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF8)) : \
-                                          (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF)))
+#define __HAL_PWR_CLEAR_FLAG(__FLAG__)                                               \
+  (                                                                                  \
+      ((__FLAG__) == PWR_FLAG_STOPF)      ? (SET_BIT(PWR->SR, PWR_SR_CSSF))        : \
+      ((__FLAG__) == PWR_FLAG_SBF)        ? (SET_BIT(PWR->SR, PWR_SR_CSSF))        : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG1)    ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF1)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG2)    ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF2)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG3)    ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF3)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG4)    ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF4)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG5)    ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF5)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG6)    ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF6)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG7)    ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF7)) : \
+      ((__FLAG__) == PWR_WAKEUP_FLAG8)    ? (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF8)) : \
+      (SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF)))
 
 /**
   * @brief  Enable the PVD Extended Interrupt Line.
@@ -493,10 +473,10 @@ typedef struct
   * @retval None.
   */
 #define __HAL_PWR_PVD_EXTI_ENABLE_RISING_FALLING_EDGE() \
-  do                                                      \
-  {                                                       \
-    __HAL_PWR_PVD_EXTI_ENABLE_RISING_EDGE();              \
-    __HAL_PWR_PVD_EXTI_ENABLE_FALLING_EDGE();             \
+  do                                                    \
+  {                                                     \
+    __HAL_PWR_PVD_EXTI_ENABLE_RISING_EDGE();            \
+    __HAL_PWR_PVD_EXTI_ENABLE_FALLING_EDGE();           \
   } while(0)
 
 /**
@@ -504,10 +484,10 @@ typedef struct
   * @retval None.
   */
 #define __HAL_PWR_PVD_EXTI_DISABLE_RISING_FALLING_EDGE() \
-  do                                                       \
-  {                                                        \
-    __HAL_PWR_PVD_EXTI_DISABLE_RISING_EDGE();              \
-    __HAL_PWR_PVD_EXTI_DISABLE_FALLING_EDGE();             \
+  do                                                     \
+  {                                                      \
+    __HAL_PWR_PVD_EXTI_DISABLE_RISING_EDGE();            \
+    __HAL_PWR_PVD_EXTI_DISABLE_FALLING_EDGE();           \
   } while(0)
 
 /**
@@ -526,7 +506,7 @@ typedef struct
   * @brief  Clear the PVD EXTI Interrupt flag.
   * @retval None.
   */
-#define __HAL_PWR_PVD_EXTI_CLEAR_FLAG()     \
+#define __HAL_PWR_PVD_EXTI_CLEAR_FLAG()       \
   do                                          \
   {                                           \
     WRITE_REG(EXTI->RPR1, PWR_EXTI_LINE_PVD); \
@@ -545,12 +525,12 @@ typedef struct
 #define PWR_EXTI_LINE_PVD (0x00010000UL) /*!< PVD EXTI Line */
 
 /* Defines wake up lines shift */
-#define PWR_WUP_POLARITY_SHIFT      (0x08U) /*!< Internal constant used to retrieve wakeup signal polariry  */
+#define PWR_WUP_POLARITY_SHIFT      (0x08U) /*!< Internal constant used to retrieve wakeup signal polarity  */
 #define PWR_WUP_SELECT_SIGNAL_SHIFT (0x10U) /*!< Internal constant used to retrieve wakeup signal selection */
 
 /* Defines wake up lines mask */
 #define PWR_EWUP_MASK         (0x000000FFUL) /*!< Internal constant used to retrieve wakeup signal enable    */
-#define PWR_WUP_POLARITY_MASK (0x0000FF00UL) /*!< Internal constant used to retrieve wakeup signal polariry  */
+#define PWR_WUP_POLARITY_MASK (0x0000FF00UL) /*!< Internal constant used to retrieve wakeup signal polarity  */
 #define PWR_WUP_SELECT_MASK   (0xFFFF0000UL) /*!< Internal constant used to retrieve wakeup signal selection */
 
 /* Defines wake up lines selection */
@@ -605,101 +585,107 @@ typedef struct
   * @{
   */
 /* Wake up pins check macro */
-#define IS_PWR_WAKEUP_PIN(PIN) (((PIN) == PWR_WAKEUP_PIN1_HIGH_0)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN1_HIGH_1)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN1_HIGH_2)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN2_HIGH_0)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN2_HIGH_1)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN2_HIGH_2)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN3_HIGH_0)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN3_HIGH_1)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN3_HIGH_2)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN4_HIGH_0)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN4_HIGH_1)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN4_HIGH_2)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN5_HIGH_0)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN5_HIGH_1)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN5_HIGH_2)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN6_HIGH_0)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN6_HIGH_1)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN6_HIGH_2)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN6_HIGH_3)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN7_HIGH_0)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN7_HIGH_1)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN7_HIGH_2)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN7_HIGH_3)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN8_HIGH_0)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN8_HIGH_1)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN8_HIGH_2)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN8_HIGH_3)  ||\
-                                ((PIN) == PWR_WAKEUP_PIN1_LOW_0)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN1_LOW_1)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN1_LOW_2)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN2_LOW_0)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN2_LOW_1)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN2_LOW_2)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN3_LOW_0)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN3_LOW_1)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN3_LOW_2)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN4_LOW_0)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN4_LOW_1)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN4_LOW_2)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN5_LOW_0)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN5_LOW_1)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN5_LOW_2)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN6_LOW_0)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN6_LOW_1)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN6_LOW_2)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN6_LOW_3)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN7_LOW_0)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN7_LOW_1)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN7_LOW_2)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN7_LOW_3)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN8_LOW_0)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN8_LOW_1)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN8_LOW_2)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN8_LOW_3)   ||\
-                                ((PIN) == PWR_WAKEUP_PIN1)         ||\
-                                ((PIN) == PWR_WAKEUP_PIN2)         ||\
-                                ((PIN) == PWR_WAKEUP_PIN3)         ||\
-                                ((PIN) == PWR_WAKEUP_PIN4)         ||\
-                                ((PIN) == PWR_WAKEUP_PIN5)         ||\
-                                ((PIN) == PWR_WAKEUP_PIN6)         ||\
-                                ((PIN) == PWR_WAKEUP_PIN7)         ||\
-                                ((PIN) == PWR_WAKEUP_PIN8))
+#define IS_PWR_WAKEUP_PIN(PIN)          \
+  (((PIN) == PWR_WAKEUP_PIN1_HIGH_0)  ||\
+   ((PIN) == PWR_WAKEUP_PIN1_HIGH_1)  ||\
+   ((PIN) == PWR_WAKEUP_PIN1_HIGH_2)  ||\
+   ((PIN) == PWR_WAKEUP_PIN2_HIGH_0)  ||\
+   ((PIN) == PWR_WAKEUP_PIN2_HIGH_1)  ||\
+   ((PIN) == PWR_WAKEUP_PIN2_HIGH_2)  ||\
+   ((PIN) == PWR_WAKEUP_PIN3_HIGH_0)  ||\
+   ((PIN) == PWR_WAKEUP_PIN3_HIGH_1)  ||\
+   ((PIN) == PWR_WAKEUP_PIN3_HIGH_2)  ||\
+   ((PIN) == PWR_WAKEUP_PIN4_HIGH_0)  ||\
+   ((PIN) == PWR_WAKEUP_PIN4_HIGH_1)  ||\
+   ((PIN) == PWR_WAKEUP_PIN4_HIGH_2)  ||\
+   ((PIN) == PWR_WAKEUP_PIN5_HIGH_0)  ||\
+   ((PIN) == PWR_WAKEUP_PIN5_HIGH_1)  ||\
+   ((PIN) == PWR_WAKEUP_PIN5_HIGH_2)  ||\
+   ((PIN) == PWR_WAKEUP_PIN6_HIGH_0)  ||\
+   ((PIN) == PWR_WAKEUP_PIN6_HIGH_1)  ||\
+   ((PIN) == PWR_WAKEUP_PIN6_HIGH_2)  ||\
+   ((PIN) == PWR_WAKEUP_PIN6_HIGH_3)  ||\
+   ((PIN) == PWR_WAKEUP_PIN7_HIGH_0)  ||\
+   ((PIN) == PWR_WAKEUP_PIN7_HIGH_1)  ||\
+   ((PIN) == PWR_WAKEUP_PIN7_HIGH_2)  ||\
+   ((PIN) == PWR_WAKEUP_PIN7_HIGH_3)  ||\
+   ((PIN) == PWR_WAKEUP_PIN8_HIGH_0)  ||\
+   ((PIN) == PWR_WAKEUP_PIN8_HIGH_1)  ||\
+   ((PIN) == PWR_WAKEUP_PIN8_HIGH_2)  ||\
+   ((PIN) == PWR_WAKEUP_PIN8_HIGH_3)  ||\
+   ((PIN) == PWR_WAKEUP_PIN1_LOW_0)   ||\
+   ((PIN) == PWR_WAKEUP_PIN1_LOW_1)   ||\
+   ((PIN) == PWR_WAKEUP_PIN1_LOW_2)   ||\
+   ((PIN) == PWR_WAKEUP_PIN2_LOW_0)   ||\
+   ((PIN) == PWR_WAKEUP_PIN2_LOW_1)   ||\
+   ((PIN) == PWR_WAKEUP_PIN2_LOW_2)   ||\
+   ((PIN) == PWR_WAKEUP_PIN3_LOW_0)   ||\
+   ((PIN) == PWR_WAKEUP_PIN3_LOW_1)   ||\
+   ((PIN) == PWR_WAKEUP_PIN3_LOW_2)   ||\
+   ((PIN) == PWR_WAKEUP_PIN4_LOW_0)   ||\
+   ((PIN) == PWR_WAKEUP_PIN4_LOW_1)   ||\
+   ((PIN) == PWR_WAKEUP_PIN4_LOW_2)   ||\
+   ((PIN) == PWR_WAKEUP_PIN5_LOW_0)   ||\
+   ((PIN) == PWR_WAKEUP_PIN5_LOW_1)   ||\
+   ((PIN) == PWR_WAKEUP_PIN5_LOW_2)   ||\
+   ((PIN) == PWR_WAKEUP_PIN6_LOW_0)   ||\
+   ((PIN) == PWR_WAKEUP_PIN6_LOW_1)   ||\
+   ((PIN) == PWR_WAKEUP_PIN6_LOW_2)   ||\
+   ((PIN) == PWR_WAKEUP_PIN6_LOW_3)   ||\
+   ((PIN) == PWR_WAKEUP_PIN7_LOW_0)   ||\
+   ((PIN) == PWR_WAKEUP_PIN7_LOW_1)   ||\
+   ((PIN) == PWR_WAKEUP_PIN7_LOW_2)   ||\
+   ((PIN) == PWR_WAKEUP_PIN7_LOW_3)   ||\
+   ((PIN) == PWR_WAKEUP_PIN8_LOW_0)   ||\
+   ((PIN) == PWR_WAKEUP_PIN8_LOW_1)   ||\
+   ((PIN) == PWR_WAKEUP_PIN8_LOW_2)   ||\
+   ((PIN) == PWR_WAKEUP_PIN8_LOW_3)   ||\
+   ((PIN) == PWR_WAKEUP_PIN1)         ||\
+   ((PIN) == PWR_WAKEUP_PIN2)         ||\
+   ((PIN) == PWR_WAKEUP_PIN3)         ||\
+   ((PIN) == PWR_WAKEUP_PIN4)         ||\
+   ((PIN) == PWR_WAKEUP_PIN5)         ||\
+   ((PIN) == PWR_WAKEUP_PIN6)         ||\
+   ((PIN) == PWR_WAKEUP_PIN7)         ||\
+   ((PIN) == PWR_WAKEUP_PIN8))
 
 /* PVD level check macro */
-#define IS_PWR_PVD_LEVEL(LEVEL) (((LEVEL) == PWR_PVDLEVEL_0) || ((LEVEL) == PWR_PVDLEVEL_1) || \
-                                 ((LEVEL) == PWR_PVDLEVEL_2) || ((LEVEL) == PWR_PVDLEVEL_3) || \
-                                 ((LEVEL) == PWR_PVDLEVEL_4) || ((LEVEL) == PWR_PVDLEVEL_5) || \
-                                 ((LEVEL) == PWR_PVDLEVEL_6) || ((LEVEL) == PWR_PVDLEVEL_7))
+#define IS_PWR_PVD_LEVEL(LEVEL)                                 \
+  (((LEVEL) == PWR_PVDLEVEL_0) || ((LEVEL) == PWR_PVDLEVEL_1) ||\
+   ((LEVEL) == PWR_PVDLEVEL_2) || ((LEVEL) == PWR_PVDLEVEL_3) ||\
+   ((LEVEL) == PWR_PVDLEVEL_4) || ((LEVEL) == PWR_PVDLEVEL_5) ||\
+   ((LEVEL) == PWR_PVDLEVEL_6) || ((LEVEL) == PWR_PVDLEVEL_7))
 
 /* PVD mode check macro */
-#define IS_PWR_PVD_MODE(MODE) (((MODE) == PWR_PVD_MODE_NORMAL)               ||\
-                               ((MODE) == PWR_PVD_MODE_IT_RISING)            ||\
-                               ((MODE) == PWR_PVD_MODE_IT_FALLING)           ||\
-                               ((MODE) == PWR_PVD_MODE_IT_RISING_FALLING)    ||\
-                               ((MODE) == PWR_PVD_MODE_EVENT_RISING)         ||\
-                               ((MODE) == PWR_PVD_MODE_EVENT_FALLING)        ||\
-                               ((MODE) == PWR_PVD_MODE_EVENT_RISING_FALLING))
+#define IS_PWR_PVD_MODE(MODE)                      \
+  (((MODE) == PWR_PVD_MODE_NORMAL)               ||\
+   ((MODE) == PWR_PVD_MODE_IT_RISING)            ||\
+   ((MODE) == PWR_PVD_MODE_IT_FALLING)           ||\
+   ((MODE) == PWR_PVD_MODE_IT_RISING_FALLING)    ||\
+   ((MODE) == PWR_PVD_MODE_EVENT_RISING)         ||\
+   ((MODE) == PWR_PVD_MODE_EVENT_FALLING)        ||\
+   ((MODE) == PWR_PVD_MODE_EVENT_RISING_FALLING))
 
 /* Sleep mode entry check macro */
-#define IS_PWR_SLEEP_ENTRY(ENTRY) (((ENTRY) == PWR_SLEEPENTRY_WFI) || ((ENTRY) == PWR_SLEEPENTRY_WFE))
+#define IS_PWR_SLEEP_ENTRY(ENTRY) \
+  (((ENTRY) == PWR_SLEEPENTRY_WFI) || ((ENTRY) == PWR_SLEEPENTRY_WFE))
 
 /* Stop mode entry check macro */
-#define IS_PWR_STOP_ENTRY(ENTRY) (((ENTRY) == PWR_STOPENTRY_WFI) || ((ENTRY) == PWR_STOPENTRY_WFE))
+#define IS_PWR_STOP_ENTRY(ENTRY) \
+  (((ENTRY) == PWR_STOPENTRY_WFI) || ((ENTRY) == PWR_STOPENTRY_WFE))
 
 /* PWR items check macro */
-#define IS_PWR_ITEMS_ATTRIBUTES(ITEM) ((((ITEM) & (~PWR_ALL)) == 0U) && ((ITEM) != 0U))
+#define IS_PWR_ITEMS_ATTRIBUTES(ITEM) \
+  ((((ITEM) & (~PWR_ALL)) == 0U) && ((ITEM) != 0U))
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /* PWR attribute check macro (Secure) */
-#define IS_PWR_ATTRIBUTES(ATTRIBUTES) ((((~(((ATTRIBUTES)& \
-                                             0xF0U) >> 4U)) & ((ATTRIBUTES) & 0x0FU)) == 0U) && \
-                                       (((ATTRIBUTES) & 0xFFFFFFCCU) == 0U))
+#define IS_PWR_ATTRIBUTES(ATTRIBUTES) \
+  ((((~(((ATTRIBUTES) & 0xF0U) >> 4U)) & ((ATTRIBUTES) & 0x0FU)) == 0U) && (((ATTRIBUTES) & 0xFFFFFFCCU) == 0U))
 #else
 /* PWR attribute check macro (NSecure) */
-#define IS_PWR_ATTRIBUTES(ATTRIBUTES) (((ATTRIBUTES) == PWR_NSEC_NPRIV) || ((ATTRIBUTES) == PWR_NSEC_PRIV))
+#define IS_PWR_ATTRIBUTES(ATTRIBUTES) \
+  (((ATTRIBUTES) == PWR_NSEC_NPRIV) || ((ATTRIBUTES) == PWR_NSEC_PRIV))
 #endif /* __ARM_FEATURE_CMSE */
 /**
   * @}
@@ -729,7 +715,7 @@ void HAL_PWR_DisableBkUpAccess(void);
   * @{
   */
 /* Programmable voltage detector functions ************************************/
-HAL_StatusTypeDef HAL_PWR_ConfigPVD(PWR_PVDTypeDef *sConfigPVD);
+HAL_StatusTypeDef HAL_PWR_ConfigPVD(PWR_PVDTypeDef *pConfigPVD);
 void              HAL_PWR_EnablePVD(void);
 void              HAL_PWR_DisablePVD(void);
 
@@ -738,8 +724,8 @@ void HAL_PWR_EnableWakeUpPin(uint32_t WakeUpPin);
 void HAL_PWR_DisableWakeUpPin(uint32_t WakeUpPin);
 
 /* Low power modes configuration functions ************************************/
-void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SLEEPEntry);
-void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry);
+void HAL_PWR_EnterSLEEPMode(uint32_t Regulator, uint8_t SleepEntry);
+void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t StopEntry);
 void HAL_PWR_EnterSTANDBYMode(void);
 
 /* Sleep on exit and sev on pending configuration functions *******************/

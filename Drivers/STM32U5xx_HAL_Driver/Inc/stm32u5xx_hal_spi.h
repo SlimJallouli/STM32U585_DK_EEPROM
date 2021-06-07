@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -63,7 +63,8 @@ typedef struct
 
   uint32_t NSS;                               /*!< Specifies whether the NSS signal is managed by
                                                      hardware (NSS pin) or by software using the SSI bit.
-                                                     This parameter can be a value of @ref SPI_Slave_Select_Management */
+                                                     This parameter can be a value of
+                                                     @ref SPI_Slave_Select_Management */
 
   uint32_t BaudRatePrescaler;                 /*!< Specifies the Baud Rate prescaler value which will be
                                                      used to configure the transmit and receive SCK clock.
@@ -81,40 +82,45 @@ typedef struct
                                                      This parameter can be a value of @ref SPI_CRC_Calculation */
 
   uint32_t CRCPolynomial;                     /*!< Specifies the polynomial used for the CRC calculation.
-                                                     This parameter must be an odd number between Min_Data = 0 and Max_Data = 65535 */
+                                                     This parameter must be an odd number between
+                                                     Min_Data = 0 and Max_Data = 65535 */
 
   uint32_t CRCLength;                         /*!< Specifies the CRC Length used for the CRC calculation.
                                                      This parameter can be a value of @ref SPI_CRC_length */
 
   uint32_t NSSPMode;                          /*!< Specifies whether the NSSP signal is enabled or not .
                                                      This parameter can be a value of @ref SPI_NSSP_Mode
-                                                     This mode is activated by the SSOM bit in the SPIx_CR2 register and
-                                                     it takes effect only if the SPI interface is configured as Motorola SPI
-                                                     master (FRF=0). */
+                                                     This mode is activated by the SSOM bit in the SPIx_CR2 register
+                                                     and it takes effect only if the SPI interface is configured
+                                                     as Motorola SPI master (FRF=0). */
 
-  uint32_t NSSPolarity;                       /*!< Specifies which level of SS input/output external signal (present on SS pin) is
-                                                     considered as active one.
+  uint32_t NSSPolarity;                       /*!< Specifies which level of SS input/output external signal
+                                                     (present on SS pin) is considered as active one.
                                                      This parameter can be a value of @ref SPI_NSS_Polarity */
 
   uint32_t FifoThreshold;                     /*!< Specifies the FIFO threshold level.
                                                      This parameter can be a value of @ref SPI_Fifo_Threshold */
 
-  uint32_t TxCRCInitializationPattern;        /*!< Specifies the transmitter CRC initialization Pattern used for the CRC calculation.
-                                                     This parameter can be a value of @ref SPI_CRC_Calculation_Initialization_Pattern */
+  uint32_t TxCRCInitializationPattern;        /*!< Specifies the transmitter CRC initialization Pattern used for
+                                                     the CRC calculation. This parameter can be a value of
+                                                     @ref SPI_CRC_Calculation_Initialization_Pattern */
 
-  uint32_t RxCRCInitializationPattern;        /*!< Specifies the receiver CRC initialization Pattern used for the CRC calculation.
-                                                     This parameter can be a value of @ref SPI_CRC_Calculation_Initialization_Pattern */
+  uint32_t RxCRCInitializationPattern;        /*!< Specifies the receiver CRC initialization Pattern used for
+                                                     the CRC calculation. This parameter can be a value of
+                                                     @ref SPI_CRC_Calculation_Initialization_Pattern */
 
-  uint32_t MasterSSIdleness;                  /*!< Specifies an extra delay, expressed in number of SPI clock cycle periods, inserted
-                                                     additionally between active edge of SS and first data transaction start in master mode.
+  uint32_t MasterSSIdleness;                  /*!< Specifies an extra delay, expressed in number of SPI clock cycle
+                                                     periods, inserted additionally between active edge of SS
+                                                     and first data transaction start in master mode.
                                                      This parameter can be a value of @ref SPI_Master_SS_Idleness */
 
-  uint32_t MasterInterDataIdleness;           /*!< Specifies minimum time delay (expressed in SPI clock cycles periods) inserted between
-                                                     two consecutive data frames in master mode
-                                                     This parameter can be a value of @ref SPI_Master_InterData_Idleness */
+  uint32_t MasterInterDataIdleness;           /*!< Specifies minimum time delay (expressed in SPI clock cycles periods)
+                                                     inserted between two consecutive data frames in master mode.
+                                                     This parameter can be a value of
+                                                     @ref SPI_Master_InterData_Idleness */
 
-  uint32_t MasterReceiverAutoSusp;            /*!< Control continuous SPI transfer in master receiver mode and automatic management
-                                                     in order to avoid overrun condition.
+  uint32_t MasterReceiverAutoSusp;            /*!< Control continuous SPI transfer in master receiver mode
+                                                     and automatic management in order to avoid overrun condition.
                                                      This parameter can be a value of @ref SPI_Master_RX_AutoSuspend*/
 
   uint32_t MasterKeepIOState;                 /*!< Control of Alternate function GPIOs state
@@ -126,8 +132,8 @@ typedef struct
   uint32_t ReadyMasterManagement;             /*!< Specifies if RDY Signal is managed internally or not.
                                                      This parameter can be a value of @ref SPI_RDY_Master_Management */
 
-  uint32_t ReadyPolarity;                     /*!< Specifies which level of RDY Signal input (present on RDY pin) is considered
-                                                     as active one.
+  uint32_t ReadyPolarity;                     /*!< Specifies which level of RDY Signal input (present on RDY pin)
+                                                     is considered as active one.
                                                      This parameter can be a value of @ref SPI_RDY_Polarity */
 } SPI_InitTypeDef;
 
@@ -259,7 +265,6 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
 #define HAL_SPI_ERROR_TIMEOUT                         (0x00000100UL)   /*!< Timeout error                          */
 #define HAL_SPI_ERROR_UNKNOW                          (0x00000200UL)   /*!< Unknown error                          */
 #define HAL_SPI_ERROR_NOT_SUPPORTED                   (0x00000400UL)   /*!< Requested operation not supported      */
-#define HAL_SPI_ERROR_RELOAD                          (0x00000800UL)   /*!< Reload error                           */
 #if (USE_HAL_SPI_REGISTER_CALLBACKS == 1UL)
 #define HAL_SPI_ERROR_INVALID_CALLBACK                (0x00001000UL)   /*!< Invalid Callback error                 */
 #endif /* USE_HAL_SPI_REGISTER_CALLBACKS */
@@ -363,6 +368,7 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
 /** @defgroup SPI_BaudRate_Prescaler SPI BaudRate Prescaler
   * @{
   */
+#define SPI_BAUDRATEPRESCALER_BYPASS                  (0x80000000UL)
 #define SPI_BAUDRATEPRESCALER_2                       (0x00000000UL)
 #define SPI_BAUDRATEPRESCALER_4                       (0x10000000UL)
 #define SPI_BAUDRATEPRESCALER_8                       (0x20000000UL)
@@ -593,7 +599,6 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
 #define SPI_IT_CRCERR                   SPI_IER_CRCEIE
 #define SPI_IT_FRE                      SPI_IER_TIFREIE
 #define SPI_IT_MODF                     SPI_IER_MODFIE
-#define SPI_IT_TSERF                    SPI_IER_TSERFIE
 #define SPI_IT_ERR                      (SPI_IT_UDR | SPI_IT_OVR | SPI_IT_FRE | SPI_IT_MODF | SPI_IT_CRCERR)
 /**
   * @}
@@ -612,7 +617,6 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
 #define SPI_FLAG_CRCERR                 SPI_SR_CRCE    /* SPI Error flag  : CRC error flag                           */
 #define SPI_FLAG_FRE                    SPI_SR_TIFRE   /* SPI Error flag  : TI mode frame format error flag          */
 #define SPI_FLAG_MODF                   SPI_SR_MODF    /* SPI Error flag  : Mode fault flag                          */
-#define SPI_FLAG_TSERF                  SPI_SR_TSERF   /* SPI status flag : Additional number of data reloaded flag  */
 #define SPI_FLAG_SUSP                   SPI_SR_SUSP    /* SPI status flag : Transfer suspend complete flag           */
 #define SPI_FLAG_TXC                    SPI_SR_TXC     /* SPI status flag : TxFIFO transmission complete flag        */
 #define SPI_FLAG_FRLVL                  SPI_SR_RXPLVL  /* SPI status flag : Fifo reception level flag                */
@@ -624,10 +628,10 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
 /** @defgroup SPI_reception_fifo_status_level SPI Reception FIFO Status Level
   * @{
   */
-#define SPI_RX_FIFO_0PACKET                           (0x00000000UL)                      /* 0 or multiple of 4 packets available in the RxFIFO */
-#define SPI_RX_FIFO_1PACKET                           (SPI_SR_RXPLVL_0)
-#define SPI_RX_FIFO_2PACKET                           (SPI_SR_RXPLVL_1)
-#define SPI_RX_FIFO_3PACKET                           (SPI_SR_RXPLVL_1 | SPI_SR_RXPLVL_0)
+#define SPI_RX_FIFO_0PACKET             (0x00000000UL)         /* 0 or multiple of 4 packets available in the RxFIFO */
+#define SPI_RX_FIFO_1PACKET             (SPI_SR_RXPLVL_0)
+#define SPI_RX_FIFO_2PACKET             (SPI_SR_RXPLVL_1)
+#define SPI_RX_FIFO_3PACKET             (SPI_SR_RXPLVL_1 | SPI_SR_RXPLVL_0)
 /**
   * @}
   */
@@ -654,7 +658,7 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
                                                      } while(0)
 #else
 #define __HAL_SPI_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->State = HAL_SPI_STATE_RESET)
-#endif
+#endif /* USE_HAL_SPI_REGISTER_CALLBACKS */
 
 /** @brief  Enable the specified SPI interrupts.
   * @param  __HANDLE__: specifies the SPI Handle.
@@ -671,7 +675,6 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
   *            @arg SPI_IT_CRCERR : CRC error interrupt
   *            @arg SPI_IT_FRE    : TI mode frame format error interrupt
   *            @arg SPI_IT_MODF   : Mode fault interrupt
-  *            @arg SPI_IT_TSERF  : Additional number of data reloaded interrupt
   *            @arg SPI_IT_ERR    : Error interrupt
   * @retval None
   */
@@ -692,7 +695,6 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
   *            @arg SPI_IT_CRCERR : CRC error interrupt
   *            @arg SPI_IT_FRE    : TI mode frame format error interrupt
   *            @arg SPI_IT_MODF   : Mode fault interrupt
-  *            @arg SPI_IT_TSERF  : Additional number of data reloaded interrupt
   *            @arg SPI_IT_ERR    : Error interrupt
   * @retval None
   */
@@ -713,11 +715,11 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
   *            @arg SPI_IT_CRCERR : CRC error interrupt
   *            @arg SPI_IT_FRE    : TI mode frame format error interrupt
   *            @arg SPI_IT_MODF   : Mode fault interrupt
-  *            @arg SPI_IT_TSERF  : Additional number of data reloaded interrupt
   *            @arg SPI_IT_ERR    : Error interrupt
   * @retval The new state of __IT__ (TRUE or FALSE).
   */
-#define __HAL_SPI_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) ((((__HANDLE__)->Instance->IER & (__INTERRUPT__)) == (__INTERRUPT__)) ? SET : RESET)
+#define __HAL_SPI_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__) ((((__HANDLE__)->Instance->IER & \
+                                                              (__INTERRUPT__)) == (__INTERRUPT__)) ? SET : RESET)
 
 /** @brief  Check whether the specified SPI flag is set or not.
   * @param  __HANDLE__: specifies the SPI Handle.
@@ -734,7 +736,6 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
   *            @arg SPI_FLAG_CRCERR : CRC error flag
   *            @arg SPI_FLAG_FRE    : TI mode frame format error flag
   *            @arg SPI_FLAG_MODF   : Mode fault flag
-  *            @arg SPI_FLAG_TSERF  : Additional number of data reloaded flag
   *            @arg SPI_FLAG_SUSP   : Transfer suspend complete flag
   *            @arg SPI_FLAG_TXC    : TxFIFO transmission complete flag
   *            @arg SPI_FLAG_FRLVL  : Fifo reception level flag
@@ -791,12 +792,6 @@ typedef  void (*pSPI_CallbackTypeDef)(SPI_HandleTypeDef *hspi); /*!< pointer to 
   */
 #define __HAL_SPI_CLEAR_SUSPFLAG(__HANDLE__) SET_BIT((__HANDLE__)->Instance->IFCR , SPI_IFCR_SUSPC)
 
-/** @brief  Clear the SPI TSERF pending flag.
-  * @param  __HANDLE__: specifies the SPI Handle.
-  * @retval None
-  */
-#define __HAL_SPI_CLEAR_TSERFFLAG(__HANDLE__) SET_BIT((__HANDLE__)->Instance->IFCR , SPI_IFCR_TSERFC)
-
 /** @brief  Enable the SPI peripheral.
   * @param  __HANDLE__: specifies the SPI Handle.
   * @retval None
@@ -833,7 +828,8 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi);
 
 /* Callbacks Register/UnRegister functions  ***********************************/
 #if (USE_HAL_SPI_REGISTER_CALLBACKS == 1U)
-HAL_StatusTypeDef HAL_SPI_RegisterCallback(SPI_HandleTypeDef *hspi, HAL_SPI_CallbackIDTypeDef CallbackID, pSPI_CallbackTypeDef pCallback);
+HAL_StatusTypeDef HAL_SPI_RegisterCallback(SPI_HandleTypeDef *hspi, HAL_SPI_CallbackIDTypeDef CallbackID,
+                                           pSPI_CallbackTypeDef pCallback);
 HAL_StatusTypeDef HAL_SPI_UnRegisterCallback(SPI_HandleTypeDef *hspi, HAL_SPI_CallbackIDTypeDef CallbackID);
 #endif /* USE_HAL_SPI_REGISTER_CALLBACKS */
 /**
@@ -850,11 +846,13 @@ HAL_StatusTypeDef HAL_SPI_TransmitReceive(SPI_HandleTypeDef *hspi, uint8_t *pTxD
                                           uint32_t Timeout);
 HAL_StatusTypeDef HAL_SPI_Transmit_IT(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size);
 HAL_StatusTypeDef HAL_SPI_Receive_IT(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size);
-HAL_StatusTypeDef HAL_SPI_TransmitReceive_IT(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size);
+HAL_StatusTypeDef HAL_SPI_TransmitReceive_IT(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData,
+                                             uint16_t Size);
 
 HAL_StatusTypeDef HAL_SPI_Transmit_DMA(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size);
 HAL_StatusTypeDef HAL_SPI_Receive_DMA(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size);
-HAL_StatusTypeDef HAL_SPI_TransmitReceive_DMA(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size);
+HAL_StatusTypeDef HAL_SPI_TransmitReceive_DMA(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData,
+                                              uint16_t Size);
 
 
 HAL_StatusTypeDef HAL_SPI_DMAPause(SPI_HandleTypeDef *hspi);
@@ -922,15 +920,13 @@ uint32_t             HAL_SPI_GetError(SPI_HandleTypeDef *hspi);
 
 #define IS_SPI_DIRECTION_2LINES(MODE) ((MODE) == SPI_DIRECTION_2LINES)
 
-#define IS_SPI_DIRECTION_2LINES_OR_1LINE_2LINES_TXONLY(MODE) (                         \
-                                                    ((MODE) == SPI_DIRECTION_2LINES)|| \
-                                                    ((MODE) == SPI_DIRECTION_1LINE) || \
-                                                    ((MODE) == SPI_DIRECTION_2LINES_TXONLY))
+#define IS_SPI_DIRECTION_2LINES_OR_1LINE_2LINES_TXONLY(MODE) (((MODE) == SPI_DIRECTION_2LINES)|| \
+                                                              ((MODE) == SPI_DIRECTION_1LINE) || \
+                                                              ((MODE) == SPI_DIRECTION_2LINES_TXONLY))
 
-#define IS_SPI_DIRECTION_2LINES_OR_1LINE_2LINES_RXONLY(MODE) (                         \
-                                                    ((MODE) == SPI_DIRECTION_2LINES)|| \
-                                                    ((MODE) == SPI_DIRECTION_1LINE) || \
-                                                    ((MODE) == SPI_DIRECTION_2LINES_RXONLY))
+#define IS_SPI_DIRECTION_2LINES_OR_1LINE_2LINES_RXONLY(MODE) (((MODE) == SPI_DIRECTION_2LINES)|| \
+                                                              ((MODE) == SPI_DIRECTION_1LINE) || \
+                                                              ((MODE) == SPI_DIRECTION_2LINES_RXONLY))
 
 #define IS_SPI_DATASIZE(DATASIZE)                  (((DATASIZE) == SPI_DATASIZE_32BIT) || \
                                                     ((DATASIZE) == SPI_DATASIZE_31BIT) || \

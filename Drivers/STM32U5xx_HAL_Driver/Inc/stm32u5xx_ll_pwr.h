@@ -131,8 +131,8 @@ extern "C" {
 #define LL_PWR_SRAM1_STOP_PAGE1_RETENTION (PWR_CR2_SRAM1PDS1) /*!< SRAM1 page 1 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
 #define LL_PWR_SRAM1_STOP_PAGE2_RETENTION (PWR_CR2_SRAM1PDS2) /*!< SRAM1 page 2 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
 #define LL_PWR_SRAM1_STOP_PAGE3_RETENTION (PWR_CR2_SRAM1PDS3) /*!< SRAM1 page 3 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
-#define LL_PWR_SRAM1_STOP_FULL_RETENTION  (PWR_CR2_SRAM1PDS1 | PWR_CR2_SRAM1PDS2 | \
-                                           PWR_CR2_SRAM1PDS3) /*!< SRAM1 all pages retention in Stop mode (Stop 0, 1, 2, 3)      */
+#define LL_PWR_SRAM1_STOP_1_3_RETENTION   (PWR_CR2_SRAM1PDS1 | PWR_CR2_SRAM1PDS2 | \
+                                           PWR_CR2_SRAM1PDS3) /*!< SRAM1 pages (1 to 3) retention in Stop mode (Stop 0, 1, 2, 3) */
 /**
   * @}
   */
@@ -151,19 +151,18 @@ extern "C" {
 /** @defgroup PWR_LL_EC_SRAM3_STOP_CONTENTS_RETENTION PWR SRAM3 Content Retention in Stop Mode
   * @{
   */
-#define LL_PWR_SRAM3_STOP_NO_RETENTION    0U                                      /*!< SRAM3 no retention in Stop mode (Stop 0, 1, 2, 3)             */
-#define LL_PWR_SRAM3_STOP_PAGE1_RETENTION (PWR_CR2_SRAM3PDS1)                     /*!< SRAM3 page 1 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
-#define LL_PWR_SRAM3_STOP_PAGE2_RETENTION (PWR_CR2_SRAM3PDS2)                     /*!< SRAM3 page 2 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
-#define LL_PWR_SRAM3_STOP_PAGE3_RETENTION (PWR_CR2_SRAM3PDS3)                     /*!< SRAM3 page 3 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
-#define LL_PWR_SRAM3_STOP_PAGE4_RETENTION (PWR_CR2_SRAM3PDS4)                     /*!< SRAM3 page 4 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
-#define LL_PWR_SRAM3_STOP_PAGE5_RETENTION (PWR_CR2_SRAM3PDS5)                     /*!< SRAM3 page 5 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
-#define LL_PWR_SRAM3_STOP_PAGE6_RETENTION (PWR_CR2_SRAM3PDS6)                     /*!< SRAM3 page 6 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
-#define LL_PWR_SRAM3_STOP_PAGE7_RETENTION (PWR_CR2_SRAM3PDS7)                     /*!< SRAM3 page 7 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
-#define LL_PWR_SRAM3_STOP_PAGE8_RETENTION (PWR_CR2_SRAM3PDS8)                     /*!< SRAM3 page 8 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3) */
-#define LL_PWR_SRAM3_STOP_FULL_RETENTION  (PWR_CR2_SRAM3PDS1 | PWR_CR2_SRAM3PDS2 | \
-                                           PWR_CR2_SRAM3PDS3 | PWR_CR2_SRAM3PDS4 | \
-                                           PWR_CR2_SRAM3PDS5 | PWR_CR2_SRAM3PDS6 | \
-                                           PWR_CR2_SRAM3PDS7 | PWR_CR2_SRAM3PDS8) /*!< SRAM3 all pages retention in Stop modes      (Stop 0, 1, 2, 3) */
+#define LL_PWR_SRAM3_STOP_NO_RETENTION    0U                                      /*!< SRAM3 no retention in Stop mode (Stop 0, 1, 2, 3)              */
+#define LL_PWR_SRAM3_STOP_PAGE1_RETENTION (PWR_CR2_SRAM3PDS1)                     /*!< SRAM3 page 1 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3)  */
+#define LL_PWR_SRAM3_STOP_PAGE2_RETENTION (PWR_CR2_SRAM3PDS2)                     /*!< SRAM3 page 2 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3)  */
+#define LL_PWR_SRAM3_STOP_PAGE3_RETENTION (PWR_CR2_SRAM3PDS3)                     /*!< SRAM3 page 3 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3)  */
+#define LL_PWR_SRAM3_STOP_PAGE4_RETENTION (PWR_CR2_SRAM3PDS4)                     /*!< SRAM3 page 4 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3)  */
+#define LL_PWR_SRAM3_STOP_PAGE5_RETENTION (PWR_CR2_SRAM3PDS5)                     /*!< SRAM3 page 5 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3)  */
+#define LL_PWR_SRAM3_STOP_PAGE6_RETENTION (PWR_CR2_SRAM3PDS6)                     /*!< SRAM3 page 6 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3)  */
+#define LL_PWR_SRAM3_STOP_PAGE7_RETENTION (PWR_CR2_SRAM3PDS7)                     /*!< SRAM3 page 7 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3)  */
+#define LL_PWR_SRAM3_STOP_PAGE8_RETENTION (PWR_CR2_SRAM3PDS8)                     /*!< SRAM3 page 8 (64 KB) retention in Stop mode (Stop 0, 1, 2, 3)  */
+#define LL_PWR_SRAM3_STOP_1_8_RETENTION   (PWR_CR2_SRAM3PDS1 | PWR_CR2_SRAM3PDS2 | PWR_CR2_SRAM3PDS3 | \
+                                           PWR_CR2_SRAM3PDS4 | PWR_CR2_SRAM3PDS5 | PWR_CR2_SRAM3PDS6 | \
+                                           PWR_CR2_SRAM3PDS7 | PWR_CR2_SRAM3PDS8) /*!< SRAM3 pages (1 to 8) retention in Stop modes (Stop 0, 1, 2, 3) */
 /**
   * @}
   */
@@ -186,11 +185,11 @@ extern "C" {
   * @}
   */
 
-/** @defgroup PWR_LL_EC_DCACHERAM_STOP_CONTENTS_RETENTION PWR DCACHE Content Retention in Stop Mode
+/** @defgroup PWR_LL_EC_DCACHE1RAM_STOP_CONTENTS_RETENTION PWR DCACHE1 Content Retention in Stop Mode
   * @{
   */
-#define LL_PWR_DCACHERAM_STOP_NO_RETENTION    0U               /*!< DCACHE SRAM no retention in Stop mode (Stop 0, 1, 2) */
-#define LL_PWR_DCACHERAM_STOP_FULL_RETENTION  PWR_CR2_DCRAMPDS /*!< DCACHE SRAM retention in Stop mode (Stop 0, 1, 2)    */
+#define LL_PWR_DCACHE1RAM_STOP_NO_RETENTION   0U                /*!< DCACHE1 SRAM no retention in Stop mode (Stop 0, 1, 2) */
+#define LL_PWR_DCACHE1RAM_STOP_FULL_RETENTION PWR_CR2_DC1RAMPDS /*!< DCACHE1 SRAM retention in Stop mode (Stop 0, 1, 2)    */
 /**
   * @}
   */
@@ -405,10 +404,6 @@ extern "C" {
 #define LL_PWR_VB_SEC   PWR_SECCFGR_WUP8SEC /*!< Backup domain secure mode                     */
 #define LL_PWR_APC_NSEC 0U                  /*!< Pull-up/pull-down nsecure mode                */
 #define LL_PWR_APC_SEC  PWR_SECCFGR_WUP8SEC /*!< Pull-up/pull-down secure mode                 */
-/**
-  * @}
-  */
-
 /**
   * @}
   */
@@ -654,40 +649,40 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM4RunRetention(void)
 }
 
 /**
-  * @brief  Set the SRAM1 page(s) retention in Stop mode.
-  * @rmtoll CR2    SRAM1PDS1       LL_PWR_SetSRAM1StopRetention\n
-  * @rmtoll CR2    SRAM1PDS2       LL_PWR_SetSRAM1StopRetention\n
-  * @rmtoll CR2    SRAM1PDS3       LL_PWR_SetSRAM1StopRetention
+  * @brief  Set the SRAM1 page(s) (From page 1 to page 3) retention in Stop mode.
+  * @rmtoll CR2    SRAM1PDS1       LL_PWR_SetSRAM1StopRetention_1_3\n
+  * @rmtoll CR2    SRAM1PDS2       LL_PWR_SetSRAM1StopRetention_1_3\n
+  * @rmtoll CR2    SRAM1PDS3       LL_PWR_SetSRAM1StopRetention_1_3
   * @param  SRAM1PageRetention : This parameter can be one of the following values:
   *         @arg @ref LL_PWR_SRAM1_STOP_NO_RETENTION
-  *         @arg @ref LL_PWR_SRAM1_STOP_FULL_RETENTION
+  *         @arg @ref LL_PWR_SRAM1_STOP_1_3_RETENTION
   *                      Or can be a combination of the following values:
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE1_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE2_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE3_RETENTION
   * @retval None
   */
-__STATIC_INLINE void LL_PWR_SetSRAM1StopRetention(uint32_t SRAM1PageRetention)
+__STATIC_INLINE void LL_PWR_SetSRAM1StopRetention_1_3(uint32_t SRAM1PageRetention)
 {
-  MODIFY_REG(PWR->CR2, LL_PWR_SRAM1_STOP_FULL_RETENTION, ((~SRAM1PageRetention) & LL_PWR_SRAM1_STOP_FULL_RETENTION));
+  MODIFY_REG(PWR->CR2, LL_PWR_SRAM1_STOP_1_3_RETENTION, ((~SRAM1PageRetention) & LL_PWR_SRAM1_STOP_1_3_RETENTION));
 }
 
 /**
-  * @brief  Get the SRAM1 page(s) retention in Stop mode.
-  * @rmtoll CR2    SRAM1PDS1       LL_PWR_GetSRAM1StopRetention\n
-  * @rmtoll CR2    SRAM1PDS2       LL_PWR_GetSRAM1StopRetention\n
-  * @rmtoll CR2    SRAM1PDS3       LL_PWR_GetSRAM1StopRetention
+  * @brief  Get the SRAM1 page(s) (From page 1 to page 3) retention in Stop mode.
+  * @rmtoll CR2    SRAM1PDS1       LL_PWR_GetSRAM1StopRetention_1_3\n
+  * @rmtoll CR2    SRAM1PDS2       LL_PWR_GetSRAM1StopRetention_1_3\n
+  * @rmtoll CR2    SRAM1PDS3       LL_PWR_GetSRAM1StopRetention_1_3
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_SRAM1_STOP_NO_RETENTION
-  *         @arg @ref LL_PWR_SRAM1_STOP_FULL_RETENTION
+  *         @arg @ref LL_PWR_SRAM1_STOP_1_3_RETENTION
   *         Or a combination of the following values:
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE1_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE2_RETENTION
   *         @arg @ref LL_PWR_SRAM1_STOP_PAGE3_RETENTION
   */
-__STATIC_INLINE uint32_t LL_PWR_GetSRAM1StopRetention(void)
+__STATIC_INLINE uint32_t LL_PWR_GetSRAM1StopRetention_1_3(void)
 {
-  return ((~(READ_BIT(PWR->CR2, LL_PWR_SRAM1_STOP_FULL_RETENTION))) & LL_PWR_SRAM1_STOP_FULL_RETENTION);
+  return ((~(READ_BIT(PWR->CR2, LL_PWR_SRAM1_STOP_1_3_RETENTION))) & LL_PWR_SRAM1_STOP_1_3_RETENTION);
 }
 
 /**
@@ -722,18 +717,18 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM2StopRetention(void)
 }
 
 /**
-  * @brief  Set the SRAM3 page(s) retention in Stop mode.
-  * @rmtoll CR2    SRAM3PDS1       LL_PWR_SetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS2       LL_PWR_SetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS3       LL_PWR_SetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS4       LL_PWR_SetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS5       LL_PWR_SetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS6       LL_PWR_SetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS7       LL_PWR_SetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS8       LL_PWR_SetSRAM3StopRetention
+  * @brief  Set the SRAM3 page(s) (From page 1 to page 8) retention in Stop mode.
+  * @rmtoll CR2    SRAM3PDS1       LL_PWR_SetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS2       LL_PWR_SetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS3       LL_PWR_SetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS4       LL_PWR_SetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS5       LL_PWR_SetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS6       LL_PWR_SetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS7       LL_PWR_SetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS8       LL_PWR_SetSRAM3StopRetention_1_8
   * @param  SRAM3PageRetention : This parameter can be one of the following values:
   *         @arg @ref LL_PWR_SRAM3_STOP_NO_RETENTION
-  *         @arg @ref LL_PWR_SRAM3_STOP_FULL_RETENTION
+  *         @arg @ref LL_PWR_SRAM3_STOP_1_8_RETENTION
   *                      Or can be a combination of the following values:
   *         @arg @ref LL_PWR_SRAM3_STOP_PAGE1_RETENTION
   *         @arg @ref LL_PWR_SRAM3_STOP_PAGE2_RETENTION
@@ -745,24 +740,24 @@ __STATIC_INLINE uint32_t LL_PWR_GetSRAM2StopRetention(void)
   *         @arg @ref LL_PWR_SRAM3_STOP_PAGE8_RETENTION
   * @retval None
   */
-__STATIC_INLINE void LL_PWR_SetSRAM3StopRetention(uint32_t SRAM3PageRetention)
+__STATIC_INLINE void LL_PWR_SetSRAM3StopRetention_1_8(uint32_t SRAM3PageRetention)
 {
-  MODIFY_REG(PWR->CR2, LL_PWR_SRAM3_STOP_FULL_RETENTION, ((~SRAM3PageRetention) & LL_PWR_SRAM3_STOP_FULL_RETENTION));
+  MODIFY_REG(PWR->CR2, LL_PWR_SRAM3_STOP_1_8_RETENTION, ((~SRAM3PageRetention) & LL_PWR_SRAM3_STOP_1_8_RETENTION));
 }
 
 /**
-  * @brief  Get the SRAM3 page(s) retention in Stop mode.
-  * @rmtoll CR2    SRAM3PDS1       LL_PWR_GetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS2       LL_PWR_GetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS3       LL_PWR_GetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS4       LL_PWR_GetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS5       LL_PWR_GetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS6       LL_PWR_GetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS7       LL_PWR_GetSRAM3StopRetention\n
-  * @rmtoll CR2    SRAM3PDS8       LL_PWR_GetSRAM3StopRetention
+  * @brief  Get the SRAM3 page(s) (From page 1 to page 8) retention in Stop mode.
+  * @rmtoll CR2    SRAM3PDS1       LL_PWR_GetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS2       LL_PWR_GetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS3       LL_PWR_GetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS4       LL_PWR_GetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS5       LL_PWR_GetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS6       LL_PWR_GetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS7       LL_PWR_GetSRAM3StopRetention_1_8\n
+  * @rmtoll CR2    SRAM3PDS8       LL_PWR_GetSRAM3StopRetention_1_8
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_PWR_SRAM3_STOP_NO_RETENTION
-  *         @arg @ref LL_PWR_SRAM3_STOP_FULL_RETENTION
+  *         @arg @ref LL_PWR_SRAM3_STOP_1_8_RETENTION
   *                      Or can be a combination of the following values:
   *         @arg @ref LL_PWR_SRAM3_STOP_PAGE1_RETENTION
   *         @arg @ref LL_PWR_SRAM3_STOP_PAGE2_RETENTION
@@ -773,9 +768,9 @@ __STATIC_INLINE void LL_PWR_SetSRAM3StopRetention(uint32_t SRAM3PageRetention)
   *         @arg @ref LL_PWR_SRAM3_STOP_PAGE7_RETENTION
   *         @arg @ref LL_PWR_SRAM3_STOP_PAGE8_RETENTION
   */
-__STATIC_INLINE uint32_t LL_PWR_GetSRAM3StopRetention(void)
+__STATIC_INLINE uint32_t LL_PWR_GetSRAM3StopRetention_1_8(void)
 {
-  return ((~(READ_BIT(PWR->CR2, LL_PWR_SRAM3_STOP_FULL_RETENTION))) & LL_PWR_SRAM3_STOP_FULL_RETENTION);
+  return ((~(READ_BIT(PWR->CR2, LL_PWR_SRAM3_STOP_1_8_RETENTION))) & LL_PWR_SRAM3_STOP_1_8_RETENTION);
 }
 
 /**
@@ -830,29 +825,29 @@ __STATIC_INLINE uint32_t LL_PWR_GetICacheRAMStopRetention(void)
 }
 
 /**
-  * @brief  Set the DCACHE SRAM page retention in Stop mode.
-  * @rmtoll CR2    DCRAMPDS       LL_PWR_SetDCacheRAMStopRetention\n
-  * @param  DCachePageRetention : This parameter can be one of the following values:
-  *         @arg @ref LL_PWR_DCACHERAM_STOP_NO_RETENTION
-  *         @arg @ref LL_PWR_DCACHERAM_STOP_FULL_RETENTION
+  * @brief  Set the DCACHE1 SRAM page retention in Stop mode.
+  * @rmtoll CR2    DC1RAMPDS       LL_PWR_SetDCache1RAMStopRetention\n
+  * @param  DCache1PageRetention : This parameter can be one of the following values:
+  *         @arg @ref LL_PWR_DCACHE1RAM_STOP_NO_RETENTION
+  *         @arg @ref LL_PWR_DCACHE1RAM_STOP_FULL_RETENTION
   * @retval None
   */
-__STATIC_INLINE void LL_PWR_SetDCacheRAMStopRetention(uint32_t DCachePageRetention)
+__STATIC_INLINE void LL_PWR_SetDCache1RAMStopRetention(uint32_t DCache1PageRetention)
 {
-  MODIFY_REG(PWR->CR2, LL_PWR_DCACHERAM_STOP_FULL_RETENTION,
-             ((~DCachePageRetention) & LL_PWR_DCACHERAM_STOP_FULL_RETENTION));
+  MODIFY_REG(PWR->CR2, LL_PWR_DCACHE1RAM_STOP_FULL_RETENTION,
+             ((~DCache1PageRetention) & LL_PWR_DCACHE1RAM_STOP_FULL_RETENTION));
 }
 
 /**
-  * @brief  Get the DCACHE SRAM page retention in Stop mode.
-  * @rmtoll CR2    DCRAMPDS       LL_PWR_GetDCacheRAMStopRetention
+  * @brief  Get the DCACHE1 SRAM page retention in Stop mode.
+  * @rmtoll CR2    DC1RAMPDS       LL_PWR_GetDCache1RAMStopRetention
   * @retval Returned value can be one of the following values:
-  *         @arg @ref LL_PWR_DCACHERAM_STOP_NO_RETENTION
-  *         @arg @ref LL_PWR_DCACHERAM_STOP_FULL_RETENTION
+  *         @arg @ref LL_PWR_DCACHE1RAM_STOP_NO_RETENTION
+  *         @arg @ref LL_PWR_DCACHE1RAM_STOP_FULL_RETENTION
   */
-__STATIC_INLINE uint32_t LL_PWR_GetDCacheRAMStopRetention(void)
+__STATIC_INLINE uint32_t LL_PWR_GetDCache1RAMStopRetention(void)
 {
-  return ((~(READ_BIT(PWR->CR2, LL_PWR_DCACHERAM_STOP_FULL_RETENTION))) & LL_PWR_DCACHERAM_STOP_FULL_RETENTION);
+  return ((~(READ_BIT(PWR->CR2, LL_PWR_DCACHE1RAM_STOP_FULL_RETENTION))) & LL_PWR_DCACHE1RAM_STOP_FULL_RETENTION);
 }
 
 /**
@@ -909,7 +904,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetPeriphRAMStopRetention(void)
 
 /**
   * @brief  Set the PKA32 SRAM page retention in Stop mode.
-  * @rmtoll CR2    PKARAMPDS       LL_PWR_SetPKARAMStopRetention\n
+  * @rmtoll CR2    PKARAMPDS       LL_PWR_SetPKARAMStopRetention
   * @param  PKARAMPageRetention : This parameter can be one of the following values:
   *         @arg @ref LL_PWR_PKARAM_STOP_NO_RETENTION
   *         @arg @ref LL_PWR_PKARAM_STOP_FULL_RETENTION
@@ -1844,13 +1839,11 @@ __STATIC_INLINE void LL_PWR_DisableUCPDDeadBattery(void)
   *         to disable it in all cases, either to stop this pull-down or to hand over
   *         control to the UCPD (which should therefore be initialized before doing the disable).
   * @rmtoll UCPDR          UCPD_DBDIS           LL_PWR_IsEnabledUCPDDeadBattery
-  * @retval State of bit.
+  * @retval State of feature (1 : enabled; 0 : disabled).
   */
 __STATIC_INLINE uint32_t LL_PWR_IsEnabledUCPDDeadBattery(void)
 {
-
-  return ((READ_BIT(PWR->UCPDR, PWR_UCPDR_UCPD_DBDIS) == (PWR_UCPDR_UCPD_DBDIS)) ? 1UL : 0UL);
-
+  return ((READ_BIT(PWR->UCPDR, PWR_UCPDR_UCPD_DBDIS) == (PWR_UCPDR_UCPD_DBDIS)) ? 0UL : 1UL);
 }
 
 /**
@@ -2617,10 +2610,6 @@ ErrorStatus LL_PWR_DeInit(void);
   */
 #endif /* defined (USE_FULL_LL_DRIVER) */
 
-
-/**
-  * @}
-  */
 
 /**
   * @}

@@ -9,6 +9,18 @@
   *           + Invalidate functions
   *           + Monitoring management
   *           + Memory address remap management
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                         ##### ICACHE main features #####
@@ -44,7 +56,8 @@
         @ref HAL_ICACHE_InvalidateCompleteCallback() is called when the invalidate
         procedure is complete. The function @ref HAL_ICACHE_WaitForInvalidateComplete()
         may be called to wait for the end of the invalidate procedure automatically
-        initiated when disabling the Instruction Cache with @ref HAL_ICACHE_Disable()
+        initiated when disabling the Instruction Cache with @ref HAL_ICACHE_Disable().
+        The cache operation is bypassed during the invalidation procedure.
 
     (#) Use the performance monitoring counters for Hit and Miss with the following
         functions: @ref HAL_ICACHE_Monitor_Start(), @ref HAL_ICACHE_Monitor_Stop(),
@@ -56,18 +69,6 @@
         @ref HAL_ICACHE_EnableRemapRegion() and @ref HAL_ICACHE_DisableRemapRegion()
 
   @endverbatim
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -96,6 +97,37 @@
   */
 
 /* Private macros ------------------------------------------------------------*/
+/** @defgroup ICACHE_Private_Macros ICACHE Private Macros
+  * @{
+  */
+
+#define IS_ICACHE_ASSOCIATIVITY_MODE(__MODE__) (((__MODE__) == ICACHE_1WAY) || \
+                                                ((__MODE__) == ICACHE_2WAYS))
+
+#define IS_ICACHE_MONITOR_TYPE(__TYPE__)    (((__TYPE__) == ICACHE_MONITOR_HIT_MISS) || \
+                                             ((__TYPE__) == ICACHE_MONITOR_HIT)      || \
+                                             ((__TYPE__) == ICACHE_MONITOR_MISS))
+
+#define IS_ICACHE_REGION_NUMBER(__NUMBER__) ((__NUMBER__) < 4U)
+
+#define IS_ICACHE_REGION_SIZE(__SIZE__)     (((__SIZE__) == ICACHE_REGIONSIZE_2MB)   || \
+                                             ((__SIZE__) == ICACHE_REGIONSIZE_4MB)   || \
+                                             ((__SIZE__) == ICACHE_REGIONSIZE_8MB)   || \
+                                             ((__SIZE__) == ICACHE_REGIONSIZE_16MB)  || \
+                                             ((__SIZE__) == ICACHE_REGIONSIZE_32MB)  || \
+                                             ((__SIZE__) == ICACHE_REGIONSIZE_64MB)  || \
+                                             ((__SIZE__) == ICACHE_REGIONSIZE_128MB))
+
+#define IS_ICACHE_REGION_TRAFFIC_ROUTE(__TRAFFICROUTE__)  (((__TRAFFICROUTE__) == ICACHE_MASTER1_PORT) || \
+                                                           ((__TRAFFICROUTE__) == ICACHE_MASTER2_PORT))
+
+#define IS_ICACHE_REGION_OUTPUT_BURST_TYPE(__OUTPUTBURSTTYPE_) (((__OUTPUTBURSTTYPE_) == ICACHE_OUTPUT_BURST_WRAP) || \
+                                                                ((__OUTPUTBURSTTYPE_) == ICACHE_OUTPUT_BURST_INCR))
+
+/**
+  * @}
+  */
+
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 
@@ -216,8 +248,12 @@ HAL_StatusTypeDef HAL_ICACHE_Disable(void)
   {
     if ((HAL_GetTick() - tickstart) > ICACHE_DISABLE_TIMEOUT_VALUE)
     {
-      status = HAL_TIMEOUT;
-      break;
+      /* New check to avoid false timeout detection in case of preemption */
+      if (READ_BIT(ICACHE->CR, ICACHE_CR_EN) != 0U)
+      {
+        status = HAL_TIMEOUT;
+        break;
+      }
     }
   }
 
@@ -306,8 +342,12 @@ HAL_StatusTypeDef HAL_ICACHE_WaitForInvalidateComplete(void)
     {
       if ((HAL_GetTick() - tickstart) > ICACHE_INVALIDATE_TIMEOUT_VALUE)
       {
-        status = HAL_TIMEOUT;
-        break;
+        /* New check to avoid false timeout detection in case of preemption */
+        if (READ_BIT(ICACHE->SR, ICACHE_SR_BSYENDF) == 0U)
+        {
+          status = HAL_TIMEOUT;
+          break;
+        }
       }
     }
   }
@@ -430,7 +470,7 @@ void HAL_ICACHE_IRQHandler(void)
   uint32_t itflags   = READ_REG(ICACHE->SR);
   uint32_t itsources = READ_REG(ICACHE->IER);
 
-  /* Check Instruction cache Error interrupt flag  */
+  /* Check Instruction cache Error interrupt flag */
   if (((itflags & itsources) & ICACHE_FLAG_ERROR) != 0U)
   {
     /* Disable error interrupt */
@@ -443,7 +483,7 @@ void HAL_ICACHE_IRQHandler(void)
     HAL_ICACHE_ErrorCallback();
   }
 
-  /* Check Instruction cache BusyEnd interrupt flag  */
+  /* Check Instruction cache BusyEnd interrupt flag */
   if (((itflags & itsources) & ICACHE_FLAG_BUSYEND) != 0U)
   {
     /* Disable end of cache invalidation interrupt */
@@ -500,31 +540,20 @@ __weak void HAL_ICACHE_ErrorCallback(void)
   * @note   The Instruction Cache and the region must be disabled.
   * @param  Region   Region number
                      This parameter can be a value of @arg @ref ICACHE_Region
-  * @param  sRegionConfig  Structure of ICACHE region configuration parameters
+  * @param  pRegionConfig  Pointer to structure of ICACHE region configuration parameters
   * @retval HAL status (HAL_OK/HAL_ERROR)
   */
-HAL_StatusTypeDef  HAL_ICACHE_EnableRemapRegion(uint32_t Region, ICACHE_RegionConfigTypeDef *sRegionConfig)
+HAL_StatusTypeDef  HAL_ICACHE_EnableRemapRegion(uint32_t Region, const ICACHE_RegionConfigTypeDef *const pRegionConfig)
 {
-  const uint16_t ICacheRemapSizeAddressTab[] =
-  {
-    0x00FFU, 0x07FFU, /* Region 2MB:   BaseAddress size 8 bits, RemapAddress size 11 bits */
-    0x00FEU, 0x07FEU, /* Region 4MB:   BaseAddress size 7 bits, RemapAddress size 10 bits */
-    0x00FCU, 0x07FCU, /* Region 8MB:   BaseAddress size 6 bits, RemapAddress size 9 bits  */
-    0x00F8U, 0x07F8U, /* Region 16MB:  BaseAddress size 5 bits, RemapAddress size 8 bits  */
-    0x00F0U, 0x07F0U, /* Region 32MB:  BaseAddress size 4 bits, RemapAddress size 7 bits  */
-    0x00E0U, 0x07E0U, /* Region 64MB:  BaseAddress size 3 bits, RemapAddress size 6 bits  */
-    0x00C0U, 0x07C0U  /* Region 128MB: BaseAddress size 2 bits, RemapAddress size 5 bits  */
-  };
-
   HAL_StatusTypeDef status = HAL_OK;
-  __IO uint32_t *reg;
+  __IO uint32_t *p_reg;
   uint32_t value;
 
   /* Check the parameters */
   assert_param(IS_ICACHE_REGION_NUMBER(Region));
-  assert_param(IS_ICACHE_REGION_SIZE(sRegionConfig->Size));
-  assert_param(IS_ICACHE_REGION_TRAFFIC_ROUTE(sRegionConfig->TrafficRoute));
-  assert_param(IS_ICACHE_REGION_OUTPUT_BURST_TYPE(sRegionConfig->OutputBurstType));
+  assert_param(IS_ICACHE_REGION_SIZE(pRegionConfig->Size));
+  assert_param(IS_ICACHE_REGION_TRAFFIC_ROUTE(pRegionConfig->TrafficRoute));
+  assert_param(IS_ICACHE_REGION_OUTPUT_BURST_TYPE(pRegionConfig->OutputBurstType));
 
   /* Check cache is not enabled */
   if (READ_BIT(ICACHE->CR, ICACHE_CR_EN) != 0U)
@@ -534,20 +563,29 @@ HAL_StatusTypeDef  HAL_ICACHE_EnableRemapRegion(uint32_t Region, ICACHE_RegionCo
   else
   {
     /* Get region control register address */
-    reg = &(ICACHE->CRR0) + (1U * Region);
+    p_reg = &(ICACHE->CRR0) + (1U * Region);
 
     /* Check region is not already enabled */
-    if ((*reg & ICACHE_CRRx_REN) != 0U)
+    if ((*p_reg & ICACHE_CRRx_REN) != 0U)
     {
       status = HAL_ERROR;
     }
     else
     {
-      value  = ((sRegionConfig->BaseAddress & 0x1FFFFFFFU) >> 21U) & ICacheRemapSizeAddressTab[(sRegionConfig->Size - 1U) * 2U];
-      value |= ((sRegionConfig->RemapAddress >> 5U) & ((uint32_t)(ICacheRemapSizeAddressTab[((sRegionConfig->Size - 1U) * 2U) + 1U]) << ICACHE_CRRx_REMAPADDR_Pos));
-      value |= (sRegionConfig->Size << ICACHE_CRRx_RSIZE_Pos) | sRegionConfig->TrafficRoute | sRegionConfig->OutputBurstType;
-
-      *reg = (value | ICACHE_CRRx_REN);
+      /* Region 2MB:   BaseAddress size 8 bits, RemapAddress size 11 bits */
+      /* Region 4MB:   BaseAddress size 7 bits, RemapAddress size 10 bits */
+      /* Region 8MB:   BaseAddress size 6 bits, RemapAddress size 9 bits  */
+      /* Region 16MB:  BaseAddress size 5 bits, RemapAddress size 8 bits  */
+      /* Region 32MB:  BaseAddress size 4 bits, RemapAddress size 7 bits  */
+      /* Region 64MB:  BaseAddress size 3 bits, RemapAddress size 6 bits  */
+      /* Region 128MB: BaseAddress size 2 bits, RemapAddress size 5 bits  */
+      value  = ((pRegionConfig->BaseAddress & 0x1FFFFFFFU) >> 21U) & \
+               (0xFFU & ~(pRegionConfig->Size - 1U));
+      value |= ((pRegionConfig->RemapAddress >> 5U) & \
+                ((uint32_t)(0x7FFU & ~(pRegionConfig->Size - 1U)) << ICACHE_CRRx_REMAPADDR_Pos));
+      value |= (pRegionConfig->Size << ICACHE_CRRx_RSIZE_Pos) | pRegionConfig->TrafficRoute | \
+               pRegionConfig->OutputBurstType;
+      *p_reg = (value | ICACHE_CRRx_REN);
     }
   }
 
@@ -563,7 +601,7 @@ HAL_StatusTypeDef  HAL_ICACHE_EnableRemapRegion(uint32_t Region, ICACHE_RegionCo
 HAL_StatusTypeDef  HAL_ICACHE_DisableRemapRegion(uint32_t Region)
 {
   HAL_StatusTypeDef status = HAL_OK;
-  __IO uint32_t *reg;
+  __IO uint32_t *p_reg;
 
   /* Check the parameters */
   assert_param(IS_ICACHE_REGION_NUMBER(Region));
@@ -576,9 +614,9 @@ HAL_StatusTypeDef  HAL_ICACHE_DisableRemapRegion(uint32_t Region)
   else
   {
     /* Get region control register address */
-    reg = &(ICACHE->CRR0) + (1U * Region);
+    p_reg = &(ICACHE->CRR0) + (1U * Region);
 
-    *reg &= ~ICACHE_CRRx_REN;
+    *p_reg &= ~ICACHE_CRRx_REN;
   }
 
   return status;

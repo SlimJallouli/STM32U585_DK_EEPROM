@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -96,38 +96,41 @@ typedef struct
   */
 typedef struct
 {
-  LPTIM_ClockConfigTypeDef     Clock;               /*!< Specifies the clock parameters */
+  LPTIM_ClockConfigTypeDef     Clock;             /*!< Specifies the clock parameters */
 
-  LPTIM_ULPClockConfigTypeDef  UltraLowPowerClock;  /*!< Specifies the Ultra Low Power clock parameters */
+  LPTIM_ULPClockConfigTypeDef  UltraLowPowerClock;/*!< Specifies the Ultra Low Power clock parameters */
 
-  LPTIM_TriggerConfigTypeDef   Trigger;             /*!< Specifies the Trigger parameters */
+  LPTIM_TriggerConfigTypeDef   Trigger;           /*!< Specifies the Trigger parameters */
 
-  uint32_t                     Period;              /*!< Specifies the period value to be loaded into the active
-                                                    Auto-Reload Register at the next update event.
-                                                    This parameter can be a number between Min_Data = 0x0000 and Max_Data = 0xFFFF.  */
+  uint32_t                     Period;            /*!< Specifies the period value to be loaded into the active
+                                                  Auto-Reload Register at the next update event.
+                                                  This parameter can be a number between
+                                                  Min_Data = 0x0000 and Max_Data = 0xFFFF.  */
 
-  uint32_t                     UpdateMode;          /*!< Specifies whether the update of the autoreload and the compare
-                                                    values is done immediately or after the end of current period.
-                                                    This parameter can be a value of @ref LPTIM_Updating_Mode */
+  uint32_t                     UpdateMode;        /*!< Specifies whether the update of the autoreload and the compare
+                                                  values is done immediately or after the end of current period.
+                                                  This parameter can be a value of @ref LPTIM_Updating_Mode */
 
-  uint32_t                     CounterSource;       /*!< Specifies whether the counter is incremented each internal event
-                                                    or each external event.
-                                                    This parameter can be a value of @ref LPTIM_Counter_Source */
+  uint32_t                     CounterSource;     /*!< Specifies whether the counter is incremented each internal event
+                                                  or each external event.
+                                                  This parameter can be a value of @ref LPTIM_Counter_Source */
 
-  uint32_t                     Input1Source;        /*!< Specifies source selected for input1 (GPIO or comparator output).
-                                                    This parameter can be a value of @ref LPTIM_Input1_Source */
+  uint32_t                     Input1Source;      /*!< Specifies source selected for input1 (GPIO or comparator output).
+                                                  This parameter can be a value of @ref LPTIM_Input1_Source */
 
-  uint32_t                     Input2Source;        /*!< Specifies source selected for input2 (GPIO or comparator output).
-                                                    Note: This parameter is used only for encoder feature so is used only
-                                                    for LPTIM1 instance.
-                                                    This parameter can be a value of @ref LPTIM_Input2_Source */
+  uint32_t                     Input2Source;      /*!< Specifies source selected for input2 (GPIO or comparator output).
+                                                  Note: This parameter is used only for encoder feature so is used only
+                                                  for LPTIM1 instance.
+                                                  This parameter can be a value of @ref LPTIM_Input2_Source */
 
-  uint32_t                     RepetitionCounter;  /*!< Specifies the repetition counter value. Each time the RCR downcounter
-                                                    reaches zero, an update event is generated and counting restarts
-                                                    from the RCR value (N).
-                                                    Note: When using repetition counter the UpdateMode field must be set to
-                                                          LPTIM_UPDATE_ENDOFPERIOD otherwise unpredictable behavior may occur.
-                                                    This parameter must be a number between Min_Data = 0x00 and Max_Data = 0xFF. */
+  uint32_t                     RepetitionCounter;/*!< Specifies the repetition counter value.
+                                                  Each time the RCR downcounter reaches zero, an update event is
+                                                  generated and counting restarts from the RCR value (N).
+                                                  Note: When using repetition counter the UpdateMode field must be
+                                                        set to LPTIM_UPDATE_ENDOFPERIOD otherwise unpredictable
+                                                        behavior may occur.
+                                                  This parameter must be a number between Min_Data = 0x00 and
+                                                  Max_Data = 0xFF. */
 } LPTIM_InitTypeDef;
 
 /**
@@ -135,10 +138,10 @@ typedef struct
   */
 typedef struct
 {
-  uint32_t Pulse;                   /*!< Specifies the pulse value to be loaded into the Capture Compare Register.
-                                         This parameter can be a number between Min_Data = 0x0000 and Max_Data = 0xFFFF */
-  uint32_t OCPolarity;              /*!< Specifies the output polarity.
-                                         This parameter can be a value of @ref LPTIM_Output_Compare_Polarity */
+  uint32_t Pulse;                 /*!< Specifies the pulse value to be loaded into the Capture Compare Register.
+                                       This parameter can be a number between Min_Data = 0x0000 and Max_Data = 0xFFFF */
+  uint32_t OCPolarity;            /*!< Specifies the output polarity.
+                                       This parameter can be a value of @ref LPTIM_Output_Compare_Polarity */
 } LPTIM_OC_ConfigTypeDef;
 
 /**
@@ -182,6 +185,16 @@ typedef enum
 } HAL_LPTIM_ActiveChannel;
 
 /**
+  * @brief  LPTIM Channel States definition
+  */
+typedef enum
+{
+  HAL_LPTIM_CHANNEL_STATE_RESET             = 0x00U,    /*!< LPTIM Channel initial state                         */
+  HAL_LPTIM_CHANNEL_STATE_READY             = 0x01U,    /*!< LPTIM Channel ready for use                         */
+  HAL_LPTIM_CHANNEL_STATE_BUSY              = 0x02U,    /*!< An internal process is ongoing on the LPTIM channel */
+} HAL_LPTIM_ChannelStateTypeDef;
+
+/**
   * @brief  LPTIM handle Structure definition
   */
 #if (USE_HAL_LPTIM_REGISTER_CALLBACKS == 1)
@@ -196,7 +209,7 @@ typedef struct
 
   HAL_LPTIM_ActiveChannel        Channel;          /*!< Active channel            */
 
-  DMA_HandleTypeDef             *hdma[2];          /*!< DMA Handlers array        */
+  DMA_HandleTypeDef             *hdma[3];          /*!< DMA Handlers array, This array is accessed by a @ref LPTIM_DMA_Handle_index */
 
   HAL_StatusTypeDef              Status;           /*!< LPTIM peripheral status   */
 
@@ -204,6 +217,7 @@ typedef struct
 
   __IO  HAL_LPTIM_StateTypeDef   State;            /*!< LPTIM peripheral state    */
 
+  __IO  HAL_LPTIM_ChannelStateTypeDef   ChannelState[2];  /*!< LPTIM channel operation state                       */
 #if (USE_HAL_LPTIM_REGISTER_CALLBACKS == 1)
   void (* MspInitCallback)(struct __LPTIM_HandleTypeDef *hlptim);            /*!< LPTIM Base Msp Init Callback                 */
   void (* MspDeInitCallback)(struct __LPTIM_HandleTypeDef *hlptim);          /*!< LPTIM Base Msp DeInit Callback               */
@@ -220,6 +234,7 @@ typedef struct
   void (* IC_CaptureCallback)(struct __LPTIM_HandleTypeDef *hlptim);         /*!< Input capture Callback                       */
   void (* IC_CaptureHalfCpltCallback)(struct __LPTIM_HandleTypeDef *htim);   /*!< Input Capture half complete Callback         */
   void (* IC_OverCaptureCallback)(struct __LPTIM_HandleTypeDef *hlptim);     /*!< Over capture Callback                        */
+  void (* ErrorCallback)(struct __LPTIM_HandleTypeDef *hlptim);              /*!< LPTIM Error Callback                         */
 #endif /* USE_HAL_LPTIM_REGISTER_CALLBACKS */
 } LPTIM_HandleTypeDef;
 
@@ -244,6 +259,7 @@ typedef enum
   HAL_LPTIM_IC_CAPTURE_CB_ID        = 0x0CU,   /*!< Input capture Callback ID                        */
   HAL_LPTIM_IC_CAPTURE_HALF_CB_ID   = 0x0DU,   /*!< Input capture half complete Callback ID          */
   HAL_LPTIM_OVER_CAPTURE_CB_ID      = 0x0EU,   /*!< Over capture Callback ID                         */
+  HAL_LPTIM_ERROR_CB_ID             = 0x0FU,   /*!< LPTIM Error Callback ID                          */
 } HAL_LPTIM_CallbackIDTypeDef;
 
 /**
@@ -416,11 +432,12 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
   * @}
   */
 
-/** @defgroup DMA_Handle_index LPTIM DMA Handle Index
+/** @defgroup LPTIM_DMA_Handle_index LPTIM DMA Handle Index
   * @{
   */
-#define LPTIM_DMA_ID_CC1                   ((uint16_t) 0x0000)       /*!< Index of the DMA handle used for Capture/Update event 1 DMA request */
-#define LPTIM_DMA_ID_CC2                   ((uint16_t) 0x0001)       /*!< Index of the DMA handle used for Capture/Update event 2 DMA request */
+#define LPTIM_DMA_ID_UPDATE                ((uint16_t) 0x0000)       /*!< Index of the DMA handle used for Update DMA requests */
+#define LPTIM_DMA_ID_CC1                   ((uint16_t) 0x0001)       /*!< Index of the DMA handle used for Capture/Update event 1 DMA request */
+#define LPTIM_DMA_ID_CC2                   ((uint16_t) 0x0002)       /*!< Index of the DMA handle used for Capture/Update event 2 DMA request */
 /**
   * @}
   */
@@ -506,8 +523,8 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
 #define LPTIM_IC2SOURCE_LSI                        LPTIM_CFGR2_IC2SEL_0                       /*!< For LPTIM1 */
 #define LPTIM_IC2SOURCE_LSE                        LPTIM_CFGR2_IC2SEL_1                       /*!< For LPTIM1 */
 #define LPTIM_IC2SOURCE_HSI_256                    LPTIM_CFGR2_IC2SEL_0                       /*!< For LPTIM2 */
-#define LPTIM_IC2SOURCE_MSI_1024                   LPTIM_CFGR2_IC2SEL_1                       /*!< For LPTIM2 */
-#define LPTIM_IC2SOURCE_MSI_4                     (LPTIM_CFGR2_IC2SEL_0|LPTIM_CFGR2_IC2SEL_1) /*!< For LPTIM2 */
+#define LPTIM_IC2SOURCE_MSIS_1024                  LPTIM_CFGR2_IC2SEL_1                       /*!< For LPTIM2 */
+#define LPTIM_IC2SOURCE_MSIS_4                    (LPTIM_CFGR2_IC2SEL_0|LPTIM_CFGR2_IC2SEL_1) /*!< For LPTIM2 */
 /**
   * @}
   */
@@ -527,11 +544,17 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
 #if (USE_HAL_LPTIM_REGISTER_CALLBACKS == 1)
 #define __HAL_LPTIM_RESET_HANDLE_STATE(__HANDLE__) do {                                                        \
                                                         (__HANDLE__)->State             = HAL_LPTIM_STATE_RESET; \
+                                                        (__HANDLE__)->ChannelState[0]  = HAL_LPTIM_CHANNEL_STATE_RESET;\
+                                                        (__HANDLE__)->ChannelState[1]  = HAL_LPTIM_CHANNEL_STATE_RESET;\
                                                         (__HANDLE__)->MspInitCallback   = NULL;                  \
                                                         (__HANDLE__)->MspDeInitCallback = NULL;                  \
                                                       } while(0)
 #else
-#define __HAL_LPTIM_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->State = HAL_LPTIM_STATE_RESET)
+#define __HAL_LPTIM_RESET_HANDLE_STATE(__HANDLE__) do {                                                              \
+                                                        (__HANDLE__)->State            = HAL_LPTIM_STATE_RESET;        \
+                                                        (__HANDLE__)->ChannelState[0]  = HAL_LPTIM_CHANNEL_STATE_RESET;\
+                                                        (__HANDLE__)->ChannelState[1]  = HAL_LPTIM_CHANNEL_STATE_RESET;\
+                                                      } while(0)
 #endif /* USE_HAL_LPTIM_REGISTER_CALLBACKS */
 
 /**
@@ -790,8 +813,6 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
 /**
   * @}
   */
-/* Include LPTIM HAL Extended module */
-#include "stm32u5xx_hal_lptim_ex.h"
 
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup LPTIM_Exported_Functions LPTIM Exported Functions
@@ -1088,11 +1109,45 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(LPTIM_HandleTypeDef *hlptim);
    (((__INSTANCE__) == LPTIM2) &&                   \
     (((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)    ||    \
      ((__SOURCE__) == LPTIM_IC2SOURCE_HSI_256) ||    \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_MSI_1024)||    \
-     ((__SOURCE__) == LPTIM_IC2SOURCE_MSI_4)))       \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_MSIS_1024)||    \
+     ((__SOURCE__) == LPTIM_IC2SOURCE_MSIS_4)))       \
    ||                                              \
    (((__INSTANCE__) == LPTIM3) &&                   \
     ((__SOURCE__) == LPTIM_IC2SOURCE_GPIO)))
+
+#define LPTIM_CHANNEL_STATE_GET(__INSTANCE__, __CHANNEL__)\
+  (((__CHANNEL__) == LPTIM_CHANNEL_1) ? (__INSTANCE__)->ChannelState[0] :\
+   (__INSTANCE__)->ChannelState[1])
+
+#define LPTIM_CHANNEL_STATE_SET(__INSTANCE__, __CHANNEL__, __CHANNEL_STATE__) \
+  (((__CHANNEL__) == LPTIM_CHANNEL_1) ? ((__INSTANCE__)->ChannelState[0] = (__CHANNEL_STATE__)) :\
+   ((__INSTANCE__)->ChannelState[1] = (__CHANNEL_STATE__)))
+
+#define LPTIM_CHANNEL_STATE_SET_ALL(__INSTANCE__,  __CHANNEL_STATE__) do { \
+                                                                           (__INSTANCE__)->ChannelState[0]  =\
+                                                                                                (__CHANNEL_STATE__);  \
+                                                                           (__INSTANCE__)->ChannelState[1]  =\
+                                                                                                (__CHANNEL_STATE__);  \
+                                                                         } while(0)
+
+#define IS_LPTIM_CCX_INSTANCE(__INSTANCE__, __CHANNEL__) \
+  (((((__INSTANCE__) == LPTIM1_NS)  || ((__INSTANCE__) == LPTIM1_S))  && \
+    (((__CHANNEL__)  == LPTIM_CHANNEL_1) ||  \
+     ((__CHANNEL__)  == LPTIM_CHANNEL_2) ||  \
+     ((__CHANNEL__)  == LPTIM_CHANNEL_ALL))) \
+   ||                                        \
+   ((((__INSTANCE__) == LPTIM2_NS)  || ((__INSTANCE__) == LPTIM2_S))  && \
+    (((__CHANNEL__)  == LPTIM_CHANNEL_1) ||  \
+     ((__CHANNEL__)  == LPTIM_CHANNEL_2) ||  \
+     ((__CHANNEL__)  == LPTIM_CHANNEL_ALL))) \
+   ||                                        \
+   ((((__INSTANCE__) == LPTIM3_NS)  || ((__INSTANCE__) == LPTIM3_S))  && \
+    (((__CHANNEL__)  == LPTIM_CHANNEL_1) ||  \
+     ((__CHANNEL__)  == LPTIM_CHANNEL_2) ||  \
+     ((__CHANNEL__)  == LPTIM_CHANNEL_ALL))) \
+   ||                                        \
+   ((((__INSTANCE__) == LPTIM4_NS)  || ((__INSTANCE__) == LPTIM4_S))  && \
+    ((__CHANNEL__)  == LPTIM_CHANNEL_1)))
 /**
   * @}
   */
@@ -1101,13 +1156,6 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(LPTIM_HandleTypeDef *hlptim);
 /** @defgroup LPTIM_Private_Functions LPTIM Private Functions
   * @{
   */
-void LPTIM_DMAError(DMA_HandleTypeDef *hdma);
-void LPTIM_DMACaptureCplt(DMA_HandleTypeDef *hdma);
-void LPTIM_DMACaptureHalfCplt(DMA_HandleTypeDef *hdma);
-void LPTIM_DMAUpdateEventCplt(DMA_HandleTypeDef *hdma);
-void LPTIM_DMAUpdateEventHalfCplt(DMA_HandleTypeDef *hdma);
-HAL_StatusTypeDef LPTIM_DMA_Start_IT(DMA_HandleTypeDef *hdma, uint32_t src, uint32_t dst,
-                                     uint32_t length);
 /**
   * @}
   */

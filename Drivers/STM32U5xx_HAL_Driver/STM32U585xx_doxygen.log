@@ -1,0 +1,9 @@
+C:/git/u5_release_v1.0.0.rc1/__INTERNAL__tools/tools/_ChmUserManualGeneration/tmp/stm32u5xx_hal_conf.h:3: warning: the name `stm32u5xx_hal_conf_template.h' supplied as the second argument in the \file statement is not an input file
+C:/git/u5_release_v1.0.0.rc1/Firmware/Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_utils.h:102: warning: unable to resolve reference to `LL_RCC_PLL_ConfigDomain_SYS()' for \ref command
+C:/git/u5_release_v1.0.0.rc1/Firmware/Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_utils.h:108: warning: unable to resolve reference to `LL_RCC_PLL_ConfigDomain_SYS()' for \ref command
+C:/git/u5_release_v1.0.0.rc1/Firmware/Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_utils.h:111: warning: unable to resolve reference to `RCC_LL_EC_PLLR_DIV' for \ref command
+C:/git/u5_release_v1.0.0.rc1/Firmware/Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_utils.h:114: warning: unable to resolve reference to `LL_RCC_PLL_ConfigDomain_SYS()' for \ref command
+C:/git/u5_release_v1.0.0.rc1/Firmware/Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_utils.h:102: warning: unable to resolve reference to `LL_RCC_PLL_ConfigDomain_SYS()' for \ref command
+C:/git/u5_release_v1.0.0.rc1/Firmware/Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_utils.h:108: warning: unable to resolve reference to `LL_RCC_PLL_ConfigDomain_SYS()' for \ref command
+C:/git/u5_release_v1.0.0.rc1/Firmware/Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_utils.h:111: warning: unable to resolve reference to `RCC_LL_EC_PLLR_DIV' for \ref command
+C:/git/u5_release_v1.0.0.rc1/Firmware/Drivers/STM32U5xx_HAL_Driver/Inc/stm32u5xx_ll_utils.h:114: warning: unable to resolve reference to `LL_RCC_PLL_ConfigDomain_SYS()' for \ref command

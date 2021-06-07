@@ -10,6 +10,19 @@
   *           + Voltage Monitoring Functions
   *           + Memories Retention Functions
   *           + I/O Pull-Up Pull-Down Configuration Functions
+  *
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                         ##### How to use this driver #####
@@ -118,7 +131,7 @@
              (++) ICACHE
              (++) DMA2DRAM
              (++) PKA32RAM
-             (++) DCACHE
+             (++) DCACHE1
              (++) FMAC
              (++) FDCAN
              (++) USB
@@ -136,13 +149,17 @@
        HAL_PWREx_DisableFlashFastWakeUp() to enable / disable the flash memory
        fast wakeup from Stop mode (Stop 0/1).
 
+   (#) Call HAL_PWREx_EnableSRAM4FastWakeUp() and
+       HAL_PWREx_DisableSRAM4FastWakeUp() to enable / disable the SRAM4 memory
+       fast wakeup from Stop mode (Stop 0/1/2).
+
    (#) Call HAL_PWREx_EnableBkupRAMRetention() and
        HAL_PWREx_DisableBkupRAMRetention() to enable / disable the Backup RAM
        content retention in Standby, Shutdown and VBAT modes.
 
    (#) Call HAL_PWREx_EnablePullUpPullDownConfig() and
-       HAL_PWREx_DisablePullUpPullDownConfig() to I/O pull-up and pull-down
-       configuration.
+       HAL_PWREx_DisablePullUpPullDownConfig() to I/O enable / disable pull-up
+       and pull-down configuration.
 
    (#) Call HAL_PWREx_EnableGPIOPullUp() and HAL_PWREx_EnableGPIOPullDown() to
        apply repectively pull-up and pull-down to selected I/O.
@@ -150,17 +167,6 @@
        disable applied repectively pull-up and pull-down to selected I/O.
 
   @endverbatim
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
   ******************************************************************************
   */
 
@@ -292,12 +298,13 @@
 HAL_StatusTypeDef HAL_PWREx_ControlVoltageScaling(uint32_t VoltageScaling)
 {
   uint32_t timeout;
+  uint32_t vos_old;
 
   /* Check the parameter */
   assert_param(IS_PWR_VOLTAGE_SCALING_RANGE(VoltageScaling));
 
   /* Get the current voltage scale applied */
-  uint32_t vos_old = READ_BIT(PWR->SVMSR, PWR_SVMSR_ACTVOS);
+  vos_old = READ_BIT(PWR->SVMSR, PWR_SVMSR_ACTVOS);
 
   /* No change, nothing to do */
   if (vos_old == VoltageScaling)
@@ -307,9 +314,9 @@ HAL_StatusTypeDef HAL_PWREx_ControlVoltageScaling(uint32_t VoltageScaling)
 
   /* Check voltage scaling level */
   /*
-     The Embedded power distribution (EPOD) must be enabled before switching to
-     voltage scale 1 / 2 from voltage scale lower.
-  */
+   *  The Embedded power distribution (EPOD) must be enabled before switching to
+   *  voltage scale 1 / 2 from voltage scale lower.
+   */
   if (VoltageScaling > PWR_REGULATOR_VOLTAGE_SCALE3)
   {
     MODIFY_REG(PWR->VOSR, (PWR_VOSR_VOS | PWR_VOSR_BOOSTEN), (VoltageScaling | PWR_VOSR_BOOSTEN));
@@ -320,26 +327,24 @@ HAL_StatusTypeDef HAL_PWREx_ControlVoltageScaling(uint32_t VoltageScaling)
   }
 
   /* Wait until VOSRDY is rised */
-  timeout = (PWR_FLAG_SETTING_DELAY * (SystemCoreClock / 1000000U)) + 1U;
+  timeout = ((PWR_FLAG_SETTING_DELAY * (SystemCoreClock / 1000U)) / 1000U) + 1U;
   while (HAL_IS_BIT_CLR(PWR->VOSR, PWR_VOSR_VOSRDY) && (timeout != 0U))
   {
     timeout--;
   }
 
-  /* Check time out  */
-  if (timeout == 0U)
+  /* Check time out */
+  if (timeout != 0U)
   {
-    return HAL_TIMEOUT;
+    /* Wait until ACTVOSRDY is rised */
+    timeout = ((PWR_FLAG_SETTING_DELAY * (SystemCoreClock / 1000U)) / 1000U) + 1U;
+    while ((HAL_IS_BIT_CLR(PWR->SVMSR, PWR_SVMSR_ACTVOSRDY)) && (timeout != 0U))
+    {
+      timeout--;
+    }
   }
 
-  /* Wait until ACTVOSRDY is rised */
-  timeout = (PWR_FLAG_SETTING_DELAY * (SystemCoreClock / 1000000U)) + 1U;
-  while ((HAL_IS_BIT_CLR(PWR->SVMSR, PWR_SVMSR_ACTVOSRDY)) && (timeout != 0U))
-  {
-    timeout--;
-  }
-
-  /* Check time out  */
+  /* Check time out */
   if (timeout == 0U)
   {
     return HAL_TIMEOUT;
@@ -364,7 +369,7 @@ uint32_t HAL_PWREx_GetVoltageRange(void)
   *                        This parameter can be one of the following values :
   *                        @arg PWR_LDO_SUPPLY  : The LDO regulator supplies the Vcore Power Domains.
   *                        @arg PWR_SMPS_SUPPLY : The SMPS regulator supplies the Vcore Power Domains.
-  * @retval HAL status.
+  * @retval HAL Status.
   */
 HAL_StatusTypeDef HAL_PWREx_ConfigSupply(uint32_t SupplySource)
 {
@@ -374,9 +379,9 @@ HAL_StatusTypeDef HAL_PWREx_ConfigSupply(uint32_t SupplySource)
   assert_param(IS_PWR_SUPPLY(SupplySource));
 
   /* Set maximum time out */
-  timeout = (PWR_FLAG_SETTING_DELAY * (SystemCoreClock / 1000000U)) + 1U;
+  timeout = ((PWR_FLAG_SETTING_DELAY * (SystemCoreClock / 1000U)) / 1000U) + 1U;
 
-  /* Configure the LDO as system regulator supply  */
+  /* Configure the LDO as system regulator supply */
   if (SupplySource == PWR_LDO_SUPPLY)
   {
     /* Set the power supply configuration */
@@ -388,7 +393,7 @@ HAL_StatusTypeDef HAL_PWREx_ConfigSupply(uint32_t SupplySource)
       timeout--;
     }
   }
-  /* Configure the SMPS as system regulator supply  */
+  /* Configure the SMPS as system regulator supply */
   else
   {
     /* Set the power supply configuration */
@@ -401,7 +406,7 @@ HAL_StatusTypeDef HAL_PWREx_ConfigSupply(uint32_t SupplySource)
     }
   }
 
-  /* Check time out  */
+  /* Check time out */
   if (timeout == 0U)
   {
     return HAL_TIMEOUT;
@@ -510,7 +515,7 @@ void HAL_PWREx_DisableFastSoftStart(void)
       The PLL, MSIS, MSIK, HSI16 and HSE oscillators are disabled.
       Some peripherals with the LPBAM capability can switch on HSI16 or MSIS or
       MSIK for transferring data. All SRAMs and register contents are preserved,
-      but the SRAMs can be totally or partially switched off to further reduced
+      but the SRAMs can be totally or partially switched off to further reduce
       consumption.
       The BOR is always available in Stop 2 mode.
 
@@ -551,26 +556,6 @@ void HAL_PWREx_DisableFastSoftStart(void)
       (+) Exit:
           WKUPx pin edge, RTC or TAMP event, external Reset in NRST pin, IWDG
           Reset, BOR reset.
-
-  *** Shutdown mode ***
-   ====================
-    [..]
-      The lowest power consumption is reached in Shutdown mode. It is based on
-      the Deepsleep mode with the voltage regulator disabled. The VCORE domain
-      is consequently powered off.
-      The PLL, HSI16, MSIS, MSIK and HSE oscillators are also switched off.
-      The SRAMs and register contents are lost except for registers in the
-      Backup domain.
-      The BOR is not available in Shutdown mode.
-      No power voltage monitoring is possible in this mode, therefore the switch
-      to Backup domain is not supported.
-
-      (+) Entry:
-          The Shutdown mode is entered by using the HAL_PWREx_EnterSHUTDOWNMode()
-          function.
-
-      (+) Exit:
-          WKUPx pin edge, RTC/TAMP event, external Reset in NRST pin.
 
   *** Shutdown mode ***
    ====================
@@ -815,6 +800,8 @@ void HAL_PWREx_DisableUltraLowPowerMode(void)
 /**
   * @brief  This function handles the PWR Wake up from Stop 3 interrupt request.
   * @note   This API should be called under the PWR_S3WU_IRQHandler().
+  * @param  WakeUpPin : Specifies the wakeup pin interrupt to be handled.
+  *                     This parameter can be a combination of @ref PWR_WakeUp_Pins.
   * @retval None.
   */
 void HAL_PWREx_S3WU_IRQHandler(uint32_t WakeUpPin)
@@ -822,7 +809,7 @@ void HAL_PWREx_S3WU_IRQHandler(uint32_t WakeUpPin)
   /* Check PWR wake up line 1 */
   if ((WakeUpPin & PWR_WAKEUP_PIN1) != 0U)
   {
-    if (__HAL_PWR_GET_FLAG(PWR_WAKEUP_FLAG1) != 0U)
+    if (READ_BIT(PWR->WUSR, PWR_WUSR_WUF1) != 0U)
     {
       /* Clear PWR wake up flag line 1 */
       SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF1);
@@ -835,7 +822,7 @@ void HAL_PWREx_S3WU_IRQHandler(uint32_t WakeUpPin)
   /* Check PWR wake up line 2 */
   if ((WakeUpPin & PWR_WAKEUP_PIN2) != 0U)
   {
-    if (__HAL_PWR_GET_FLAG(PWR_WAKEUP_FLAG2) != 0U)
+    if (READ_BIT(PWR->WUSR, PWR_WUSR_WUF2) != 0U)
     {
       /* Clear PWR wake up flag line 2 */
       SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF2);
@@ -848,7 +835,7 @@ void HAL_PWREx_S3WU_IRQHandler(uint32_t WakeUpPin)
   /* Check PWR wake up line 3 */
   if ((WakeUpPin & PWR_WAKEUP_PIN3) != 0U)
   {
-    if (__HAL_PWR_GET_FLAG(PWR_WAKEUP_FLAG3) != 0U)
+    if (READ_BIT(PWR->WUSR, PWR_WUSR_WUF3) != 0U)
     {
       /* Clear PWR wake up flag line 3 */
       SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF3);
@@ -861,7 +848,7 @@ void HAL_PWREx_S3WU_IRQHandler(uint32_t WakeUpPin)
   /* Check PWR wake up line 4 */
   if ((WakeUpPin & PWR_WAKEUP_PIN4) != 0U)
   {
-    if (__HAL_PWR_GET_FLAG(PWR_WAKEUP_FLAG4) != 0U)
+    if (READ_BIT(PWR->WUSR, PWR_WUSR_WUF4) != 0U)
     {
       /* Clear PWR wake up flag line 4 */
       SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF4);
@@ -874,7 +861,7 @@ void HAL_PWREx_S3WU_IRQHandler(uint32_t WakeUpPin)
   /* Check PWR wake up line 5 */
   if ((WakeUpPin & PWR_WAKEUP_PIN5) != 0U)
   {
-    if (__HAL_PWR_GET_FLAG(PWR_WAKEUP_FLAG5) != 0U)
+    if (READ_BIT(PWR->WUSR, PWR_WUSR_WUF5) != 0U)
     {
       /* Clear PWR wake up flag line 5 */
       SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF5);
@@ -887,7 +874,7 @@ void HAL_PWREx_S3WU_IRQHandler(uint32_t WakeUpPin)
   /* Check PWR wake up line 6 */
   if ((WakeUpPin & PWR_WAKEUP_PIN6) != 0U)
   {
-    if (__HAL_PWR_GET_FLAG(PWR_WAKEUP_FLAG6) != 0U)
+    if (READ_BIT(PWR->WUSR, PWR_WUSR_WUF6) != 0U)
     {
       /* Clear PWR wake up flag line 6 */
       SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF6);
@@ -900,7 +887,7 @@ void HAL_PWREx_S3WU_IRQHandler(uint32_t WakeUpPin)
   /* Check PWR wake up line 7 */
   if ((WakeUpPin & PWR_WAKEUP_PIN7) != 0U)
   {
-    if (__HAL_PWR_GET_FLAG(PWR_WAKEUP_FLAG7) != 0U)
+    if (READ_BIT(PWR->WUSR, PWR_WUSR_WUF7) != 0U)
     {
       /* Clear PWR wake up flag line 7 */
       SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF7);
@@ -913,7 +900,7 @@ void HAL_PWREx_S3WU_IRQHandler(uint32_t WakeUpPin)
   /* Check PWR wake up line 8 */
   if ((WakeUpPin & PWR_WAKEUP_PIN8) != 0U)
   {
-    if (__HAL_PWR_GET_FLAG(PWR_WAKEUP_FLAG8) != 0U)
+    if (READ_BIT(PWR->WUSR, PWR_WUSR_WUF8) != 0U)
     {
       /* Clear PWR wake up flag line 8 */
       SET_BIT(PWR->WUSCR, PWR_WUSCR_CWUF8);
@@ -926,6 +913,8 @@ void HAL_PWREx_S3WU_IRQHandler(uint32_t WakeUpPin)
 
 /**
   * @brief  PWR S3WU interrupt callback.
+  * @param  WakeUpPin : Specifies the wakeup pin interrupt to be handled.
+  *                     This parameter can be a combination of @ref PWR_WakeUp_Pins.
   * @retval None.
   */
 __weak void HAL_PWREx_S3WUCallback(uint32_t WakeUpPin)
@@ -954,10 +943,8 @@ __weak void HAL_PWREx_S3WUCallback(uint32_t WakeUpPin)
     *** PVM configuration ***
     =========================
     [..]
-      (+) Only VDD is monitored by default, as it is the only supply required
-          for all system related functions. The other supplies (VDDA, VDDIO2 and
-          VDDUSB) can be independent from VDD and can be monitored with four
-          peripheral voltage monitoring (PVM):
+      (+) The supplies (VDDA, VDDIO2 and VDDUSB) can be independent from VDD and
+          can be monitored with four peripheral voltage monitoring (PVM):
 
           (++) The UVM monitors the USB supply VDDUSB. VDDUSBRDY indicates if
                the VDDUSB independent power supply is higher or lower than the
@@ -987,8 +974,8 @@ __weak void HAL_PWREx_S3WUCallback(uint32_t WakeUpPin)
     [..]
       When VDD is present, it is possible to charge the external battery on VBAT
       through an internal resistance.
-      The VBAT charging is done either through a 5 kO resistor or through a 1.5
-      kO resistor depending on the VBRS bit value in the PWR_BDCR2 register.
+      The VBAT charging is done either through a 5 kOhm resistor or through a 1.5
+      kOhm resistor depending on the VBRS bit value in the PWR_BDCR2 register.
       The battery charging is enabled by setting VBE bit in the PWR_BDCR2
       register. It is automatically disabled in VBAT mode.
 
@@ -1031,18 +1018,24 @@ __weak void HAL_PWREx_S3WUCallback(uint32_t WakeUpPin)
 /**
   * @brief  Configure the voltage monitor threshold detected by the Peripheral
   *         voltage monitoring (PVM).
-  * @param  sConfigPVM : Pointer to a PWR_PVMTypeDef structure that contains the
+  * @param  pConfigPVM : Pointer to a PWR_PVMTypeDef structure that contains the
   *                      PVM configuration information (PVMType and EventMode).
-  * @retval None.
+  * @retval HAL Status.
   */
-HAL_StatusTypeDef HAL_PWREx_ConfigPVM(PWR_PVMTypeDef *sConfigPVM)
+HAL_StatusTypeDef HAL_PWREx_ConfigPVM(PWR_PVMTypeDef *pConfigPVM)
 {
+  /* Check the PVM parameter */
+  if (pConfigPVM == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
-  assert_param(IS_PWR_PVM_TYPE(sConfigPVM->PVMType));
-  assert_param(IS_PWR_PVM_MODE(sConfigPVM->Mode));
+  assert_param(IS_PWR_PVM_TYPE(pConfigPVM->PVMType));
+  assert_param(IS_PWR_PVM_MODE(pConfigPVM->Mode));
 
   /* Check the peripheral voltage monitor type */
-  switch (sConfigPVM->PVMType)
+  switch (pConfigPVM->PVMType)
   {
     case PWR_UVM: /* Independent USB voltage monitor */
 
@@ -1053,25 +1046,25 @@ HAL_StatusTypeDef HAL_PWREx_ConfigPVM(PWR_PVMTypeDef *sConfigPVM)
       __HAL_PWR_UVM_EXTI_DISABLE_FALLING_EDGE();
 
       /* Configure the UVM in interrupt mode */
-      if ((sConfigPVM->Mode & PVM_MODE_IT) == PVM_MODE_IT)
+      if ((pConfigPVM->Mode & PVM_MODE_IT) == PVM_MODE_IT)
       {
         __HAL_PWR_UVM_EXTI_ENABLE_IT();
       }
 
       /* Configure the UVM in event mode */
-      if ((sConfigPVM->Mode & PVM_MODE_EVT) == PVM_MODE_EVT)
+      if ((pConfigPVM->Mode & PVM_MODE_EVT) == PVM_MODE_EVT)
       {
         __HAL_PWR_UVM_EXTI_ENABLE_EVENT();
       }
 
       /* Configure the UVM in rising edge */
-      if ((sConfigPVM->Mode & PVM_RISING_EDGE) == PVM_RISING_EDGE)
+      if ((pConfigPVM->Mode & PVM_RISING_EDGE) == PVM_RISING_EDGE)
       {
         __HAL_PWR_UVM_EXTI_ENABLE_RISING_EDGE();
       }
 
       /* Configure the UVM in falling edge */
-      if ((sConfigPVM->Mode & PVM_FALLING_EDGE) == PVM_FALLING_EDGE)
+      if ((pConfigPVM->Mode & PVM_FALLING_EDGE) == PVM_FALLING_EDGE)
       {
         __HAL_PWR_UVM_EXTI_ENABLE_FALLING_EDGE();
       }
@@ -1087,25 +1080,25 @@ HAL_StatusTypeDef HAL_PWREx_ConfigPVM(PWR_PVMTypeDef *sConfigPVM)
       __HAL_PWR_IO2VM_EXTI_DISABLE_FALLING_EDGE();
 
       /* Configure the IO2VM in interrupt mode */
-      if ((sConfigPVM->Mode & PVM_MODE_IT) == PVM_MODE_IT)
+      if ((pConfigPVM->Mode & PVM_MODE_IT) == PVM_MODE_IT)
       {
         __HAL_PWR_IO2VM_EXTI_ENABLE_IT();
       }
 
       /* Configure the IO2VM in event mode */
-      if ((sConfigPVM->Mode & PVM_MODE_EVT) == PVM_MODE_EVT)
+      if ((pConfigPVM->Mode & PVM_MODE_EVT) == PVM_MODE_EVT)
       {
         __HAL_PWR_IO2VM_EXTI_ENABLE_EVENT();
       }
 
       /* Configure the IO2VM in rising edge */
-      if ((sConfigPVM->Mode & PVM_RISING_EDGE) == PVM_RISING_EDGE)
+      if ((pConfigPVM->Mode & PVM_RISING_EDGE) == PVM_RISING_EDGE)
       {
         __HAL_PWR_IO2VM_EXTI_ENABLE_RISING_EDGE();
       }
 
       /* Configure the IO2VM in falling edge */
-      if ((sConfigPVM->Mode & PVM_FALLING_EDGE) == PVM_FALLING_EDGE)
+      if ((pConfigPVM->Mode & PVM_FALLING_EDGE) == PVM_FALLING_EDGE)
       {
         __HAL_PWR_IO2VM_EXTI_ENABLE_FALLING_EDGE();
       }
@@ -1121,25 +1114,25 @@ HAL_StatusTypeDef HAL_PWREx_ConfigPVM(PWR_PVMTypeDef *sConfigPVM)
       __HAL_PWR_AVM1_EXTI_DISABLE_FALLING_EDGE();
 
       /* Configure the AVM1 in interrupt mode */
-      if ((sConfigPVM->Mode & PVM_MODE_IT) == PVM_MODE_IT)
+      if ((pConfigPVM->Mode & PVM_MODE_IT) == PVM_MODE_IT)
       {
         __HAL_PWR_AVM1_EXTI_ENABLE_IT();
       }
 
       /* Configure the AVM1 in event mode */
-      if ((sConfigPVM->Mode & PVM_MODE_EVT) == PVM_MODE_EVT)
+      if ((pConfigPVM->Mode & PVM_MODE_EVT) == PVM_MODE_EVT)
       {
         __HAL_PWR_AVM1_EXTI_ENABLE_EVENT();
       }
 
       /* Configure the AVM1 in rising edge */
-      if ((sConfigPVM->Mode & PVM_RISING_EDGE) == PVM_RISING_EDGE)
+      if ((pConfigPVM->Mode & PVM_RISING_EDGE) == PVM_RISING_EDGE)
       {
         __HAL_PWR_AVM1_EXTI_ENABLE_RISING_EDGE();
       }
 
       /* Configure the AVM1 in falling edge */
-      if ((sConfigPVM->Mode & PVM_FALLING_EDGE) == PVM_FALLING_EDGE)
+      if ((pConfigPVM->Mode & PVM_FALLING_EDGE) == PVM_FALLING_EDGE)
       {
         __HAL_PWR_AVM1_EXTI_ENABLE_FALLING_EDGE();
       }
@@ -1155,25 +1148,25 @@ HAL_StatusTypeDef HAL_PWREx_ConfigPVM(PWR_PVMTypeDef *sConfigPVM)
       __HAL_PWR_AVM2_EXTI_DISABLE_FALLING_EDGE();
 
       /* Configure the AVM2 in interrupt mode */
-      if ((sConfigPVM->Mode & PVM_MODE_IT) == PVM_MODE_IT)
+      if ((pConfigPVM->Mode & PVM_MODE_IT) == PVM_MODE_IT)
       {
         __HAL_PWR_AVM2_EXTI_ENABLE_IT();
       }
 
       /* Configure the AVM2 in event mode */
-      if ((sConfigPVM->Mode & PVM_MODE_EVT) == PVM_MODE_EVT)
+      if ((pConfigPVM->Mode & PVM_MODE_EVT) == PVM_MODE_EVT)
       {
         __HAL_PWR_AVM2_EXTI_ENABLE_EVENT();
       }
 
       /* Configure the AVM2 in rising edge */
-      if ((sConfigPVM->Mode & PVM_RISING_EDGE) == PVM_RISING_EDGE)
+      if ((pConfigPVM->Mode & PVM_RISING_EDGE) == PVM_RISING_EDGE)
       {
         __HAL_PWR_AVM2_EXTI_ENABLE_RISING_EDGE();
       }
 
       /* Configure the AVM2 in falling edge */
-      if ((sConfigPVM->Mode & PVM_FALLING_EDGE) == PVM_FALLING_EDGE)
+      if ((pConfigPVM->Mode & PVM_FALLING_EDGE) == PVM_FALLING_EDGE)
       {
         __HAL_PWR_AVM2_EXTI_ENABLE_FALLING_EDGE();
       }
@@ -1181,9 +1174,7 @@ HAL_StatusTypeDef HAL_PWREx_ConfigPVM(PWR_PVMTypeDef *sConfigPVM)
       break;
 
     default: /* No valid voltage monitor selected */
-
       return HAL_ERROR;
-
       break;
   }
 
@@ -1597,55 +1588,311 @@ void HAL_PWREx_EnableSRAM2ContentStandbyRetention(uint32_t SRAM2Pages)
   assert_param(IS_PWR_SRAM2_STANDBY_RETENTION(SRAM2Pages));
 
   /* Set RRSx bit(s) */
-  MODIFY_REG(PWR->CR1, PWR_SRAM2_FULL_STANDBY_RETENTION, SRAM2Pages);
+  SET_BIT(PWR->CR1, SRAM2Pages);
 }
 
 /**
   * @brief  Disable SRAM2 page(s) content retention in Stop 3 and Standby mode.
   * @note   When RRSx bit is reset, SRAM2 is powered off in Stop 3 and Standby
   *         mode and its content is lost.
+  * @param  SRAM2Pages : Specifies the SRAM2 pages.
+  *                      This parameter can be one of the following values :
+  *                      @arg PWR_SRAM2_PAGE1_STANDBY_RETENTION : SRAM2 page 1 retention.
+  *                      @arg PWR_SRAM2_PAGE2_STANDBY_RETENTION : SRAM2 page 2 retention.
+  *                      @arg PWR_SRAM2_FULL_STANDBY_RETENTION  : SRAM2 page 1 and page 2 retention.
   * @retval None.
   */
-void HAL_PWREx_DisableSRAM2ContentStandbyRetention(void)
+void HAL_PWREx_DisableSRAM2ContentStandbyRetention(uint32_t SRAM2Pages)
 {
+  /* Check the parameters */
+  assert_param(IS_PWR_SRAM2_STANDBY_RETENTION(SRAM2Pages));
+
   /* Clear RRSx bit(s) */
-  CLEAR_BIT(PWR->CR1, PWR_SRAM2_FULL_STANDBY_RETENTION);
+  CLEAR_BIT(PWR->CR1, SRAM2Pages);
 }
 
 /**
   * @brief  Enable RAM page(s) content retention in Stop mode (Stop 0, 1, 2, 3).
-  * @note   When enabling content retention for a given ram, memory kept powered
-  *         in Stop mode. (Consommation not optimized)
+  * @note   When enabling content retention for a given RAM, memory kept powered
+  *         in Stop mode. (Not optimized power consumption)
   * @param RAMSelection: Specifies RAM page(s) to be retained in Stop mode.
-  *                      This parameter can be one or a combination of
-  *                      @ref PWREx_RAM_Contents_Stop_Retention.
+  *                      This parameter can be one or a combination of the same
+  *                      memory @ref PWREx_RAM_Contents_Stop_Retention.
   * @retval None.
   */
 void HAL_PWREx_EnableRAMsContentStopRetention(uint32_t RAMSelection)
 {
-  /* Check the parameters */
-  assert_param(IS_PWR_RAM_STOP_RETENTION(RAMSelection));
+  uint32_t dummy;
 
-  /* Enable RAM retention in Stop mode */
-  CLEAR_BIT(PWR->CR2, RAMSelection);
+  /* Check RAM ID */
+  switch (RAMSelection & SRAM_ID_MASK)
+  {
+    /* SRAM 1 Stop retention */
+    case SRAM1_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_SRAM1_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & ~SRAM_ID_MASK) & (PAGE01_ID | PAGE02_ID | PAGE03_ID);
+      CLEAR_BIT(PWR->CR2, dummy);
+
+      break;
+    }
+
+    /* SRAM 2 Stop retention */
+    case SRAM2_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_SRAM2_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_SRAM2_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      CLEAR_BIT(PWR->CR2, (dummy << PWR_CR2_SRAM2PDS1_Pos));
+
+      break;
+    }
+
+    /* SRAM 3 Stop retention */
+    case SRAM3_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_SRAM3_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & ~SRAM_ID_MASK) & (PAGE01_ID | PAGE02_ID | PAGE03_ID | PAGE04_ID |
+                                                PAGE05_ID | PAGE06_ID | PAGE07_ID | PAGE08_ID);
+      CLEAR_BIT(PWR->CR2, (dummy << PWR_CR2_SRAM3PDS1_Pos));
+
+      break;
+    }
+
+    /* SRAM 4 Stop retention */
+    case SRAM4_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_SRAM4_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_SRAM4_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      CLEAR_BIT(PWR->CR2, (dummy << PWR_CR2_SRAM4PDS_Pos));
+
+      break;
+    }
+
+    /* ICACHE RAM Stop retention */
+    case ICACHERAM_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_ICACHE_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_ICACHE_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      CLEAR_BIT(PWR->CR2, dummy << PWR_CR2_ICRAMPDS_Pos);
+
+      break;
+    }
+
+    /* DCACHE1 RAM Stop retention */
+    case DCACHE1RAM_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_DCACHE1_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_DCACHE1_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      CLEAR_BIT(PWR->CR2, dummy << PWR_CR2_DC1RAMPDS_Pos);
+
+      break;
+    }
+
+    /* DMA2D RAM Stop retention */
+    case DMA2DRAM_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_DMA2DRAM_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_DMA2DRAM_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      CLEAR_BIT(PWR->CR2, (dummy << PWR_CR2_DMA2DRAMPDS_Pos));
+
+      break;
+    }
+
+    /* FMAC, FDCAN and USB RAM Stop retention */
+    case PERIPHRAM_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_PERIPHRAM_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_PERIPHRAM_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      CLEAR_BIT(PWR->CR2, (dummy << PWR_CR2_PRAMPDS_Pos));
+
+      break;
+    }
+
+    /* PKA32 RAM Stop retention */
+    case PKARAM_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_PKA32RAM_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_PKA32RAM_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      CLEAR_BIT(PWR->CR2, (dummy << PWR_CR2_PKARAMPDS_Pos));
+
+      break;
+    }
+
+    default:
+    {
+      return;
+      break;
+    }
+  }
 }
 
 /**
   * @brief Disable RAM page(s) content lost in Stop mode (Stop 0, 1, 2, 3).
-  * @note  When disabling content lost for a given ram, memory powered down
-  *        in Stop mode. (consommation optimized)
+  * @note  When disabling content lost for a given RAM, memory powered down
+  *        in Stop mode. (Optimized power consumption)
   * @param RAMSelection: Specifies RAM page(s) to be lost in Stop mode.
-  *                      This parameter can be one or a combination of
-  *                      @ref PWREx_RAM_Contents_Stop_Retention.
+  *                      This parameter can be one or a combination of the same
+  *                      memory @ref PWREx_RAM_Contents_Stop_Retention.
   * @retval None.
   */
 void HAL_PWREx_DisableRAMsContentStopRetention(uint32_t RAMSelection)
 {
-  /* Check the parameters */
-  assert_param(IS_PWR_RAM_STOP_RETENTION(RAMSelection));
+  uint32_t dummy;
 
-  /* Disable RAM retention in Stop mode */
-  MODIFY_REG(PWR->CR2, PWR_ALL_RAM_STOP_RETENTION_MASK, RAMSelection);
+  /* Check RAM ID */
+  switch (RAMSelection & SRAM_ID_MASK)
+  {
+    /* SRAM 1 Stop retention */
+    case SRAM1_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_SRAM1_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy   = (RAMSelection & ~SRAM_ID_MASK) & (PAGE01_ID | PAGE02_ID | PAGE03_ID);
+      SET_BIT(PWR->CR2, dummy);
+
+      break;
+    }
+
+    /* SRAM 2 Stop retention */
+    case SRAM2_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_SRAM2_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_SRAM2_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      SET_BIT(PWR->CR2, (dummy << PWR_CR2_SRAM2PDS1_Pos));
+
+      break;
+    }
+
+    /* SRAM 3 Stop retention */
+    case SRAM3_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_SRAM3_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & ~SRAM_ID_MASK) & (PAGE01_ID | PAGE02_ID | PAGE03_ID | PAGE04_ID |
+                                                PAGE05_ID | PAGE06_ID | PAGE07_ID | PAGE08_ID);
+      SET_BIT(PWR->CR2, (dummy << PWR_CR2_SRAM3PDS1_Pos));
+
+      break;
+    }
+
+    /* SRAM 4 Stop retention */
+    case SRAM4_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_SRAM4_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_SRAM4_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      SET_BIT(PWR->CR2, (dummy << PWR_CR2_SRAM4PDS_Pos));
+
+      break;
+    }
+
+    /* ICACHE RAM Stop retention */
+    case ICACHERAM_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_ICACHE_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_ICACHE_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      SET_BIT(PWR->CR2, (dummy << PWR_CR2_ICRAMPDS_Pos));
+
+      break;
+    }
+
+    /* DCACHE1 RAM Stop retention */
+    case DCACHE1RAM_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_DCACHE1_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_DCACHE1_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      SET_BIT(PWR->CR2, (dummy << PWR_CR2_DC1RAMPDS_Pos));
+
+      break;
+    }
+
+    /* DMA2D RAM Stop retention */
+    case DMA2DRAM_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_DMA2DRAM_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_DMA2DRAM_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      SET_BIT(PWR->CR2, (dummy << PWR_CR2_DMA2DRAMPDS_Pos));
+
+      break;
+    }
+
+    /* FMAC, FDCAN and USB RAM Stop retention */
+    case PERIPHRAM_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_PERIPHRAM_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_PERIPHRAM_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      SET_BIT(PWR->CR2, (dummy << PWR_CR2_PRAMPDS_Pos));
+
+      break;
+    }
+
+    /* PKA32 RAM Stop retention */
+    case PKARAM_ID:
+    {
+      /* Check the parameters */
+      assert_param(IS_PWR_PKA32RAM_STOP_RETENTION(RAMSelection));
+
+      /* Calculate pages mask */
+      dummy = (RAMSelection & PWR_PKA32RAM_FULL_STOP_RETENTION) & ~SRAM_ID_MASK;
+      SET_BIT(PWR->CR2, (dummy << PWR_CR2_PKARAMPDS_Pos));
+
+      break;
+    }
+
+    default:
+    {
+      return;
+      break;
+    }
+  }
 }
 
 /**
@@ -1683,7 +1930,7 @@ void HAL_PWREx_DisableRAMsContentRunRetention(uint32_t RAMSelection)
   assert_param(IS_PWR_RAM_RUN_RETENTION(RAMSelection));
 
   /* Disable RAM retention in Run mode */
-  MODIFY_REG(PWR->CR1, PWR_ALL_RAM_RUN_RETENTION_MASK, RAMSelection);
+  SET_BIT(PWR->CR1, RAMSelection);
 }
 
 /**
@@ -1693,12 +1940,12 @@ void HAL_PWREx_DisableRAMsContentRunRetention(uint32_t RAMSelection)
   *         VBAT modes.
   * @note   This bit can be enabled only when LDO regulator is selected as
   *         source supply.
-  * @retval None.
+  * @retval HAL Status.
   */
 HAL_StatusTypeDef HAL_PWREx_EnableBkupRAMRetention(void)
 {
   /*
-    Backup ram retention in Standby, Shutdown and VBAT should be enabled
+    Backup RAM retention in Standby, Shutdown and VBAT should be enabled
     when the Vcore is alimented by the LDO regulator
   */
   if (HAL_PWREx_GetSupplyConfig() == PWR_LDO_SUPPLY)
@@ -1752,6 +1999,32 @@ void HAL_PWREx_EnableFlashFastWakeUp(void)
 void HAL_PWREx_DisableFlashFastWakeUp(void)
 {
   CLEAR_BIT(PWR->CR2, PWR_CR2_FLASHFWU);
+}
+
+/**
+  * @brief  Enable the SRAM4 memory fast wakeup from Stop 0, Stop 1 and Stop 2 modes.
+  * @note   This bit is used to obtain the best trade-off between low-power consumption
+  *         and wakeup time. SRAM4 wakeup time increases the wakeup time when exiting
+  *         Stop 0, Stop 1 and Stop 2 modes, and also increases the LPDMA access time
+  *         to SRAM4 during Stop modes.
+  * @retval None.
+  */
+void HAL_PWREx_EnableSRAM4FastWakeUp(void)
+{
+  SET_BIT(PWR->CR2, PWR_CR2_SRAM4FWU);
+}
+
+/**
+  * @brief  Disable the SRAM4 memory fast wakeup from Stop 0, Stop 1 and Stop 2 modes.
+  * @note   This bit is used to obtain the best trade-off between low-power consumption
+  *         and wakeup time. SRAM4 wakeup time increases the wakeup time when exiting
+  *         Stop 0, Stop 1 and Stop 2 modes, and also increases the LPDMA access time
+  *         to SRAM4 during Stop modes.
+  * @retval None.
+  */
+void HAL_PWREx_DisableSRAM4FastWakeUp(void)
+{
+  CLEAR_BIT(PWR->CR2, PWR_CR2_SRAM4FWU);
 }
 /**
   * @}

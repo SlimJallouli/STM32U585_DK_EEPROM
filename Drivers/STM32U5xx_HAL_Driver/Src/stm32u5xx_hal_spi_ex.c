@@ -11,7 +11,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -161,11 +161,12 @@ HAL_StatusTypeDef HAL_SPIEx_EnableLockConfiguration(SPI_HandleTypeDef *hspi)
   *                             This parameter can be a value of @ref SPI_Underrun_Behaviour.
   * @retval None
   */
-HAL_StatusTypeDef HAL_SPIEx_ConfigureUnderrun(SPI_HandleTypeDef *hspi, uint32_t UnderrunDetection, uint32_t UnderrunBehaviour)
+HAL_StatusTypeDef HAL_SPIEx_ConfigureUnderrun(SPI_HandleTypeDef *hspi, uint32_t UnderrunDetection,
+                                              uint32_t UnderrunBehaviour)
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(UnderrunDetection);
-  
+
   HAL_StatusTypeDef errorcode = HAL_OK;
 
   /* Process Locked */
@@ -235,7 +236,8 @@ HAL_StatusTypeDef HAL_SPIEx_SetConfigAutonomousMode(SPI_HandleTypeDef *hspi, SPI
     __HAL_SPI_DISABLE(hspi);
 
     /* SPIx AUTOCR Configuration */
-    WRITE_REG(hspi->Instance->AUTOCR, (sConfig->TriggerState | ((sConfig->TriggerSelection) & SPI_AUTOCR_TRIGSEL_Msk) | sConfig->TriggerPolarity));
+    WRITE_REG(hspi->Instance->AUTOCR, (sConfig->TriggerState | ((sConfig->TriggerSelection) & SPI_AUTOCR_TRIGSEL_Msk) |
+                                       sConfig->TriggerPolarity));
 
     hspi->State = HAL_SPI_STATE_READY;
 

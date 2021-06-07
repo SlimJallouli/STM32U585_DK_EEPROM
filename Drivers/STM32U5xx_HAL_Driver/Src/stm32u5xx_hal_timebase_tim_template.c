@@ -6,7 +6,7 @@
   *
   *          This file overrides the native HAL time base functions (defined as weak)
   *          the TIM time base:
-  *           + Intializes the TIM peripheral to generate a Period elapsed Event each 1ms
+  *           + Initializes the TIM peripheral to generate a Period elapsed Event each 1ms
   *           + HAL_IncTick is called inside HAL_TIM_PeriodElapsedCallback ie each 1ms
   *
  @verbatim
@@ -55,7 +55,7 @@ static TIM_HandleTypeDef        TimHandle;
 void TIM6_IRQHandler(void);
 #if (USE_HAL_TIM_REGISTER_CALLBACKS == 1U)
 void TimeBase_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
-#endif
+#endif /* USE_HAL_TIM_REGISTER_CALLBACKS */
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -70,7 +70,8 @@ void TimeBase_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
   RCC_ClkInitTypeDef    clkconfig;
-  uint32_t              uwTimclock, uwAPB1Prescaler;
+  uint32_t              uwTimclock;
+  uint32_t              uwAPB1Prescaler;
   uint32_t              uwPrescalerValue;
   uint32_t              pFLatency;
   HAL_StatusTypeDef     Status;
@@ -95,7 +96,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   }
 
   /* Compute the prescaler value to have TIM6 counter clock equal to 100KHz */
-  uwPrescalerValue = (uint32_t) ((uwTimclock / 100000U) - 1U);
+  uwPrescalerValue = (uint32_t)((uwTimclock / 100000U) - 1U);
 
   /* Initialize TIM6 */
   TimHandle.Instance = TIM6;
@@ -120,7 +121,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
       if (TickPriority < (1UL << __NVIC_PRIO_BITS))
       {
         /* Enable the TIM6 global Interrupt */
-        HAL_NVIC_SetPriority(TIM6_IRQn, TickPriority ,0);
+        HAL_NVIC_SetPriority(TIM6_IRQn, TickPriority, 0);
         uwTickPrio = TickPriority;
       }
       else
@@ -131,7 +132,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   }
 #if (USE_HAL_TIM_REGISTER_CALLBACKS == 1U)
   HAL_TIM_RegisterCallback(&TimHandle, HAL_TIM_PERIOD_ELAPSED_CB_ID, TimeBase_TIM_PeriodElapsedCallback);
-#endif
+#endif /* USE_HAL_TIM_REGISTER_CALLBACKS */
 
   HAL_NVIC_EnableIRQ(TIM6_IRQn);
 
@@ -175,7 +176,7 @@ void HAL_ResumeTick(void)
 void TimeBase_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 #else
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-#endif
+#endif /* USE_HAL_TIM_REGISTER_CALLBACKS */
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(htim);

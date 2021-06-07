@@ -72,38 +72,46 @@ typedef struct
   uint32_t PeripheralMode;      /*!< Specifies the peripheral mode.
                                      This parameter can be a value of @ref I2C_LL_EC_PERIPHERAL_MODE
 
-                                     This feature can be modified afterwards using unitary function @ref LL_I2C_SetMode(). */
+                                     This feature can be modified afterwards using unitary function
+                                     @ref LL_I2C_SetMode(). */
 
   uint32_t Timing;              /*!< Specifies the SDA setup, hold time and the SCL high, low period values.
                                      This parameter must be set by referring to the STM32CubeMX Tool and
                                      the helper macro @ref __LL_I2C_CONVERT_TIMINGS()
 
-                                     This feature can be modified afterwards using unitary function @ref LL_I2C_SetTiming(). */
+                                     This feature can be modified afterwards using unitary function
+                                     @ref LL_I2C_SetTiming(). */
 
   uint32_t AnalogFilter;        /*!< Enables or disables analog noise filter.
                                      This parameter can be a value of @ref I2C_LL_EC_ANALOGFILTER_SELECTION
 
-                                     This feature can be modified afterwards using unitary functions @ref LL_I2C_EnableAnalogFilter() or LL_I2C_DisableAnalogFilter(). */
+                                     This feature can be modified afterwards using unitary functions
+                                     @ref LL_I2C_EnableAnalogFilter() or LL_I2C_DisableAnalogFilter(). */
 
   uint32_t DigitalFilter;       /*!< Configures the digital noise filter.
                                      This parameter can be a number between Min_Data = 0x00 and Max_Data = 0x0F
 
-                                     This feature can be modified afterwards using unitary function @ref LL_I2C_SetDigitalFilter(). */
+                                     This feature can be modified afterwards using unitary function
+                                     @ref LL_I2C_SetDigitalFilter(). */
 
   uint32_t OwnAddress1;         /*!< Specifies the device own address 1.
                                      This parameter must be a value between Min_Data = 0x00 and Max_Data = 0x3FF
 
-                                     This feature can be modified afterwards using unitary function @ref LL_I2C_SetOwnAddress1(). */
+                                     This feature can be modified afterwards using unitary function
+                                     @ref LL_I2C_SetOwnAddress1(). */
 
-  uint32_t TypeAcknowledge;     /*!< Specifies the ACKnowledge or Non ACKnowledge condition after the address receive match code or next received byte.
+  uint32_t TypeAcknowledge;     /*!< Specifies the ACKnowledge or Non ACKnowledge condition after the address receive
+                                     match code or next received byte.
                                      This parameter can be a value of @ref I2C_LL_EC_I2C_ACKNOWLEDGE
 
-                                     This feature can be modified afterwards using unitary function @ref LL_I2C_AcknowledgeNextData(). */
+                                     This feature can be modified afterwards using unitary function
+                                     @ref LL_I2C_AcknowledgeNextData(). */
 
   uint32_t OwnAddrSize;         /*!< Specifies the device own address 1 size (7-bit or 10-bit).
                                      This parameter can be a value of @ref I2C_LL_EC_OWNADDRESS1
 
-                                     This feature can be modified afterwards using unitary function @ref LL_I2C_SetOwnAddress1(). */
+                                     This feature can be modified afterwards using unitary function
+                                     @ref LL_I2C_SetOwnAddress1(). */
 } LL_I2C_InitTypeDef;
 /**
   * @}
@@ -173,10 +181,11 @@ typedef struct
 /** @defgroup I2C_LL_EC_PERIPHERAL_MODE Peripheral Mode
   * @{
   */
-#define LL_I2C_MODE_I2C                    0x00000000U              /*!< I2C Master or Slave mode                                    */
-#define LL_I2C_MODE_SMBUS_HOST             I2C_CR1_SMBHEN           /*!< SMBus Host address acknowledge                              */
-#define LL_I2C_MODE_SMBUS_DEVICE           0x00000000U              /*!< SMBus Device default mode (Default address not acknowledge) */
-#define LL_I2C_MODE_SMBUS_DEVICE_ARP       I2C_CR1_SMBDEN           /*!< SMBus Device Default address acknowledge                    */
+#define LL_I2C_MODE_I2C                    0x00000000U              /*!< I2C Master or Slave mode                 */
+#define LL_I2C_MODE_SMBUS_HOST             I2C_CR1_SMBHEN           /*!< SMBus Host address acknowledge           */
+#define LL_I2C_MODE_SMBUS_DEVICE           0x00000000U              /*!< SMBus Device default mode
+                                                                         (Default address not acknowledge)        */
+#define LL_I2C_MODE_SMBUS_DEVICE_ARP       I2C_CR1_SMBDEN           /*!< SMBus Device Default address acknowledge */
 /**
   * @}
   */
@@ -211,14 +220,15 @@ typedef struct
 /** @defgroup I2C_LL_EC_OWNADDRESS2 Own Address 2 Masks
   * @{
   */
-#define LL_I2C_OWNADDRESS2_NOMASK           I2C_OAR2_OA2NOMASK      /*!< Own Address2 No mask.                                */
-#define LL_I2C_OWNADDRESS2_MASK01           I2C_OAR2_OA2MASK01      /*!< Only Address2 bits[7:2] are compared.                */
-#define LL_I2C_OWNADDRESS2_MASK02           I2C_OAR2_OA2MASK02      /*!< Only Address2 bits[7:3] are compared.                */
-#define LL_I2C_OWNADDRESS2_MASK03           I2C_OAR2_OA2MASK03      /*!< Only Address2 bits[7:4] are compared.                */
-#define LL_I2C_OWNADDRESS2_MASK04           I2C_OAR2_OA2MASK04      /*!< Only Address2 bits[7:5] are compared.                */
-#define LL_I2C_OWNADDRESS2_MASK05           I2C_OAR2_OA2MASK05      /*!< Only Address2 bits[7:6] are compared.                */
-#define LL_I2C_OWNADDRESS2_MASK06           I2C_OAR2_OA2MASK06      /*!< Only Address2 bits[7] are compared.                  */
-#define LL_I2C_OWNADDRESS2_MASK07           I2C_OAR2_OA2MASK07      /*!< No comparison is done. All Address2 are acknowledged.*/
+#define LL_I2C_OWNADDRESS2_NOMASK           I2C_OAR2_OA2NOMASK      /*!< Own Address2 No mask.                 */
+#define LL_I2C_OWNADDRESS2_MASK01           I2C_OAR2_OA2MASK01      /*!< Only Address2 bits[7:2] are compared. */
+#define LL_I2C_OWNADDRESS2_MASK02           I2C_OAR2_OA2MASK02      /*!< Only Address2 bits[7:3] are compared. */
+#define LL_I2C_OWNADDRESS2_MASK03           I2C_OAR2_OA2MASK03      /*!< Only Address2 bits[7:4] are compared. */
+#define LL_I2C_OWNADDRESS2_MASK04           I2C_OAR2_OA2MASK04      /*!< Only Address2 bits[7:5] are compared. */
+#define LL_I2C_OWNADDRESS2_MASK05           I2C_OAR2_OA2MASK05      /*!< Only Address2 bits[7:6] are compared. */
+#define LL_I2C_OWNADDRESS2_MASK06           I2C_OAR2_OA2MASK06      /*!< Only Address2 bits[7] are compared.   */
+#define LL_I2C_OWNADDRESS2_MASK07           I2C_OAR2_OA2MASK07      /*!< No comparison is done.
+                                                                         All Address2 are acknowledged.        */
 /**
   * @}
   */
@@ -253,14 +263,22 @@ typedef struct
 /** @defgroup I2C_LL_EC_MODE Transfer End Mode
   * @{
   */
-#define LL_I2C_MODE_RELOAD                  I2C_CR2_RELOAD                                      /*!< Enable I2C Reload mode.                                   */
-#define LL_I2C_MODE_AUTOEND                 I2C_CR2_AUTOEND                                     /*!< Enable I2C Automatic end mode with no HW PEC comparison.  */
-#define LL_I2C_MODE_SOFTEND                 0x00000000U                                         /*!< Enable I2C Software end mode with no HW PEC comparison.   */
-#define LL_I2C_MODE_SMBUS_RELOAD            LL_I2C_MODE_RELOAD                                  /*!< Enable SMBUS Automatic end mode with HW PEC comparison.   */
-#define LL_I2C_MODE_SMBUS_AUTOEND_NO_PEC    LL_I2C_MODE_AUTOEND                                 /*!< Enable SMBUS Automatic end mode with HW PEC comparison.   */
-#define LL_I2C_MODE_SMBUS_SOFTEND_NO_PEC    LL_I2C_MODE_SOFTEND                                 /*!< Enable SMBUS Software end mode with HW PEC comparison.    */
-#define LL_I2C_MODE_SMBUS_AUTOEND_WITH_PEC  (uint32_t)(LL_I2C_MODE_AUTOEND | I2C_CR2_PECBYTE)   /*!< Enable SMBUS Automatic end mode with HW PEC comparison.   */
-#define LL_I2C_MODE_SMBUS_SOFTEND_WITH_PEC  (uint32_t)(LL_I2C_MODE_SOFTEND | I2C_CR2_PECBYTE)   /*!< Enable SMBUS Software end mode with HW PEC comparison.    */
+/*!< Enable I2C Reload mode.                                 */
+#define LL_I2C_MODE_RELOAD                  I2C_CR2_RELOAD
+/*!< Enable I2C Automatic end mode with no HW PEC comparison.  */
+#define LL_I2C_MODE_AUTOEND                 I2C_CR2_AUTOEND
+/*!< Enable I2C Software end mode with no HW PEC comparison.   */
+#define LL_I2C_MODE_SOFTEND                 0x00000000U
+/*!< Enable SMBUS Automatic end mode with HW PEC comparison.   */
+#define LL_I2C_MODE_SMBUS_RELOAD            LL_I2C_MODE_RELOAD
+/*!< Enable SMBUS Automatic end mode with HW PEC comparison.   */
+#define LL_I2C_MODE_SMBUS_AUTOEND_NO_PEC    LL_I2C_MODE_AUTOEND
+/*!< Enable SMBUS Software end mode with HW PEC comparison.    */
+#define LL_I2C_MODE_SMBUS_SOFTEND_NO_PEC    LL_I2C_MODE_SOFTEND
+/*!< Enable SMBUS Automatic end mode with HW PEC comparison.   */
+#define LL_I2C_MODE_SMBUS_AUTOEND_WITH_PEC  (uint32_t)(LL_I2C_MODE_AUTOEND | I2C_CR2_PECBYTE)
+/*!< Enable SMBUS Software end mode with HW PEC comparison.    */
+#define LL_I2C_MODE_SMBUS_SOFTEND_WITH_PEC  (uint32_t)(LL_I2C_MODE_SOFTEND | I2C_CR2_PECBYTE)
 /**
   * @}
   */
@@ -268,14 +286,22 @@ typedef struct
 /** @defgroup I2C_LL_EC_GENERATE Start And Stop Generation
   * @{
   */
-#define LL_I2C_GENERATE_NOSTARTSTOP         0x00000000U                                                                /*!< Don't Generate Stop and Start condition.                */
-#define LL_I2C_GENERATE_STOP                (uint32_t)(0x80000000U | I2C_CR2_STOP)                                     /*!< Generate Stop condition (Size should be set to 0).      */
-#define LL_I2C_GENERATE_START_READ          (uint32_t)(0x80000000U | I2C_CR2_START | I2C_CR2_RD_WRN)                   /*!< Generate Start for read request.                        */
-#define LL_I2C_GENERATE_START_WRITE         (uint32_t)(0x80000000U | I2C_CR2_START)                                    /*!< Generate Start for write request.                       */
-#define LL_I2C_GENERATE_RESTART_7BIT_READ   (uint32_t)(0x80000000U | I2C_CR2_START | I2C_CR2_RD_WRN)                   /*!< Generate Restart for read request, slave 7Bit address.  */
-#define LL_I2C_GENERATE_RESTART_7BIT_WRITE  (uint32_t)(0x80000000U | I2C_CR2_START)                                    /*!< Generate Restart for write request, slave 7Bit address. */
-#define LL_I2C_GENERATE_RESTART_10BIT_READ  (uint32_t)(0x80000000U | I2C_CR2_START | I2C_CR2_RD_WRN | I2C_CR2_HEAD10R) /*!< Generate Restart for read request, slave 10Bit address. */
-#define LL_I2C_GENERATE_RESTART_10BIT_WRITE (uint32_t)(0x80000000U | I2C_CR2_START)                                    /*!< Generate Restart for write request, slave 10Bit address.*/
+/*!< Don't Generate Stop and Start condition.                */
+#define LL_I2C_GENERATE_NOSTARTSTOP         0x00000000U
+/*!< Generate Stop condition (Size should be set to 0).      */
+#define LL_I2C_GENERATE_STOP                (uint32_t)(0x80000000U | I2C_CR2_STOP)
+/*!< Generate Start for read request.                        */
+#define LL_I2C_GENERATE_START_READ          (uint32_t)(0x80000000U | I2C_CR2_START | I2C_CR2_RD_WRN)
+/*!< Generate Start for write request.                       */
+#define LL_I2C_GENERATE_START_WRITE         (uint32_t)(0x80000000U | I2C_CR2_START)
+/*!< Generate Restart for read request, slave 7Bit address.  */
+#define LL_I2C_GENERATE_RESTART_7BIT_READ   (uint32_t)(0x80000000U | I2C_CR2_START | I2C_CR2_RD_WRN)
+/*!< Generate Restart for write request, slave 7Bit address. */
+#define LL_I2C_GENERATE_RESTART_7BIT_WRITE  (uint32_t)(0x80000000U | I2C_CR2_START)
+/*!< Generate Restart for read request, slave 10Bit address. */
+#define LL_I2C_GENERATE_RESTART_10BIT_READ  (uint32_t)(0x80000000U | I2C_CR2_START | I2C_CR2_RD_WRN | I2C_CR2_HEAD10R)
+/*!< Generate Restart for write request, slave 10Bit address.*/
+#define LL_I2C_GENERATE_RESTART_10BIT_WRITE (uint32_t)(0x80000000U | I2C_CR2_START)
 /**
   * @}
   */
@@ -283,8 +309,8 @@ typedef struct
 /** @defgroup I2C_LL_EC_DIRECTION Read Write Direction
   * @{
   */
-#define LL_I2C_DIRECTION_WRITE              0x00000000U              /*!< Write transfer request by master, slave enters receiver mode.  */
-#define LL_I2C_DIRECTION_READ               I2C_ISR_DIR              /*!< Read transfer request by master, slave enters transmitter mode.*/
+#define LL_I2C_DIRECTION_WRITE        0x00000000U /*!< Write transfer request by master, slave enters receiver mode.  */
+#define LL_I2C_DIRECTION_READ         I2C_ISR_DIR /*!< Read transfer request by master, slave enters transmitter mode.*/
 /**
   * @}
   */
@@ -292,8 +318,8 @@ typedef struct
 /** @defgroup I2C_LL_EC_DMA_REG_DATA DMA Register Data
   * @{
   */
-#define LL_I2C_DMA_REG_DATA_TRANSMIT        0x00000000U              /*!< Get address of data register used for transmission */
-#define LL_I2C_DMA_REG_DATA_RECEIVE         0x00000001U              /*!< Get address of data register used for reception */
+#define LL_I2C_DMA_REG_DATA_TRANSMIT  0x00000000U /*!< Get address of data register used for transmission */
+#define LL_I2C_DMA_REG_DATA_RECEIVE   0x00000001U /*!< Get address of data register used for reception */
 /**
   * @}
   */
@@ -301,8 +327,10 @@ typedef struct
 /** @defgroup I2C_LL_EC_SMBUS_TIMEOUTA_MODE SMBus TimeoutA Mode SCL SDA Timeout
   * @{
   */
-#define LL_I2C_SMBUS_TIMEOUTA_MODE_SCL_LOW      0x00000000U          /*!< TimeoutA is used to detect SCL low level timeout.              */
-#define LL_I2C_SMBUS_TIMEOUTA_MODE_SDA_SCL_HIGH I2C_TIMEOUTR_TIDLE   /*!< TimeoutA is used to detect both SCL and SDA high level timeout.*/
+#define LL_I2C_SMBUS_TIMEOUTA_MODE_SCL_LOW      0x00000000U          /*!< TimeoutA is used to detect SCL low level
+                                                                          timeout.              */
+#define LL_I2C_SMBUS_TIMEOUTA_MODE_SDA_SCL_HIGH I2C_TIMEOUTR_TIDLE   /*!< TimeoutA is used to detect both SCL and SDA
+                                                                          high level timeout.*/
 /**
   * @}
   */
@@ -310,9 +338,10 @@ typedef struct
 /** @defgroup I2C_LL_EC_SMBUS_TIMEOUT_SELECTION SMBus Timeout Selection
   * @{
   */
-#define LL_I2C_SMBUS_TIMEOUTA               I2C_TIMEOUTR_TIMOUTEN                                   /*!< TimeoutA enable bit                                */
-#define LL_I2C_SMBUS_TIMEOUTB               I2C_TIMEOUTR_TEXTEN                                     /*!< TimeoutB (extended clock) enable bit               */
-#define LL_I2C_SMBUS_ALL_TIMEOUT            (uint32_t)(I2C_TIMEOUTR_TIMOUTEN | I2C_TIMEOUTR_TEXTEN) /*!< TimeoutA and TimeoutB (extended clock) enable bits */
+#define LL_I2C_SMBUS_TIMEOUTA               I2C_TIMEOUTR_TIMOUTEN           /*!< TimeoutA enable bit                  */
+#define LL_I2C_SMBUS_TIMEOUTB               I2C_TIMEOUTR_TEXTEN             /*!< TimeoutB (extended clock) enable bit */
+#define LL_I2C_SMBUS_ALL_TIMEOUT            (uint32_t)(I2C_TIMEOUTR_TIMOUTEN | \
+                                                       I2C_TIMEOUTR_TEXTEN) /*!< TimeoutA and TimeoutB enable bits    */
 /**
   * @}
   */
@@ -321,34 +350,58 @@ typedef struct
   * @brief    I2C Autonomous Trigger selection
   * @{
   */
-#define LL_I2C_TRIG_GRP1                   (0x10000000U)                    /*!< Trigger Group for I2C1, I2C2 and I2C4 */
-#define LL_I2C_TRIG_GRP2                   (0x20000000U)                    /*!< Trigger Group for I2C3 */
+#define LL_I2C_TRIG_GRP1                   (0x10000000U)         /*!< Trigger Group for I2C1, I2C2 and I2C4 */
+#define LL_I2C_TRIG_GRP2                   (0x20000000U)         /*!< Trigger Group for I2C3 */
 
-#define LL_I2C_GRP1_GPDMA_CH0_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP1 | (0x00000000U))                     /*!< HW Trigger signal is GPDMA_CH0_TRG     */
-#define LL_I2C_GRP1_GPDMA_CH1_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP1 | (0x1U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is GPDMA_CH1_TRG     */
-#define LL_I2C_GRP1_GPDMA_CH2_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP1 | (0x2U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is GPDMA_CH2_TRG     */
-#define LL_I2C_GRP1_GPDMA_CH3_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP1 | (0x3U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is GPDMA_CH3_TRG     */
-#define LL_I2C_GRP1_EXTI5_TRG              (uint32_t)(LL_I2C_TRIG_GRP1 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is EXTI5_TRG         */
-#define LL_I2C_GRP1_EXTI9_TRG              (uint32_t)(LL_I2C_TRIG_GRP1 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is EXTI9_TRG         */
-#define LL_I2C_GRP1_LPTIM1_CH1_TRG         (uint32_t)(LL_I2C_TRIG_GRP1 | (0x6U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is LPTIM1_CH1_TRG    */
-#define LL_I2C_GRP1_LPTIM2_CH1_TRG         (uint32_t)(LL_I2C_TRIG_GRP1 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is LPTIM2_CH1_TRG    */
-#define LL_I2C_GRP1_COMP1_TRG              (uint32_t)(LL_I2C_TRIG_GRP1 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is COMP1_TRG         */
-#define LL_I2C_GRP1_COMP2_TRG              (uint32_t)(LL_I2C_TRIG_GRP1 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is COMP2_TRG         */
-#define LL_I2C_GRP1_RTC_ALRA_TRG           (uint32_t)(LL_I2C_TRIG_GRP1 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is RTC_ALRA_TRG      */
-#define LL_I2C_GRP1_RTC_WUT_TRG            (uint32_t)(LL_I2C_TRIG_GRP1 | (0xBU << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is RTC_WUT_TRG       */
+/*!< HW Trigger signal is GPDMA_CH0_TRG     */
+#define LL_I2C_GRP1_GPDMA_CH0_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP1 | (0x00000000U))
+/*!< HW Trigger signal is GPDMA_CH1_TRG     */
+#define LL_I2C_GRP1_GPDMA_CH1_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP1 | (0x1U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is GPDMA_CH2_TRG     */
+#define LL_I2C_GRP1_GPDMA_CH2_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP1 | (0x2U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is GPDMA_CH3_TRG     */
+#define LL_I2C_GRP1_GPDMA_CH3_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP1 | (0x3U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is EXTI5_TRG         */
+#define LL_I2C_GRP1_EXTI5_TRG              (uint32_t)(LL_I2C_TRIG_GRP1 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is EXTI9_TRG         */
+#define LL_I2C_GRP1_EXTI9_TRG              (uint32_t)(LL_I2C_TRIG_GRP1 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is LPTIM1_CH1_TRG    */
+#define LL_I2C_GRP1_LPTIM1_CH1_TRG         (uint32_t)(LL_I2C_TRIG_GRP1 | (0x6U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is LPTIM2_CH1_TRG    */
+#define LL_I2C_GRP1_LPTIM2_CH1_TRG         (uint32_t)(LL_I2C_TRIG_GRP1 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is COMP1_TRG         */
+#define LL_I2C_GRP1_COMP1_TRG              (uint32_t)(LL_I2C_TRIG_GRP1 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is COMP2_TRG         */
+#define LL_I2C_GRP1_COMP2_TRG              (uint32_t)(LL_I2C_TRIG_GRP1 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is RTC_ALRA_TRG      */
+#define LL_I2C_GRP1_RTC_ALRA_TRG           (uint32_t)(LL_I2C_TRIG_GRP1 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is RTC_WUT_TRG       */
+#define LL_I2C_GRP1_RTC_WUT_TRG            (uint32_t)(LL_I2C_TRIG_GRP1 | (0xBU << I2C_AUTOCR_TRIGSEL_Pos))
 
-#define LL_I2C_GRP2_LPDMA_CH0_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP2 | (0x00000000U))                     /*!< HW Trigger signal is LPDMA_CH0_TRG     */
-#define LL_I2C_GRP2_LPDMA_CH1_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP2 | (0x1U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is LPDMA_CH1_TRG     */
-#define LL_I2C_GRP2_LPDMA_CH2_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP2 | (0x2U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is LPDMA_CH2_TRG     */
-#define LL_I2C_GRP2_LPDMA_CH3_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP2 | (0x3U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is LPDMA_CH3_TRG     */
-#define LL_I2C_GRP2_EXTI5_TRG              (uint32_t)(LL_I2C_TRIG_GRP2 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is EXTI5_TRG         */
-#define LL_I2C_GRP2_EXTI8_TRG              (uint32_t)(LL_I2C_TRIG_GRP2 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is EXTI8_TRG         */
-#define LL_I2C_GRP2_LPTIM1_CH1_TRG         (uint32_t)(LL_I2C_TRIG_GRP2 | (0x6U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is LPTIM1_CH1_TRG    */
-#define LL_I2C_GRP2_LPTIM3_CH1_TRG         (uint32_t)(LL_I2C_TRIG_GRP2 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is LPTIM3_CH1_TRG    */
-#define LL_I2C_GRP2_COMP1_TRG              (uint32_t)(LL_I2C_TRIG_GRP2 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is COMP1_TRG         */
-#define LL_I2C_GRP2_COMP2_TRG              (uint32_t)(LL_I2C_TRIG_GRP2 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is COMP2_TRG         */
-#define LL_I2C_GRP2_RTC_ALRA_TRG           (uint32_t)(LL_I2C_TRIG_GRP2 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is RTC_ALRA_TRG      */
-#define LL_I2C_GRP2_RTC_WUT_TRG            (uint32_t)(LL_I2C_TRIG_GRP2 | (0xBU << I2C_AUTOCR_TRIGSEL_Pos))  /*!< HW Trigger signal is RTC_WUT_TRG       */
+/*!< HW Trigger signal is LPDMA_CH0_TRG     */
+#define LL_I2C_GRP2_LPDMA_CH0_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP2 | (0x00000000U))
+/*!< HW Trigger signal is LPDMA_CH1_TRG     */
+#define LL_I2C_GRP2_LPDMA_CH1_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP2 | (0x1U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is LPDMA_CH2_TRG     */
+#define LL_I2C_GRP2_LPDMA_CH2_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP2 | (0x2U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is LPDMA_CH3_TRG     */
+#define LL_I2C_GRP2_LPDMA_CH3_TCF_TRG      (uint32_t)(LL_I2C_TRIG_GRP2 | (0x3U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is EXTI5_TRG         */
+#define LL_I2C_GRP2_EXTI5_TRG              (uint32_t)(LL_I2C_TRIG_GRP2 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is EXTI8_TRG         */
+#define LL_I2C_GRP2_EXTI8_TRG              (uint32_t)(LL_I2C_TRIG_GRP2 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is LPTIM1_CH1_TRG    */
+#define LL_I2C_GRP2_LPTIM1_CH1_TRG         (uint32_t)(LL_I2C_TRIG_GRP2 | (0x6U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is LPTIM3_CH1_TRG    */
+#define LL_I2C_GRP2_LPTIM3_CH1_TRG         (uint32_t)(LL_I2C_TRIG_GRP2 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is COMP1_TRG         */
+#define LL_I2C_GRP2_COMP1_TRG              (uint32_t)(LL_I2C_TRIG_GRP2 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is COMP2_TRG         */
+#define LL_I2C_GRP2_COMP2_TRG              (uint32_t)(LL_I2C_TRIG_GRP2 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is RTC_ALRA_TRG      */
+#define LL_I2C_GRP2_RTC_ALRA_TRG           (uint32_t)(LL_I2C_TRIG_GRP2 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))
+/*!< HW Trigger signal is RTC_WUT_TRG       */
+#define LL_I2C_GRP2_RTC_WUT_TRG            (uint32_t)(LL_I2C_TRIG_GRP2 | (0xBU << I2C_AUTOCR_TRIGSEL_Pos))
 /**
   * @}
   */
@@ -401,19 +454,23 @@ typedef struct
   */
 /**
   * @brief  Configure the SDA setup, hold time and the SCL high, low period.
-  * @param  __PRESCALER__ This parameter must be a value between  Min_Data=0 and Max_Data=0xF.
-  * @param  __DATA_SETUP_TIME__ This parameter must be a value between Min_Data=0 and Max_Data=0xF. (tscldel = (SCLDEL+1)xtpresc)
-  * @param  __DATA_HOLD_TIME__ This parameter must be a value between Min_Data=0 and Max_Data=0xF. (tsdadel = SDADELxtpresc)
-  * @param  __CLOCK_HIGH_PERIOD__ This parameter must be a value between Min_Data=0 and Max_Data=0xFF. (tsclh = (SCLH+1)xtpresc)
-  * @param  __CLOCK_LOW_PERIOD__ This parameter must be a value between  Min_Data=0 and Max_Data=0xFF. (tscll = (SCLL+1)xtpresc)
+  * @param  __PRESCALER__    This parameter must be a value between  Min_Data=0 and Max_Data=0xF.
+  * @param  __SETUP_TIME__   This parameter must be a value between Min_Data=0 and Max_Data=0xF.
+                               (tscldel = (SCLDEL+1)xtpresc)
+  * @param  __HOLD_TIME__    This parameter must be a value between Min_Data=0 and Max_Data=0xF.
+                               (tsdadel = SDADELxtpresc)
+  * @param  __SCL_H_PERIOD__ This parameter must be a value between Min_Data=0 and Max_Data=0xFF.
+                               (tsclh = (SCLH+1)xtpresc)
+  * @param  __SCL_L_PERIOD__ This parameter must be a value between  Min_Data=0 and Max_Data=0xFF.
+                               (tscll = (SCLL+1)xtpresc)
   * @retval Value between Min_Data=0 and Max_Data=0xFFFFFFFF
   */
-#define __LL_I2C_CONVERT_TIMINGS(__PRESCALER__, __DATA_SETUP_TIME__, __DATA_HOLD_TIME__, __CLOCK_HIGH_PERIOD__, __CLOCK_LOW_PERIOD__)   \
-  ((((uint32_t)(__PRESCALER__)         << I2C_TIMINGR_PRESC_Pos)  & I2C_TIMINGR_PRESC)   | \
-   (((uint32_t)(__DATA_SETUP_TIME__)   << I2C_TIMINGR_SCLDEL_Pos) & I2C_TIMINGR_SCLDEL)  | \
-   (((uint32_t)(__DATA_HOLD_TIME__)    << I2C_TIMINGR_SDADEL_Pos) & I2C_TIMINGR_SDADEL)  | \
-   (((uint32_t)(__CLOCK_HIGH_PERIOD__) << I2C_TIMINGR_SCLH_Pos)   & I2C_TIMINGR_SCLH)    | \
-   (((uint32_t)(__CLOCK_LOW_PERIOD__)  << I2C_TIMINGR_SCLL_Pos)   & I2C_TIMINGR_SCLL))
+#define __LL_I2C_CONVERT_TIMINGS(__PRESCALER__, __SETUP_TIME__, __HOLD_TIME__, __SCL_H_PERIOD__, __SCL_L_PERIOD__) \
+  ((((uint32_t)(__PRESCALER__)     << I2C_TIMINGR_PRESC_Pos)  & I2C_TIMINGR_PRESC)   | \
+   (((uint32_t)(__SETUP_TIME__)    << I2C_TIMINGR_SCLDEL_Pos) & I2C_TIMINGR_SCLDEL)  | \
+   (((uint32_t)(__HOLD_TIME__)     << I2C_TIMINGR_SDADEL_Pos) & I2C_TIMINGR_SDADEL)  | \
+   (((uint32_t)(__SCL_H_PERIOD__)  << I2C_TIMINGR_SCLH_Pos)   & I2C_TIMINGR_SCLH)    | \
+   (((uint32_t)(__SCL_L_PERIOD__)  << I2C_TIMINGR_SCLL_Pos)   & I2C_TIMINGR_SCLL))
 /**
   * @}
   */
@@ -477,7 +534,8 @@ __STATIC_INLINE uint32_t LL_I2C_IsEnabled(I2C_TypeDef *I2Cx)
   * @param  AnalogFilter This parameter can be one of the following values:
   *         @arg @ref LL_I2C_ANALOGFILTER_ENABLE
   *         @arg @ref LL_I2C_ANALOGFILTER_DISABLE
-  * @param  DigitalFilter This parameter must be a value between Min_Data=0x00 (Digital filter disabled) and Max_Data=0x0F (Digital filter enabled and filtering capability up to 15*ti2cclk).
+  * @param  DigitalFilter This parameter must be a value between Min_Data=0x00 (Digital filter disabled)
+            and Max_Data=0x0F (Digital filter enabled and filtering capability up to 15*ti2cclk).
   *         This parameter is used to configure the digital noise filter on SDA and SCL input.
   *         The digital filter will filter spikes with a length of up to DNF[3:0]*ti2cclk.
   * @retval None
@@ -493,7 +551,8 @@ __STATIC_INLINE void LL_I2C_ConfigFilters(I2C_TypeDef *I2Cx, uint32_t AnalogFilt
   *         This filter can only be programmed when the I2C is disabled (PE = 0).
   * @rmtoll CR1          DNF           LL_I2C_SetDigitalFilter
   * @param  I2Cx I2C Instance.
-  * @param  DigitalFilter This parameter must be a value between Min_Data=0x00 (Digital filter disabled) and Max_Data=0x0F (Digital filter enabled and filtering capability up to 15*ti2cclk).
+  * @param  DigitalFilter This parameter must be a value between Min_Data=0x00 (Digital filter disabled)
+            and Max_Data=0x0F (Digital filter enabled and filtering capability up to 15*ti2cclk).
   *         This parameter is used to configure the digital noise filter on SDA and SCL input.
   *         The digital filter will filter spikes with a length of up to DNF[3:0]*ti2cclk.
   * @retval None
@@ -632,12 +691,12 @@ __STATIC_INLINE uint32_t LL_I2C_DMA_GetRegAddr(I2C_TypeDef *I2Cx, uint32_t Direc
   if (Direction == LL_I2C_DMA_REG_DATA_TRANSMIT)
   {
     /* return address of TXDR register */
-    data_reg_addr = (uint32_t) & (I2Cx->TXDR);
+    data_reg_addr = (uint32_t) &(I2Cx->TXDR);
   }
   else
   {
     /* return address of RXDR register */
-    data_reg_addr = (uint32_t) & (I2Cx->RXDR);
+    data_reg_addr = (uint32_t) &(I2Cx->RXDR);
   }
 
   return data_reg_addr;
@@ -1972,7 +2031,8 @@ __STATIC_INLINE uint32_t LL_I2C_GetTransferSize(I2C_TypeDef *I2Cx)
 }
 
 /**
-  * @brief  Prepare the generation of a ACKnowledge or Non ACKnowledge condition after the address receive match code or next received byte.
+  * @brief  Prepare the generation of a ACKnowledge or Non ACKnowledge condition after the address receive match code
+            or next received byte.
   * @note   Usage in Slave mode only.
   * @rmtoll CR2          NACK          LL_I2C_AcknowledgeNextData
   * @param  I2Cx I2C Instance.
@@ -2013,7 +2073,8 @@ __STATIC_INLINE void LL_I2C_GenerateStopCondition(I2C_TypeDef *I2Cx)
 /**
   * @brief  Enable automatic RESTART Read request condition for 10bit address header (master mode).
   * @note   The master sends the complete 10bit slave address read sequence :
-  *         Start + 2 bytes 10bit address in Write direction + Restart + first 7 bits of 10bit address in Read direction.
+  *         Start + 2 bytes 10bit address in Write direction + Restart + first 7 bits of 10bit address
+            in Read direction.
   * @rmtoll CR2          HEAD10R       LL_I2C_EnableAuto10BitRead
   * @param  I2Cx I2C Instance.
   * @retval None
@@ -2139,8 +2200,9 @@ __STATIC_INLINE uint32_t LL_I2C_GetSlaveAddr(I2C_TypeDef *I2Cx)
 __STATIC_INLINE void LL_I2C_HandleTransfer(I2C_TypeDef *I2Cx, uint32_t SlaveAddr, uint32_t SlaveAddrSize,
                                            uint32_t TransferSize, uint32_t EndMode, uint32_t Request)
 {
-  MODIFY_REG(I2Cx->CR2, I2C_CR2_SADD | I2C_CR2_ADD10 | (I2C_CR2_RD_WRN & (uint32_t)(Request >> (31U - I2C_CR2_RD_WRN_Pos))) | I2C_CR2_START | I2C_CR2_STOP | I2C_CR2_RELOAD |
-             I2C_CR2_NBYTES | I2C_CR2_AUTOEND | I2C_CR2_HEAD10R,
+  MODIFY_REG(I2Cx->CR2, I2C_CR2_SADD | I2C_CR2_ADD10 |
+             (I2C_CR2_RD_WRN & (uint32_t)(Request >> (31U - I2C_CR2_RD_WRN_Pos))) |
+             I2C_CR2_START | I2C_CR2_STOP | I2C_CR2_RELOAD | I2C_CR2_NBYTES | I2C_CR2_AUTOEND | I2C_CR2_HEAD10R,
              SlaveAddr | SlaveAddrSize | (TransferSize << I2C_CR2_NBYTES_Pos) | EndMode | Request);
 }
 
@@ -2174,7 +2236,8 @@ __STATIC_INLINE uint32_t LL_I2C_GetAddressMatchCode(I2C_TypeDef *I2Cx)
   * @brief  Enable internal comparison of the SMBus Packet Error byte (transmission or reception mode).
   * @note   The macro IS_SMBUS_ALL_INSTANCE(I2Cx) can be used to check whether or not
   *         SMBus feature is supported by the I2Cx Instance.
-  * @note   This feature is cleared by hardware when the PEC byte is transferred, or when a STOP condition or an Address Matched is received.
+  * @note   This feature is cleared by hardware when the PEC byte is transferred, or when a STOP condition
+            or an Address Matched is received.
   *         This bit has no effect when RELOAD bit is set.
   *         This bit has no effect in device mode when SBC bit is not set.
   * @rmtoll CR2          PECBYTE       LL_I2C_EnableSMBusPECCompare

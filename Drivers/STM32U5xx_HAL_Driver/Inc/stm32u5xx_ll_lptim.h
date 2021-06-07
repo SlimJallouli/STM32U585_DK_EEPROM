@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -58,8 +58,14 @@ static const uint8_t LL_LPTIM_SHIFT_TAB_ICxF[] =
 
 static const uint8_t LL_LPTIM_SHIFT_TAB_ICxPSC[] =
 {
-  0U,                     /* IC1PSC */
+  0U,                              /* IC1PSC */
   16U                              /* IC2PSC */
+};
+
+static const uint8_t LL_LPTIM_SHIFT_TAB_CCxSEL[] =
+{
+  0U,                              /* CC1SEL */
+  16U                              /* CC2SEL */
 };
 
 static const uint8_t LL_LPTIM_SHIFT_TAB_CCxE[] =
@@ -98,17 +104,20 @@ typedef struct
   uint32_t ClockSource;    /*!< Specifies the source of the clock used by the LPTIM instance.
                                 This parameter can be a value of @ref LPTIM_LL_EC_CLK_SOURCE.
 
-                                This feature can be modified afterwards using unitary function @ref LL_LPTIM_SetClockSource().*/
+                                This feature can be modified afterwards using unitary
+                                function @ref LL_LPTIM_SetClockSource().*/
 
   uint32_t Prescaler;      /*!< Specifies the prescaler division ratio.
                                 This parameter can be a value of @ref LPTIM_LL_EC_PRESCALER.
 
-                                This feature can be modified afterwards using using unitary function @ref LL_LPTIM_SetPrescaler().*/
+                                This feature can be modified afterwards using using unitary
+                                function @ref LL_LPTIM_SetPrescaler().*/
 
   uint32_t Waveform;       /*!< Specifies the waveform shape.
                                 This parameter can be a value of @ref LPTIM_LL_EC_OUTPUT_WAVEFORM.
 
-                                This feature can be modified afterwards using unitary function @ref LL_LPTIM_SetWaveform().*/
+                                This feature can be modified afterwards using unitary
+                                function @ref LL_LPTIM_SetWaveform().*/
 } LL_LPTIM_InitTypeDef;
 
 /**
@@ -125,10 +134,15 @@ typedef struct
   * @brief    Flags defines which can be used with LL_LPTIM_ReadReg function
   * @{
   */
-#define LL_LPTIM_ISR_CMPM                     LPTIM_ISR_CMPM     /*!< Compare match */
+#define LL_LPTIM_ISR_CMP1OK                   LPTIM_ISR_CMP1OK   /*!< Compare register 1 update OK */
+#define LL_LPTIM_ISR_CMP2OK                   LPTIM_ISR_CMP2OK   /*!< Compare register 2 update OK */
+#define LL_LPTIM_ISR_CC1IF                    LPTIM_ISR_CC1IF    /*!< Capture/Compare 1 interrupt flag */
+#define LL_LPTIM_ISR_CC2IF                    LPTIM_ISR_CC2IF    /*!< Capture/Compare 2 interrupt flag */
+#define LL_LPTIM_ISR_CC1OF                    LPTIM_ISR_CC1OF    /*!< Capture/Compare 1 over-capture flag */
+#define LL_LPTIM_ISR_CC2OF                    LPTIM_ISR_CC2OF    /*!< Capture/Compare 2 over-capture flag */
+#define LL_LPTIM_ISR_DIEROK                   LPTIM_ISR_DIEROK   /*!< Interrupt enable register update OK */
 #define LL_LPTIM_ISR_ARRM                     LPTIM_ISR_ARRM     /*!< Autoreload match */
 #define LL_LPTIM_ISR_EXTTRIG                  LPTIM_ISR_EXTTRIG  /*!< External trigger edge event */
-#define LL_LPTIM_ISR_CMPOK                    LPTIM_ISR_CMPOK    /*!< Compare register update OK */
 #define LL_LPTIM_ISR_ARROK                    LPTIM_ISR_ARROK    /*!< Autoreload register update OK */
 #define LL_LPTIM_ISR_UP                       LPTIM_ISR_UP       /*!< Counter direction change down to up */
 #define LL_LPTIM_ISR_DOWN                     LPTIM_ISR_DOWN     /*!< Counter direction change up to down */
@@ -142,15 +156,19 @@ typedef struct
   * @brief    IT defines which can be used with LL_LPTIM_ReadReg and  LL_LPTIM_WriteReg functions
   * @{
   */
-#define LL_LPTIM_IER_CMPMIE                   LPTIM_IER_CMPMIE       /*!< Compare match Interrupt Enable */
-#define LL_LPTIM_IER_ARRMIE                   LPTIM_IER_ARRMIE       /*!< Autoreload match Interrupt Enable */
-#define LL_LPTIM_IER_EXTTRIGIE                LPTIM_IER_EXTTRIGIE    /*!< External trigger valid edge Interrupt Enable */
-#define LL_LPTIM_IER_CMPOKIE                  LPTIM_IER_CMPOKIE      /*!< Compare register update OK Interrupt Enable */
-#define LL_LPTIM_IER_ARROKIE                  LPTIM_IER_ARROKIE      /*!< Autoreload register update OK Interrupt Enable */
-#define LL_LPTIM_IER_UPIE                     LPTIM_IER_UPIE         /*!< Direction change to UP Interrupt Enable */
-#define LL_LPTIM_IER_DOWNIE                   LPTIM_IER_DOWNIE       /*!< Direction change to down Interrupt Enable */
-#define LL_LPTIM_IER_UEIE                     LPTIM_IER_UEIE         /*!< Update event Interrupt Enable */
-#define LL_LPTIM_IER_REPOKIE                  LPTIM_IER_REPOKIE      /*!< Repetition register update OK Interrupt Enable */
+#define LL_LPTIM_DIER_CMP1OKIE                 LPTIM_DIER_CMP1OKIE   /*!< Compare register 1 update OK */
+#define LL_LPTIM_DIER_CMP2OKIE                 LPTIM_DIER_CMP2OKIE   /*!< Compare register 2 update OK */
+#define LL_LPTIM_DIER_CC1IFIE                  LPTIM_DIER_CC1IE      /*!< Capture/Compare 1 interrupt flag */
+#define LL_LPTIM_DIER_CC2IFIE                  LPTIM_DIER_CC2IE      /*!< Capture/Compare 2 interrupt flag */
+#define LL_LPTIM_DIER_CC1OFIE                  LPTIM_DIER_CC1OIE     /*!< Capture/Compare 1 over-capture flag */
+#define LL_LPTIM_DIER_CC2OFIE                  LPTIM_DIER_CC2OIE     /*!< Capture/Compare 2 over-capture flag */
+#define LL_LPTIM_DIER_ARRMIE                   LPTIM_DIER_ARRMIE     /*!< Autoreload match */
+#define LL_LPTIM_DIER_EXTTRIGIE                LPTIM_DIER_EXTTRIGIE  /*!< External trigger edge event */
+#define LL_LPTIM_DIER_ARROKIE                  LPTIM_DIER_ARROKIE    /*!< Autoreload register update OK */
+#define LL_LPTIM_DIER_UPIE                     LPTIM_DIER_UPIE       /*!< Counter direction change down to up */
+#define LL_LPTIM_DIER_DOWNIE                   LPTIM_DIER_DOWNIE     /*!< Counter direction change up to down */
+#define LL_LPTIM_DIER_UEIE                     LPTIM_DIER_UEIE       /*!< Update event */
+#define LL_LPTIM_DIER_REPOKIE                  LPTIM_DIER_REPOKIE    /*!< Repetition register update OK */
 /**
   * @}
   */
@@ -236,6 +254,14 @@ typedef struct
 #define LL_LPTIM_ICPOLARITY_RISING            0x00000000UL                              /*!< Capture/Compare input rising polarity */
 #define LL_LPTIM_ICPOLARITY_FALLING           LPTIM_CCMR1_CC1P_0                        /*!< Capture/Compare input falling polarity */
 #define LL_LPTIM_ICPOLARITY_RISING_FALLING    (LPTIM_CCMR1_CC1P_0|LPTIM_CCMR1_CC1P_1)   /*!< Capture/Compare input rising and falling polarities */
+/**
+  * @}
+  */
+/** @defgroup LPTIM_LL_EC_LPTIM_IC_Selection  Input Capture selection
+  * @{
+  */
+#define LL_LPTIM_CCMODE_OUTPUT_PWM            0x00000000UL                              /*!< Select PWM mode */
+#define LL_LPTIM_CCMODE_INPUTCAPTURE          LPTIM_CCMR1_CC1SEL                        /*!< Select Input Capture mode*/
 /**
   * @}
   */
@@ -390,11 +416,11 @@ typedef struct
   */
 #define LL_LPTIM_LPTIM2_IC2_RMP_GPIO     0x00000000UL                                  /* IC2 connected to GPIO */
 #define LL_LPTIM_LPTIM2_IC2_RMP_HSI      LPTIM_CFGR2_IC2SEL_0                          /* IC2 connected to HSI */
-#define LL_LPTIM_LPTIM2_IC2_RMP_MSI_1024 LPTIM_CFGR2_IC2SEL_1                          /* IC2 connected to MSI/1024 */
-#define LL_LPTIM_LPTIM2_IC2_RMP_MSI_4    (LPTIM_CFGR2_IC2SEL_1|LPTIM_CFGR2_IC2SEL_0)   /* IC2 connected to MSI/4 */
+#define LL_LPTIM_LPTIM2_IC2_RMP_MSIS_1024 LPTIM_CFGR2_IC2SEL_1                         /* IC2 connected to MSIS/1024 */
+#define LL_LPTIM_LPTIM2_IC2_RMP_MSIS_4    (LPTIM_CFGR2_IC2SEL_1|LPTIM_CFGR2_IC2SEL_0)  /* IC2 connected to MSIS/4 */
 
 /**
-  *
+  * @}
   */
 
 /** @defgroup LPTIM_EC_LPTIM3_IC1_RMP LPTIM3 Input Ch1 Remap
@@ -692,7 +718,8 @@ __STATIC_INLINE void LL_LPTIM_CC_DisableChannel(LPTIM_TypeDef *LPTIMx, uint32_t 
   */
 __STATIC_INLINE uint32_t LL_LPTIM_CC_IsEnabledChannel(LPTIM_TypeDef *LPTIMx, uint32_t Channel)
 {
-  return ((READ_BIT(LPTIMx->CCMR1, 0x1UL << LL_LPTIM_SHIFT_TAB_CCxE[Channel]) == (0x1UL << LL_LPTIM_SHIFT_TAB_CCxE[Channel])) ? 1UL : 0UL);
+  return ((READ_BIT(LPTIMx->CCMR1, 0x1UL << LL_LPTIM_SHIFT_TAB_CCxE[Channel]) ==                                       \
+           (0x1UL << LL_LPTIM_SHIFT_TAB_CCxE[Channel])) ? 1UL : 0UL);
 
 }
 
@@ -841,7 +868,8 @@ __STATIC_INLINE void LL_LPTIM_OC_SetPolarity(LPTIM_TypeDef *LPTIMx, uint32_t Cha
   }
   else
   {
-    MODIFY_REG(LPTIMx->CCMR1, (LPTIM_CCMR1_CC1P << LL_LPTIM_SHIFT_TAB_CCxP[Channel]), (Polarity << LL_LPTIM_SHIFT_TAB_CCxP[Channel]));
+    MODIFY_REG(LPTIMx->CCMR1, (LPTIM_CCMR1_CC1P << LL_LPTIM_SHIFT_TAB_CCxP[Channel]),
+               (Polarity << LL_LPTIM_SHIFT_TAB_CCxP[Channel]));
   }
 }
 
@@ -865,7 +893,8 @@ __STATIC_INLINE uint32_t LL_LPTIM_OC_GetPolarity(LPTIM_TypeDef *LPTIMx, uint32_t
   }
   else
   {
-    return (uint32_t)(READ_BIT(LPTIMx->CCMR1, LPTIM_CCMR1_CC1P << LL_LPTIM_SHIFT_TAB_CCxP[Channel]) >> LL_LPTIM_SHIFT_TAB_CCxP[Channel]);
+    return (uint32_t)(READ_BIT(LPTIMx->CCMR1, LPTIM_CCMR1_CC1P << LL_LPTIM_SHIFT_TAB_CCxP[Channel]) >>                 \
+                      LL_LPTIM_SHIFT_TAB_CCxP[Channel]);
   }
 }
 
@@ -920,8 +949,8 @@ __STATIC_INLINE uint32_t LL_LPTIM_GetPrescaler(LPTIM_TypeDef *LPTIMx)
   * @param  Src This parameter can be one of the following values:
   *         @arg @ref LL_LPTIM_INPUT1_SRC_GPIO
   *         @arg @ref LL_LPTIM_INPUT1_SRC_COMP1
-  *         @arg @ref LL_LPTIM_INPUT1_SRC_COMP2
-  *         @arg @ref LL_LPTIM_INPUT1_SRC_COMP1_COMP2
+  *         @arg @ref LL_LPTIM_INPUT1_SRC_COMP2 (*)
+  *         (*) Value not defined for all devices
   * @retval None
   */
 __STATIC_INLINE void LL_LPTIM_SetInput1Src(LPTIM_TypeDef *LPTIMx, uint32_t Src)
@@ -957,8 +986,8 @@ __STATIC_INLINE void LL_LPTIM_SetInput2Src(LPTIM_TypeDef *LPTIMx, uint32_t Src)
   *         @arg @ref LL_LPTIM_LPTIM1_IC2_RMP_LSE
   *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_GPIO
   *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_HSI
-  *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_MSI_1024
-  *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_MSI_4
+  *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_MSIS_1024
+  *         @arg @ref LL_LPTIM_LPTIM2_IC2_RMP_MSIS_4
   *         @arg @ref LL_LPTIM_LPTIM2_IC1_RMP_GPIO
   *         @arg @ref LL_LPTIM_LPTIM2_IC1_RMP_COMP1
   *         @arg @ref LL_LPTIM_LPTIM2_IC1_RMP_COMP2
@@ -988,7 +1017,8 @@ __STATIC_INLINE void LL_LPTIM_SetRemap(LPTIM_TypeDef *LPTIMx, uint32_t Src)
   */
 __STATIC_INLINE void LL_LPTIM_IC_SetPolarity(LPTIM_TypeDef *LPTIMx, uint32_t Channel, uint32_t Polarity)
 {
-  MODIFY_REG(LPTIMx->CCMR1, LPTIM_CCMR1_CC1P << LL_LPTIM_SHIFT_TAB_CCxP[Channel], Polarity << LL_LPTIM_SHIFT_TAB_CCxP[Channel]);
+  MODIFY_REG(LPTIMx->CCMR1, LPTIM_CCMR1_CC1P << LL_LPTIM_SHIFT_TAB_CCxP[Channel],
+             Polarity << LL_LPTIM_SHIFT_TAB_CCxP[Channel]);
 }
 
 /**
@@ -1006,7 +1036,8 @@ __STATIC_INLINE void LL_LPTIM_IC_SetPolarity(LPTIM_TypeDef *LPTIMx, uint32_t Cha
   */
 __STATIC_INLINE uint32_t LL_LPTIM_IC_GetPolarity(LPTIM_TypeDef *LPTIMx, uint32_t Channel)
 {
-  return (uint32_t)((READ_BIT(LPTIMx->CCMR1, LPTIM_CCMR1_CC1P << LL_LPTIM_SHIFT_TAB_CCxP[Channel])) >> LL_LPTIM_SHIFT_TAB_CCxP[Channel]);
+  return (uint32_t)((READ_BIT(LPTIMx->CCMR1, LPTIM_CCMR1_CC1P << LL_LPTIM_SHIFT_TAB_CCxP[Channel])) >>                 \
+                    LL_LPTIM_SHIFT_TAB_CCxP[Channel]);
 
 }
 
@@ -1027,13 +1058,14 @@ __STATIC_INLINE uint32_t LL_LPTIM_IC_GetPolarity(LPTIM_TypeDef *LPTIMx, uint32_t
   */
 __STATIC_INLINE void LL_LPTIM_IC_SetFilter(LPTIM_TypeDef *LPTIMx, uint32_t Channel, uint32_t Filter)
 {
-  MODIFY_REG(LPTIMx->CCMR1, LPTIM_CCMR1_IC1F << LL_LPTIM_SHIFT_TAB_ICxF[Channel], Filter << LL_LPTIM_SHIFT_TAB_ICxF[Channel]);
+  MODIFY_REG(LPTIMx->CCMR1, LPTIM_CCMR1_IC1F << LL_LPTIM_SHIFT_TAB_ICxF[Channel],
+             Filter << LL_LPTIM_SHIFT_TAB_ICxF[Channel]);
 }
 
 /**
   * @brief  Get the filter of IC channels.
-  * @rmtoll CCMR1         IC1F          LL_TIM_IC_GetFilter\n
-  * @rmtoll CCMR1         IC2F          LL_TIM_IC_GetFilter\n
+  * @rmtoll CCMR1         IC1F          LL_LPTIM_IC_GetFilter\n
+  * @rmtoll CCMR1         IC2F          LL_LPTIM_IC_GetFilter\n
   * @param  LPTIMx Low-Power Timer instance
   * @param  Channel This parameter can be one of the following values:
   *         @arg @ref LL_LPTIM_CHANNEL_CH1
@@ -1046,7 +1078,8 @@ __STATIC_INLINE void LL_LPTIM_IC_SetFilter(LPTIM_TypeDef *LPTIMx, uint32_t Chann
   */
 __STATIC_INLINE uint32_t LL_LPTIM_IC_GetFilter(LPTIM_TypeDef *LPTIMx, uint32_t Channel)
 {
-  return (uint32_t)((READ_BIT(LPTIMx->CCMR1, LPTIM_CCMR1_IC1F << LL_LPTIM_SHIFT_TAB_ICxF[Channel])) >> LL_LPTIM_SHIFT_TAB_ICxF[Channel]);
+  return (uint32_t)((READ_BIT(LPTIMx->CCMR1, LPTIM_CCMR1_IC1F << LL_LPTIM_SHIFT_TAB_ICxF[Channel])) >>                 \
+                    LL_LPTIM_SHIFT_TAB_ICxF[Channel]);
 }
 
 /**
@@ -1066,7 +1099,8 @@ __STATIC_INLINE uint32_t LL_LPTIM_IC_GetFilter(LPTIM_TypeDef *LPTIMx, uint32_t C
   */
 __STATIC_INLINE void LL_LPTIM_IC_SetPrescaler(LPTIM_TypeDef *LPTIMx, uint32_t Channel, uint32_t Prescaler)
 {
-  MODIFY_REG(LPTIMx->CCMR1, LPTIM_CCMR1_IC1PSC << LL_LPTIM_SHIFT_TAB_ICxPSC[Channel], Prescaler << LL_LPTIM_SHIFT_TAB_ICxPSC[Channel]);
+  MODIFY_REG(LPTIMx->CCMR1, LPTIM_CCMR1_IC1PSC << LL_LPTIM_SHIFT_TAB_ICxPSC[Channel],
+             Prescaler << LL_LPTIM_SHIFT_TAB_ICxPSC[Channel]);
 }
 
 /**
@@ -1085,7 +1119,44 @@ __STATIC_INLINE void LL_LPTIM_IC_SetPrescaler(LPTIM_TypeDef *LPTIMx, uint32_t Ch
   */
 __STATIC_INLINE uint32_t LL_LPTIM_IC_GetPrescaler(LPTIM_TypeDef *LPTIMx, uint32_t Channel)
 {
-  return (uint32_t)((READ_BIT(LPTIMx->CCMR1, LPTIM_CCMR1_IC1PSC << LL_LPTIM_SHIFT_TAB_ICxPSC[Channel])) >> LL_LPTIM_SHIFT_TAB_ICxPSC[Channel]);
+  return (uint32_t)((READ_BIT(LPTIMx->CCMR1, LPTIM_CCMR1_IC1PSC << LL_LPTIM_SHIFT_TAB_ICxPSC[Channel])) >>             \
+                    LL_LPTIM_SHIFT_TAB_ICxPSC[Channel]);
+}
+
+/**
+  * @brief  Set the Channel  Mode.
+  * @rmtoll CCMR1         CC1SEL          LL_LPTIM_CC_SetChannelMode\n
+  *         CCMR1         CC2SEL          LL_LPTIM_CC_SetChannelMode
+  * @param  LPTIMx Low-Power Timer instance
+  * @param  Channel This parameter can be one of the following values:
+  *         @arg @ref LL_LPTIM_CHANNEL_CH1
+  *         @arg @ref LL_LPTIM_CHANNEL_CH2
+  * @param  CCMode This parameter can be one of the following values:
+  *         @arg @ref LL_LPTIM_CCMODE_OUTPUT_PWM
+  *         @arg @ref LL_LPTIM_CCMODE_INPUTCAPTURE
+  * @retval None
+  */
+__STATIC_INLINE void  LL_LPTIM_CC_SetChannelMode(LPTIM_TypeDef *LPTIMx, uint32_t Channel, uint32_t CCMode)
+{
+  SET_BIT(LPTIMx->CCMR1, CCMode << LL_LPTIM_SHIFT_TAB_CCxSEL[Channel]);
+}
+
+/**
+  * @brief  Get the Channel  Mode.
+  * @rmtoll CCMR1         CC1SEL          LL_LPTIM_CC_GetChannelMode\n
+  *         CCMR1         CC2SEL          LL_LPTIM_CC_GetChannelMode
+  * @param  LPTIMx Low-Power Timer instance
+  * @param  Channel This parameter can be one of the following values:
+  *         @arg @ref LL_LPTIM_CHANNEL_CH1
+  *         @arg @ref LL_LPTIM_CHANNEL_CH2
+  * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_LPTIM_CCMODE_OUTPUT_PWM
+  *         @arg @ref LL_LPTIM_CCMODE_INPUTCAPTURE
+  */
+__STATIC_INLINE uint32_t  LL_LPTIM_CC_GetChannelMode(LPTIM_TypeDef *LPTIMx, uint32_t Channel)
+{
+  return (uint32_t)((READ_BIT(LPTIMx->CCMR1, LPTIM_CCMR1_CC1SEL << LL_LPTIM_SHIFT_TAB_CCxSEL[Channel])) >>             \
+                    LL_LPTIM_SHIFT_TAB_CCxSEL[Channel]);
 }
 
 /**
@@ -1301,7 +1372,8 @@ __STATIC_INLINE uint32_t LL_LPTIM_GetClockSource(LPTIM_TypeDef *LPTIMx)
 }
 
 /**
-  * @brief  Configure the active edge or edges used by the counter when the LPTIM is clocked by an external clock source.
+  * @brief  Configure the active edge or edges used by the counter when
+            the LPTIM is clocked by an external clock source.
   * @note This function must be called when the LPTIM instance is disabled.
   * @note When both external clock signal edges are considered active ones,
   *       the LPTIM must also be clocked by an internal clock source with a
@@ -1442,8 +1514,8 @@ __STATIC_INLINE uint32_t LL_LPTIM_IsEnabledEncoderMode(LPTIM_TypeDef *LPTIMx)
   */
 
 /**
-  * @brief  Clear the compare match flag for channel 1 (CC1F)
-  * @rmtoll ICR          CC1        LL_LPTIM_ClearFLAG_CC1
+  * @brief  Clear the compare match flag for channel 1 (CC1CF)
+  * @rmtoll ICR          CC1CF        LL_LPTIM_ClearFLAG_CC1
   * @param  LPTIMx Low-Power Timer instance
   * @retval None
   */
@@ -1454,7 +1526,7 @@ __STATIC_INLINE void LL_LPTIM_ClearFLAG_CC1(LPTIM_TypeDef *LPTIMx)
 
 /**
   * @brief  Inform application whether a capture/compare interrupt has occurred for channel 1.
-  * @rmtoll ISR          CC1          LL_LPTIM_IsActiveFlag_CC1
+  * @rmtoll ISR          CC1IF         LL_LPTIM_IsActiveFlag_CC1
   * @param  LPTIMx Low-Power Timer instance
   * @retval State of bit (1 or 0).
   */
@@ -1464,8 +1536,8 @@ __STATIC_INLINE uint32_t LL_LPTIM_IsActiveFlag_CC1(LPTIM_TypeDef *LPTIMx)
 }
 
 /**
-  * @brief  Clear the compare match flag for channel 2 (CC2F)
-  * @rmtoll ICR          CC2        LL_LPTIM_ClearFLAG_CC2
+  * @brief  Clear the compare match flag for channel 2 (CC2CF)
+  * @rmtoll ICR          CC2CF        LL_LPTIM_ClearFLAG_CC2
   * @param  LPTIMx Low-Power Timer instance
   * @retval None
   */
@@ -1476,13 +1548,57 @@ __STATIC_INLINE void LL_LPTIM_ClearFLAG_CC2(LPTIM_TypeDef *LPTIMx)
 
 /**
   * @brief  Inform application whether a capture/compare interrupt has occurred for channel 2.
-  * @rmtoll ISR          CC2          LL_LPTIM_IsActiveFlag_CC2
+  * @rmtoll ISR          CC2IF          LL_LPTIM_IsActiveFlag_CC2
   * @param  LPTIMx Low-Power Timer instance
   * @retval State of bit (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_LPTIM_IsActiveFlag_CC2(LPTIM_TypeDef *LPTIMx)
 {
   return (((READ_BIT(LPTIMx->ISR, LPTIM_ISR_CC2IF) == LPTIM_ISR_CC2IF) ? 1UL : 0UL));
+}
+
+/**
+  * @brief  Clear the Capture/Compare 1 over-capture flag for channel 1 (CC1OCF)
+  * @rmtoll ICR          CC1OCF       LL_LPTIM_ClearFLAG_CC1O
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_ClearFLAG_CC1O(LPTIM_TypeDef *LPTIMx)
+{
+  SET_BIT(LPTIMx->ICR, LPTIM_ICR_CC1OCF);
+}
+
+/**
+  * @brief  Inform application whether a Capture/Compare 1 over-capture  has occurred for channel 1.
+  * @rmtoll ISR          CC1OF          LL_LPTIM_IsActiveFlag_CC1O
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_LPTIM_IsActiveFlag_CC1O(LPTIM_TypeDef *LPTIMx)
+{
+  return (((READ_BIT(LPTIMx->ISR, LPTIM_ISR_CC1OF) == LPTIM_ISR_CC1OF) ? 1UL : 0UL));
+}
+
+/**
+  * @brief  Clear the Capture/Compare 2 over-capture flag for channel 2 (CC2OCF)
+  * @rmtoll ICR          CC2OCF       LL_LPTIM_ClearFLAG_CC2O
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_ClearFLAG_CC2O(LPTIM_TypeDef *LPTIMx)
+{
+  SET_BIT(LPTIMx->ICR, LPTIM_ICR_CC2OCF);
+}
+
+/**
+  * @brief  Inform application whether a Capture/Compare 2 over-capture  has occurred for channel 2.
+  * @rmtoll ISR          CC2OF          LL_LPTIM_IsActiveFlag_CC2O
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_LPTIM_IsActiveFlag_CC2O(LPTIM_TypeDef *LPTIMx)
+{
+  return (((READ_BIT(LPTIMx->ISR, LPTIM_ISR_CC2OF) == LPTIM_ISR_CC2OF) ? 1UL : 0UL));
 }
 /**
   * @brief  Clear the autoreload match flag (ARRMCF)
@@ -1540,7 +1656,8 @@ __STATIC_INLINE void LL_LPTIM_ClearFlag_CMP1OK(LPTIM_TypeDef *LPTIMx)
 }
 
 /**
-  * @brief  Informs application whether the APB bus write operation to the LPTIMx_CCR1 register has been successfully completed. If so, a new one can be initiated.
+  * @brief  Informs application whether the APB bus write operation to the LPTIMx_CCR1 register has been successfully
+            completed. If so, a new one can be initiated.
   * @rmtoll ISR          CMP1OK         LL_LPTIM_IsActiveFlag_CMP1OK
   * @param  LPTIMx Low-Power Timer instance
   * @retval State of bit (1 or 0).
@@ -1562,7 +1679,8 @@ __STATIC_INLINE void LL_LPTIM_ClearFlag_CMP2OK(LPTIM_TypeDef *LPTIMx)
 }
 
 /**
-  * @brief  Informs application whether the APB bus write operation to the LPTIMx_CCR2 register has been successfully completed. If so, a new one can be initiated.
+  * @brief  Informs application whether the APB bus write operation to the LPTIMx_CCR2 register has been successfully
+            completed. If so, a new one can be initiated.
   * @rmtoll ISR          CMP2OK         LL_LPTIM_IsActiveFlag_CMP2OK
   * @param  LPTIMx Low-Power Timer instance
   * @retval State of bit (1 or 0).
@@ -1571,6 +1689,30 @@ __STATIC_INLINE uint32_t LL_LPTIM_IsActiveFlag_CMP2OK(LPTIM_TypeDef *LPTIMx)
 {
   return (((READ_BIT(LPTIMx->ISR, LPTIM_ISR_CMP2OK) == LPTIM_ISR_CMP2OK) ? 1UL : 0UL));
 }
+
+/**
+  * @brief  Clear the interrupt register update interrupt flag (DIEROKCF).
+  * @rmtoll ICR       DIEROKCF          LL_LPTIM_ClearFlag_DIEROK
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_ClearFlag_DIEROK(LPTIM_TypeDef *LPTIMx)
+{
+  SET_BIT(LPTIMx->ICR, LPTIM_ICR_DIEROKCF);
+}
+
+/**
+  * @brief  Informs application whether the APB bus write operation to the LPTIMx_DIER register has been successfully
+            completed. If so, a new one can be initiated.
+  * @rmtoll ISR          DIEROK            LL_LPTIM_IsActiveFlag_DIEROK
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_LPTIM_IsActiveFlag_DIEROK(LPTIM_TypeDef *LPTIMx)
+{
+  return ((READ_BIT(LPTIMx->ISR, LPTIM_ISR_DIEROK) == (LPTIM_ISR_DIEROK)) ? 1UL : 0UL);
+}
+
 /**
   * @brief  Clear the autoreload register update interrupt flag (ARROKCF).
   * @rmtoll ICR          ARROKCF       LL_LPTIM_ClearFlag_ARROK
@@ -1583,7 +1725,8 @@ __STATIC_INLINE void LL_LPTIM_ClearFlag_ARROK(LPTIM_TypeDef *LPTIMx)
 }
 
 /**
-  * @brief  Informs application whether the APB bus write operation to the LPTIMx_ARR register has been successfully completed. If so, a new one can be initiated.
+  * @brief  Informs application whether the APB bus write operation to the LPTIMx_ARR register has been successfully
+            completed. If so, a new one can be initiated.
   * @rmtoll ISR          ARROK         LL_LPTIM_IsActiveFlag_ARROK
   * @param  LPTIMx Low-Power Timer instance
   * @retval State of bit (1 or 0).
@@ -1605,7 +1748,8 @@ __STATIC_INLINE void LL_LPTIM_ClearFlag_UP(LPTIM_TypeDef *LPTIMx)
 }
 
 /**
-  * @brief  Informs the application whether the counter direction has changed from down to up (when the LPTIM instance operates in encoder mode).
+  * @brief  Informs the application whether the counter direction has changed from down to up (when the LPTIM instance
+            operates in encoder mode).
   * @rmtoll ISR          UP            LL_LPTIM_IsActiveFlag_UP
   * @param  LPTIMx Low-Power Timer instance
   * @retval State of bit (1 or 0).
@@ -1627,7 +1771,8 @@ __STATIC_INLINE void LL_LPTIM_ClearFlag_DOWN(LPTIM_TypeDef *LPTIMx)
 }
 
 /**
-  * @brief  Informs the application whether the counter direction has changed from up to down (when the LPTIM instance operates in encoder mode).
+  * @brief  Informs the application whether the counter direction has changed from up to down (when the LPTIM instance
+            operates in encoder mode).
   * @rmtoll ISR          DOWN          LL_LPTIM_IsActiveFlag_DOWN
   * @param  LPTIMx Low-Power Timer instance
   * @retval State of bit (1 or 0).
@@ -1649,7 +1794,8 @@ __STATIC_INLINE void LL_LPTIM_ClearFlag_REPOK(LPTIM_TypeDef *LPTIMx)
 }
 
 /**
-  * @brief  Informs application whether the APB bus write operation to the LPTIMx_RCR register has been successfully completed; If so, a new one can be initiated.
+  * @brief  Informs application whether the APB bus write operation to the LPTIMx_RCR register has been successfully
+            completed; If so, a new one can be initiated.
   * @rmtoll ISR          REPOK         LL_LPTIM_IsActiveFlag_REPOK
   * @param  LPTIMx Low-Power Timer instance
   * @retval State of bit (1 or 0).
@@ -1754,6 +1900,71 @@ __STATIC_INLINE uint32_t LL_LPTIM_IsEnabledIT_CC2(LPTIM_TypeDef *LPTIMx)
   return (((READ_BIT(LPTIMx->DIER, LPTIM_DIER_CC2IE) == LPTIM_DIER_CC2IE) ? 1UL : 0UL));
 }
 
+/**
+  * @brief  Enable capture/compare 1 over-capture interrupt (CC1OIE).
+  * @rmtoll DIER         CC1OIE        LL_LPTIM_EnableIT_CC1O
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_EnableIT_CC1O(LPTIM_TypeDef *LPTIMx)
+{
+  SET_BIT(LPTIMx->DIER, LPTIM_DIER_CC1OIE);
+}
+
+/**
+  * @brief  Disable capture/compare 1 over-capture interrup (CC1OIE).
+  * @rmtoll DIER          CC1OIE        LL_LPTIM_DisableIT_CC1O
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_DisableIT_CC1O(LPTIM_TypeDef *LPTIMx)
+{
+  CLEAR_BIT(LPTIMx->DIER, LPTIM_DIER_CC1OIE);
+}
+
+/**
+  * @brief  Indicates whether the capture/compare 1 over-capture interrup (CC1OIE) is enabled.
+  * @rmtoll DIER          CC1OIE        LL_LPTIM_IsEnabledIT_CC1O
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_LPTIM_IsEnabledIT_CC1O(LPTIM_TypeDef *LPTIMx)
+{
+  return (((READ_BIT(LPTIMx->DIER, LPTIM_DIER_CC1OIE) == LPTIM_DIER_CC1OIE) ? 1UL : 0UL));
+}
+
+/**
+  * @brief  Enable capture/compare 1 over-capture interrupt (CC2OIE).
+  * @rmtoll DIER         CC2OIE        LL_LPTIM_EnableIT_CC2O
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_EnableIT_CC2O(LPTIM_TypeDef *LPTIMx)
+{
+  SET_BIT(LPTIMx->DIER, LPTIM_DIER_CC2OIE);
+}
+
+/**
+  * @brief  Disable capture/compare 1 over-capture interrup (CC2OIE).
+  * @rmtoll DIER          CC2OIE        LL_LPTIM_DisableIT_CC2O
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_DisableIT_CC2O(LPTIM_TypeDef *LPTIMx)
+{
+  CLEAR_BIT(LPTIMx->DIER, LPTIM_DIER_CC2OIE);
+}
+
+/**
+  * @brief  Indicates whether the capture/compare 2 over-capture interrup (CC2OIE) is enabled.
+  * @rmtoll DIER          CC2OIE        LL_LPTIM_IsEnabledIT_CC2O
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_LPTIM_IsEnabledIT_CC2O(LPTIM_TypeDef *LPTIMx)
+{
+  return (((READ_BIT(LPTIMx->DIER, LPTIM_DIER_CC2OIE) == LPTIM_DIER_CC2OIE) ? 1UL : 0UL));
+}
 
 /**
   * @brief  Enable autoreload match interrupt (ARRMIE).
@@ -2055,6 +2266,112 @@ __STATIC_INLINE uint32_t LL_LPTIM_IsEnabledIT_UE(LPTIM_TypeDef *LPTIMx)
   * @}
   */
 
+
+/** @defgroup TIM_LL_EF_DMA_Management DMA Management
+  * @{
+  */
+/**
+  * @brief  Enable update DMA request.
+  * @rmtoll DIER         UEDE          LL_LPTIM_EnableDMAReq_UPDATE
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_EnableDMAReq_UPDATE(LPTIM_TypeDef *LPTIMx)
+{
+  SET_BIT(LPTIMx->DIER, LPTIM_DIER_UEDE);
+}
+
+/**
+  * @brief  Disable update DMA request.
+  * @rmtoll DIER         UEDE          LL_LPTIM_DisableDMAReq_UPDATE
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_DisableDMAReq_UPDATE(LPTIM_TypeDef *LPTIMx)
+{
+  CLEAR_BIT(LPTIMx->DIER, LPTIM_DIER_UEDE);
+}
+
+/**
+  * @brief  Indicates whether the update DMA request is enabled.
+  * @rmtoll DIER         UEDE          LL_LPTIM_IsEnabledDMAReq_UPDATE
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_LPTIM_IsEnabledDMAReq_UPDATE(LPTIM_TypeDef *LPTIMx)
+{
+  return ((READ_BIT(LPTIMx->DIER, LPTIM_DIER_UEDE) == (LPTIM_DIER_UEDE)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Enable capture/compare 1 DMA request (CC1DE).
+  * @rmtoll DIER         CC1DE         LL_LPTIM_EnableDMAReq_CC1
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_EnableDMAReq_CC1(LPTIM_TypeDef *LPTIMx)
+{
+  SET_BIT(LPTIMx->DIER, LPTIM_DIER_CC1DE);
+}
+
+/**
+  * @brief  Disable capture/compare 1  DMA request (CC1DE).
+  * @rmtoll DIER         CC1DE         LL_LPTIM_DisableDMAReq_CC1
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_DisableDMAReq_CC1(LPTIM_TypeDef *LPTIMx)
+{
+  CLEAR_BIT(LPTIMx->DIER, LPTIM_DIER_CC1DE);
+}
+
+/**
+  * @brief  Indicates whether the capture/compare 1 DMA request (CC1DE) is enabled.
+  * @rmtoll DIER         CC1DE         LL_LPTIM_IsEnabledDMAReq_CC1
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_LPTIM_IsEnabledDMAReq_CC1(LPTIM_TypeDef *LPTIMx)
+{
+  return ((READ_BIT(LPTIMx->DIER, LPTIM_DIER_CC1DE) == (LPTIM_DIER_CC1DE)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Enable capture/compare 2 DMA request (CC2DE).
+  * @rmtoll DIER         CC2DE         LL_LPTIM_EnableDMAReq_CC2
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_EnableDMAReq_CC2(LPTIM_TypeDef *LPTIMx)
+{
+  SET_BIT(LPTIMx->DIER, LPTIM_DIER_CC2DE);
+}
+
+/**
+  * @brief  Disable capture/compare 2  DMA request (CC2DE).
+  * @rmtoll DIER         CC2DE         LL_LPTIM_DisableDMAReq_CC2
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_LPTIM_DisableDMAReq_CC2(LPTIM_TypeDef *LPTIMx)
+{
+  CLEAR_BIT(LPTIMx->DIER, LPTIM_DIER_CC2DE);
+}
+
+/**
+  * @brief  Indicates whether the capture/compare 2 DMA request (CC2DE) is enabled.
+  * @rmtoll DIER         CC2DE         LL_LPTIM_IsEnabledDMAReq_CC2
+  * @param  LPTIMx Low-Power Timer instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_LPTIM_IsEnabledDMAReq_CC2(LPTIM_TypeDef *LPTIMx)
+{
+  return ((READ_BIT(LPTIMx->DIER, LPTIM_DIER_CC2DE) == (LPTIM_DIER_CC2DE)) ? 1UL : 0UL);
+}
+
+/**
+  * @}
+  */
 /**
   * @}
   */

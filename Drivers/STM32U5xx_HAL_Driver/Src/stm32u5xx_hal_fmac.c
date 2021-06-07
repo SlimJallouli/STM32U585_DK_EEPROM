@@ -255,10 +255,6 @@
   */
 
 
-/**
-  * @}
-  */
-
 /* Private macros ------------------------------------------------------------*/
 /** @defgroup  FMAC_Private_Macros   FMAC Private Macros
   * @{
@@ -431,13 +427,13 @@ HAL_StatusTypeDef HAL_FMAC_Init(FMAC_HandleTypeDef *hfmac)
   FMAC_ResetDataPointers(hfmac);
 
   /* Reset FMAC unit (internal pointers) */
-  if (FMAC_Reset(hfmac) == HAL_TIMEOUT)
+  if (FMAC_Reset(hfmac) == HAL_ERROR)
   {
     /* Update FMAC error code and FMAC peripheral state */
     hfmac->ErrorCode |= HAL_FMAC_ERROR_RESET;
     hfmac->State = HAL_FMAC_STATE_TIMEOUT;
 
-    status = HAL_TIMEOUT;
+    status = HAL_ERROR;
   }
   else
   {
@@ -959,7 +955,7 @@ HAL_StatusTypeDef HAL_FMAC_FilterStart(FMAC_HandleTypeDef *hfmac, int16_t *pOutp
   }
   else
   {
-    status = HAL_BUSY;
+    status = HAL_ERROR;
   }
 
   return status;
@@ -1003,7 +999,7 @@ HAL_StatusTypeDef HAL_FMAC_AppendFilterData(FMAC_HandleTypeDef *hfmac, int16_t *
   /* Check whether the previous input vector has been handled */
   if ((hfmac->pInputSize != NULL) && (hfmac->InputCurrentSize < * (hfmac->pInputSize)))
   {
-    return HAL_BUSY;
+    return HAL_ERROR;
   }
 
   /* Check that FMAC was initialized and that no writing is already ongoing */
@@ -1014,7 +1010,7 @@ HAL_StatusTypeDef HAL_FMAC_AppendFilterData(FMAC_HandleTypeDef *hfmac, int16_t *
   }
   else
   {
-    status = HAL_BUSY;
+    status = HAL_ERROR;
   }
 
   return status;
@@ -1059,7 +1055,7 @@ HAL_StatusTypeDef HAL_FMAC_ConfigFilterOutputBuffer(FMAC_HandleTypeDef *hfmac, i
   /* Check whether the previous output vector has been handled */
   if ((hfmac->pOutputSize != NULL) && (hfmac->OutputCurrentSize < * (hfmac->pOutputSize)))
   {
-    return HAL_BUSY;
+    return HAL_ERROR;
   }
 
   /* Check that FMAC was initialized and that not reading is already ongoing */
@@ -1070,7 +1066,7 @@ HAL_StatusTypeDef HAL_FMAC_ConfigFilterOutputBuffer(FMAC_HandleTypeDef *hfmac, i
   }
   else
   {
-    status = HAL_BUSY;
+    status = HAL_ERROR;
   }
 
   return status;
@@ -1189,7 +1185,7 @@ HAL_StatusTypeDef HAL_FMAC_PollFilterData(FMAC_HandleTypeDef *hfmac, uint32_t Ti
     if ((HAL_GetTick() - tickstart) >= Timeout)
     {
       hfmac->ErrorCode |= HAL_FMAC_ERROR_TIMEOUT;
-      status = HAL_TIMEOUT;
+      status = HAL_ERROR;
     }
     else
     {
@@ -1198,7 +1194,7 @@ HAL_StatusTypeDef HAL_FMAC_PollFilterData(FMAC_HandleTypeDef *hfmac, uint32_t Ti
   }
   else
   {
-    status = HAL_BUSY;
+    status = HAL_ERROR;
   }
 
   return status;
@@ -1237,12 +1233,12 @@ HAL_StatusTypeDef HAL_FMAC_FilterStop(FMAC_HandleTypeDef *hfmac)
     }
 
     /* Reset FMAC unit (internal pointers) */
-    if (FMAC_Reset(hfmac) == HAL_TIMEOUT)
+    if (FMAC_Reset(hfmac) == HAL_ERROR)
     {
       /* Update FMAC error code and FMAC peripheral state */
       hfmac->ErrorCode = HAL_FMAC_ERROR_RESET;
       hfmac->State = HAL_FMAC_STATE_TIMEOUT;
-      status = HAL_TIMEOUT;
+      status = HAL_ERROR;
     }
     else
     {
@@ -1257,7 +1253,7 @@ HAL_StatusTypeDef HAL_FMAC_FilterStop(FMAC_HandleTypeDef *hfmac)
   }
   else
   {
-    status = HAL_BUSY;
+    status = HAL_ERROR;
   }
 
   return status;
@@ -1593,7 +1589,7 @@ static HAL_StatusTypeDef FMAC_Reset(FMAC_HandleTypeDef *hfmac)
     if ((HAL_GetTick() - tickstart) > HAL_FMAC_RESET_TIMEOUT_VALUE)
     {
       hfmac->ErrorCode |= HAL_FMAC_ERROR_TIMEOUT;
-      return HAL_TIMEOUT;
+      return HAL_ERROR;
     }
   }
 
@@ -1679,7 +1675,7 @@ static HAL_StatusTypeDef FMAC_FilterConfig(FMAC_HandleTypeDef *hfmac, FMAC_Filte
   /* Check handle state is ready */
   if (hfmac->State != HAL_FMAC_STATE_READY)
   {
-    return HAL_BUSY;
+    return HAL_ERROR;
   }
 
   /* Change the FMAC state */
@@ -1813,7 +1809,7 @@ static HAL_StatusTypeDef FMAC_FilterConfig(FMAC_HandleTypeDef *hfmac, FMAC_Filte
       {
         hfmac->ErrorCode |= HAL_FMAC_ERROR_TIMEOUT;
         hfmac->State = HAL_FMAC_STATE_TIMEOUT;
-        return HAL_TIMEOUT;
+        return HAL_ERROR;
       }
 
       /* Change the FMAC state */
@@ -1837,11 +1833,11 @@ static HAL_StatusTypeDef FMAC_FilterConfig(FMAC_HandleTypeDef *hfmac, FMAC_Filte
         {
           /* Enable the DMA channel */
           hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] =
-           (uint32_t)(2UL * pConfig->CoeffBSize); /* Set DMA data size           */
+            (uint32_t)(2UL * pConfig->CoeffBSize); /* Set DMA data size           */
           hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-           (uint32_t)pConfig->pCoeffB;            /* Set DMA source address      */
+            (uint32_t)pConfig->pCoeffB;            /* Set DMA source address      */
           hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-           (uint32_t)&hfmac->Instance->WDATA;     /* Set DMA destination address */
+            (uint32_t)&hfmac->Instance->WDATA;     /* Set DMA destination address */
 
           status = HAL_DMAEx_List_Start_IT(hfmac->hdmaPreload);
         }
@@ -1853,8 +1849,8 @@ static HAL_StatusTypeDef FMAC_FilterConfig(FMAC_HandleTypeDef *hfmac, FMAC_Filte
       }
       else
       {
-        status = HAL_DMA_Start_IT(hfmac->hdmaPreload, (uint32_t)pConfig->pCoeffB,\
-                                 (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * pConfig->CoeffBSize));
+        status = HAL_DMA_Start_IT(hfmac->hdmaPreload, (uint32_t)pConfig->pCoeffB, \
+                                  (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * pConfig->CoeffBSize));
       }
 
       if (status != HAL_OK)
@@ -1925,7 +1921,7 @@ static HAL_StatusTypeDef FMAC_FilterPreload(FMAC_HandleTypeDef *hfmac, int16_t *
   /* Check handle state is ready */
   if (hfmac->State != HAL_FMAC_STATE_READY)
   {
-    return HAL_BUSY;
+    return HAL_ERROR;
   }
 
   /* Change the FMAC state */
@@ -1951,7 +1947,7 @@ static HAL_StatusTypeDef FMAC_FilterPreload(FMAC_HandleTypeDef *hfmac, int16_t *
       {
         hfmac->ErrorCode |= HAL_FMAC_ERROR_TIMEOUT;
         hfmac->State = HAL_FMAC_STATE_TIMEOUT;
-        return HAL_TIMEOUT;
+        return HAL_ERROR;
       }
     }
     else
@@ -1972,11 +1968,11 @@ static HAL_StatusTypeDef FMAC_FilterPreload(FMAC_HandleTypeDef *hfmac, int16_t *
         {
           /* Enable the DMA channel */
           hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] =
-           (uint32_t)(2UL * InputSize);           /* Set DMA data size           */
+            (uint32_t)(2UL * InputSize);           /* Set DMA data size           */
           hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-           (uint32_t)pInput;                      /* Set DMA source address      */
+            (uint32_t)pInput;                      /* Set DMA source address      */
           hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-           (uint32_t)&hfmac->Instance->WDATA;     /* Set DMA destination address */
+            (uint32_t)&hfmac->Instance->WDATA;     /* Set DMA destination address */
 
           status = HAL_DMAEx_List_Start_IT(hfmac->hdmaPreload);
         }
@@ -1988,8 +1984,8 @@ static HAL_StatusTypeDef FMAC_FilterPreload(FMAC_HandleTypeDef *hfmac, int16_t *
       }
       else
       {
-        status = HAL_DMA_Start_IT(hfmac->hdmaPreload, (uint32_t)pInput,\
-                                 (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * InputSize));
+        status = HAL_DMA_Start_IT(hfmac->hdmaPreload, (uint32_t)pInput, \
+                                  (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * InputSize));
       }
 
       if (status != HAL_OK)
@@ -2017,7 +2013,7 @@ static HAL_StatusTypeDef FMAC_FilterPreload(FMAC_HandleTypeDef *hfmac, int16_t *
       {
         hfmac->ErrorCode |= HAL_FMAC_ERROR_TIMEOUT;
         hfmac->State = HAL_FMAC_STATE_TIMEOUT;
-        return HAL_TIMEOUT;
+        return HAL_ERROR;
       }
     }
     else
@@ -2038,11 +2034,11 @@ static HAL_StatusTypeDef FMAC_FilterPreload(FMAC_HandleTypeDef *hfmac, int16_t *
         {
           /* Enable the DMA channel */
           hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] =
-           (uint32_t)(2UL * OutputSize);      /* Set DMA data size           */
+            (uint32_t)(2UL * OutputSize);      /* Set DMA data size           */
           hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-           (uint32_t)pOutput;                 /* Set DMA source address      */
+            (uint32_t)pOutput;                 /* Set DMA source address      */
           hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-           (uint32_t)&hfmac->Instance->WDATA; /* Set DMA destination address */
+            (uint32_t)&hfmac->Instance->WDATA; /* Set DMA destination address */
 
           status = HAL_DMAEx_List_Start_IT(hfmac->hdmaPreload);
         }
@@ -2054,8 +2050,8 @@ static HAL_StatusTypeDef FMAC_FilterPreload(FMAC_HandleTypeDef *hfmac, int16_t *
       }
       else
       {
-        status = HAL_DMA_Start_IT(hfmac->hdmaPreload, (uint32_t)pOutput,\
-                                 (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * OutputSize));
+        status = HAL_DMA_Start_IT(hfmac->hdmaPreload, (uint32_t)pOutput, \
+                                  (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * OutputSize));
       }
 
       if (status != HAL_OK)
@@ -2132,7 +2128,7 @@ static HAL_StatusTypeDef FMAC_WaitOnStartUntilTimeout(FMAC_HandleTypeDef *hfmac,
     {
       hfmac->ErrorCode |= HAL_FMAC_ERROR_TIMEOUT;
 
-      return HAL_TIMEOUT;
+      return HAL_ERROR;
     }
   }
   return HAL_OK;
@@ -2170,17 +2166,17 @@ static HAL_StatusTypeDef FMAC_AppendFilterDataUpdateState(FMAC_HandleTypeDef *hf
     hfmac->hdmaIn->XferErrorCallback = FMAC_DMAError;
 
     /* Enable the DMA stream managing FMAC input data write */
-if ((hfmac->hdmaIn->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
+    if ((hfmac->hdmaIn->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
     {
       if ((hfmac->hdmaIn->LinkedListQueue != NULL) && (hfmac->hdmaIn->LinkedListQueue->Head != NULL))
       {
         /* Enable the DMA channel */
         hfmac->hdmaIn->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] =
-         (uint32_t)(2UL * (*pInputSize));  /* Set DMA data size           */
+          (uint32_t)(2UL * (*pInputSize));  /* Set DMA data size           */
         hfmac->hdmaIn->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-         (uint32_t)pInput;                 /* Set DMA source address      */
+          (uint32_t)pInput;                 /* Set DMA source address      */
         hfmac->hdmaIn->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-         (uint32_t)&hfmac->Instance->WDATA;/* Set DMA destination address */
+          (uint32_t)&hfmac->Instance->WDATA;/* Set DMA destination address */
 
         status = HAL_DMAEx_List_Start_IT(hfmac->hdmaIn);
       }
@@ -2192,8 +2188,8 @@ if ((hfmac->hdmaIn->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
     }
     else
     {
-      status = HAL_DMA_Start_IT(hfmac->hdmaIn, (uint32_t)pInput,\
-                               (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * (*pInputSize)));
+      status = HAL_DMA_Start_IT(hfmac->hdmaIn, (uint32_t)pInput, \
+                                (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * (*pInputSize)));
     }
 
     if (status != HAL_OK)
@@ -2257,11 +2253,11 @@ static HAL_StatusTypeDef FMAC_ConfigFilterOutputBufferUpdateState(FMAC_HandleTyp
       {
         /* Enable the DMA channel */
         hfmac->hdmaOut->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] =
-         (uint32_t)(4UL * (*pOutputSize)); /* Set DMA data size           */
+          (uint32_t)(4UL * (*pOutputSize)); /* Set DMA data size           */
         hfmac->hdmaOut->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-         (uint32_t)&hfmac->Instance->RDATA;/* Set DMA source address      */
+          (uint32_t)&hfmac->Instance->RDATA;/* Set DMA source address      */
         hfmac->hdmaOut->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-         (uint32_t)pOutput;                /* Set DMA destination address */
+          (uint32_t)pOutput;                /* Set DMA destination address */
 
         status = HAL_DMAEx_List_Start_IT(hfmac->hdmaOut);
       }
@@ -2273,8 +2269,8 @@ static HAL_StatusTypeDef FMAC_ConfigFilterOutputBufferUpdateState(FMAC_HandleTyp
     }
     else
     {
-      status = HAL_DMA_Start_IT(hfmac->hdmaOut, (uint32_t)&hfmac->Instance->RDATA,\
-                               (uint32_t)pOutput, (uint32_t)(4UL * (*pOutputSize)));
+      status = HAL_DMA_Start_IT(hfmac->hdmaOut, (uint32_t)&hfmac->Instance->RDATA, \
+                                (uint32_t)pOutput, (uint32_t)(4UL * (*pOutputSize)));
     }
 
     if (status != HAL_OK)
@@ -2527,11 +2523,11 @@ static void FMAC_DMAFilterConfig(DMA_HandleTypeDef *hdma)
       {
         /* Enable the DMA channel */
         hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] =
-         (uint32_t)(2UL * hfmac->InputCurrentSize);/* Set DMA data size           */
+          (uint32_t)(2UL * hfmac->InputCurrentSize);/* Set DMA data size           */
         hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-         (uint32_t)hfmac->pInput;                  /* Set DMA source address      */
+          (uint32_t)hfmac->pInput;                  /* Set DMA source address      */
         hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-         (uint32_t)&hfmac->Instance->WDATA;        /* Set DMA destination address */
+          (uint32_t)&hfmac->Instance->WDATA;        /* Set DMA destination address */
 
         status = HAL_DMAEx_List_Start_IT(hfmac->hdmaPreload);
       }
@@ -2543,8 +2539,8 @@ static void FMAC_DMAFilterConfig(DMA_HandleTypeDef *hdma)
     }
     else
     {
-      status = HAL_DMA_Start_IT(hfmac->hdmaPreload, (uint32_t)hfmac->pInput,\
-                               (uint32_t)&hfmac->Instance->WDATA,(uint32_t)(2UL * hfmac->InputCurrentSize));
+      status = HAL_DMA_Start_IT(hfmac->hdmaPreload, (uint32_t)hfmac->pInput, \
+                                (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * hfmac->InputCurrentSize));
     }
 
     if (status == HAL_OK)
@@ -2647,11 +2643,11 @@ static void FMAC_DMAFilterPreload(DMA_HandleTypeDef *hdma)
       {
         /* Enable the DMA channel */
         hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] =
-         (uint32_t)(2UL * hfmac->InputCurrentSize);/* Set DMA data size           */
+          (uint32_t)(2UL * hfmac->InputCurrentSize);/* Set DMA data size           */
         hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-         (uint32_t)hfmac->pInput;                  /* Set DMA source address      */
+          (uint32_t)hfmac->pInput;                  /* Set DMA source address      */
         hfmac->hdmaPreload->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-         (uint32_t)&hfmac->Instance->WDATA;        /* Set DMA destination address */
+          (uint32_t)&hfmac->Instance->WDATA;        /* Set DMA destination address */
 
         status = HAL_DMAEx_List_Start_IT(hfmac->hdmaPreload);
       }
@@ -2663,8 +2659,8 @@ static void FMAC_DMAFilterPreload(DMA_HandleTypeDef *hdma)
     }
     else
     {
-      status = HAL_DMA_Start_IT(hfmac->hdmaPreload, (uint32_t)hfmac->pInput,\
-                               (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * hfmac->InputCurrentSize));
+      status = HAL_DMA_Start_IT(hfmac->hdmaPreload, (uint32_t)hfmac->pInput, \
+                                (uint32_t)&hfmac->Instance->WDATA, (uint32_t)(2UL * hfmac->InputCurrentSize));
     }
 
     if (status == HAL_OK)

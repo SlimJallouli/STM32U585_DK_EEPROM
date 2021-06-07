@@ -18,8 +18,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32U5xx_LL_GPIO_H
-#define __STM32U5xx_LL_GPIO_H
+#ifndef STM32U5xx_LL_GPIO_H
+#define STM32U5xx_LL_GPIO_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -32,7 +32,8 @@ extern "C" {
   * @{
   */
 
-#if defined (GPIOA) || defined (GPIOB) || defined (GPIOC) || defined (GPIOD) || defined (GPIOE) || defined (GPIOF) || defined (GPIOG) || defined (GPIOH) || defined (GPIOI)
+#if defined (GPIOA) || defined (GPIOB) || defined (GPIOC) || defined (GPIOD) || defined (GPIOE) || defined (GPIOF) || \
+    defined (GPIOG) || defined (GPIOH) || defined (GPIOI)
 
 /** @defgroup GPIO_LL GPIO
   * @{
@@ -69,27 +70,32 @@ typedef struct
   uint32_t Mode;         /*!< Specifies the operating mode for the selected pins.
                               This parameter can be a value of @ref GPIO_LL_EC_MODE.
 
-                              GPIO HW configuration can be modified afterwards using unitary function @ref LL_GPIO_SetPinMode().*/
+                              GPIO HW configuration can be modified afterwards using unitary function
+                              @ref LL_GPIO_SetPinMode().*/
 
   uint32_t Speed;        /*!< Specifies the speed for the selected pins.
                               This parameter can be a value of @ref GPIO_LL_EC_SPEED.
 
-                              GPIO HW configuration can be modified afterwards using unitary function @ref LL_GPIO_SetPinSpeed().*/
+                              GPIO HW configuration can be modified afterwards using unitary function
+                              @ref LL_GPIO_SetPinSpeed().*/
 
   uint32_t OutputType;   /*!< Specifies the operating output type for the selected pins.
                               This parameter can be a value of @ref GPIO_LL_EC_OUTPUT.
 
-                              GPIO HW configuration can be modified afterwards using unitary function @ref LL_GPIO_SetPinOutputType().*/
+                              GPIO HW configuration can be modified afterwards using unitary function
+                              @ref LL_GPIO_SetPinOutputType().*/
 
   uint32_t Pull;         /*!< Specifies the operating Pull-up/Pull down for the selected pins.
                               This parameter can be a value of @ref GPIO_LL_EC_PULL.
 
-                              GPIO HW configuration can be modified afterwards using unitary function @ref LL_GPIO_SetPinPull().*/
+                              GPIO HW configuration can be modified afterwards using unitary function
+                              @ref LL_GPIO_SetPinPull().*/
 
   uint32_t Alternate;    /*!< Specifies the Peripheral to be connected to the selected pins.
                               This parameter can be a value of @ref GPIO_LL_EC_AF.
 
-                              GPIO HW configuration can be modified afterwards using unitary function @ref LL_GPIO_SetAFPin_0_7() and LL_GPIO_SetAFPin_8_15().*/
+                              GPIO HW configuration can be modified afterwards using unitary function
+                              @ref LL_GPIO_SetAFPin_0_7() and LL_GPIO_SetAFPin_8_15().*/
 } LL_GPIO_InitTypeDef;
 
 /**
@@ -122,11 +128,11 @@ typedef struct
 #define LL_GPIO_PIN_14                     GPIO_BSRR_BS14 /*!< Select pin 14 */
 #define LL_GPIO_PIN_15                     GPIO_BSRR_BS15 /*!< Select pin 15 */
 #define LL_GPIO_PIN_ALL                    (GPIO_BSRR_BS0 | GPIO_BSRR_BS1  | GPIO_BSRR_BS2  | \
-                                           GPIO_BSRR_BS3  | GPIO_BSRR_BS4  | GPIO_BSRR_BS5  | \
-                                           GPIO_BSRR_BS6  | GPIO_BSRR_BS7  | GPIO_BSRR_BS8  | \
-                                           GPIO_BSRR_BS9  | GPIO_BSRR_BS10 | GPIO_BSRR_BS11 | \
-                                           GPIO_BSRR_BS12 | GPIO_BSRR_BS13 | GPIO_BSRR_BS14 | \
-                                           GPIO_BSRR_BS15) /*!< Select all pins */
+                                            GPIO_BSRR_BS3  | GPIO_BSRR_BS4  | GPIO_BSRR_BS5  | \
+                                            GPIO_BSRR_BS6  | GPIO_BSRR_BS7  | GPIO_BSRR_BS8  | \
+                                            GPIO_BSRR_BS9  | GPIO_BSRR_BS10 | GPIO_BSRR_BS11 | \
+                                            GPIO_BSRR_BS12 | GPIO_BSRR_BS13 | GPIO_BSRR_BS14 | \
+                                            GPIO_BSRR_BS15) /*!< Select all pins */
 /**
   * @}
   */
@@ -714,6 +720,7 @@ __STATIC_INLINE void LL_GPIO_LockPin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
   WRITE_REG(GPIOx->LCKR, GPIO_LCKR_LCKK | PinMask);
   WRITE_REG(GPIOx->LCKR, PinMask);
   WRITE_REG(GPIOx->LCKR, GPIO_LCKR_LCKK | PinMask);
+  /* Read LCKK register. This read is mandatory to complete key lock sequence */
   temp = READ_REG(GPIOx->LCKR);
   (void) temp;
 }
@@ -744,7 +751,7 @@ __STATIC_INLINE void LL_GPIO_LockPin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
   */
 __STATIC_INLINE uint32_t LL_GPIO_IsPinLocked(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
-  return (READ_BIT(GPIOx->LCKR, PinMask) == (PinMask));
+  return ((READ_BIT(GPIOx->LCKR, PinMask) == (PinMask)) ? 1UL : 0UL);
 }
 
 /**
@@ -755,7 +762,7 @@ __STATIC_INLINE uint32_t LL_GPIO_IsPinLocked(GPIO_TypeDef *GPIOx, uint32_t PinMa
   */
 __STATIC_INLINE uint32_t LL_GPIO_IsAnyPinLocked(GPIO_TypeDef *GPIOx)
 {
-  return (READ_BIT(GPIOx->LCKR, GPIO_LCKR_LCKK) == (GPIO_LCKR_LCKK));
+  return ((READ_BIT(GPIOx->LCKR, GPIO_LCKR_LCKK) == (GPIO_LCKR_LCKK)) ? 1UL : 0UL);
 }
 
 /**
@@ -803,7 +810,7 @@ __STATIC_INLINE uint32_t LL_GPIO_ReadInputPort(GPIO_TypeDef *GPIOx)
   */
 __STATIC_INLINE uint32_t LL_GPIO_IsInputPinSet(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
-  return (READ_BIT(GPIOx->IDR, PinMask) == (PinMask));
+  return ((READ_BIT(GPIOx->IDR, PinMask) == (PinMask)) ? 1UL : 0UL);
 }
 
 /**
@@ -855,7 +862,7 @@ __STATIC_INLINE uint32_t LL_GPIO_ReadOutputPort(GPIO_TypeDef *GPIOx)
   */
 __STATIC_INLINE uint32_t LL_GPIO_IsOutputPinSet(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
-  return (READ_BIT(GPIOx->ODR, PinMask) == (PinMask));
+  return ((READ_BIT(GPIOx->ODR, PinMask) == (PinMask)) ? 1UL : 0UL);
 }
 
 /**
@@ -1129,7 +1136,7 @@ __STATIC_INLINE void LL_GPIO_DisablePinSecure(GPIO_TypeDef *GPIOx, uint32_t PinM
   */
 __STATIC_INLINE uint32_t LL_GPIO_IsEnabledPinSecure(GPIO_TypeDef *GPIOx, uint32_t PinMask)
 {
-  return (READ_BIT(GPIOx->SECCFGR, PinMask) == (PinMask));
+  return ((READ_BIT(GPIOx->SECCFGR, PinMask) == (PinMask)) ? 1UL : 0UL);
 }
 
 
@@ -1159,7 +1166,8 @@ void        LL_GPIO_StructInit(LL_GPIO_InitTypeDef *GPIO_InitStruct);
   * @}
   */
 
-#endif /* defined (GPIOA) || defined (GPIOB) || defined (GPIOC) || defined (GPIOD) || defined (GPIOE) || defined (GPIOF) || defined (GPIOG) || defined (GPIOH) || defined (GPIOI) */
+#endif /* defined (GPIOA) || defined (GPIOB) || defined (GPIOC) || defined (GPIOD) || defined (GPIOE) || \
+          defined (GPIOF) || defined (GPIOG) || defined (GPIOH) || defined (GPIOI) */
 /**
   * @}
   */

@@ -8,6 +8,18 @@
   *           + Initialization and Configuration
   *           + Cache coherency command
   *           + Monitoring management
+  ******************************************************************************
+    * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
   @verbatim
  ===============================================================================
                         ##### How to use this driver #####
@@ -49,7 +61,8 @@
         (+) Use HAL_DCACHE_<COMMAND>_IT() to start a DCache operation with IT enabled.
         (+) Use HAL_DCACHE_IRQHandler() called under DCACHE_IRQHandler() Interrupt subroutine
 
-    [..]  Use HAL_DCACHE_GetState() function to return the DCACHE state and HAL_DCACHE_GetError() in case of error detection.
+    [..]  Use HAL_DCACHE_GetState() function to return the DCACHE state and HAL_DCACHE_GetError()
+          in case of error detection.
 
      *** DCACHE HAL driver macros list ***
      =============================================
@@ -69,17 +82,6 @@
 
   @endverbatim
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -97,6 +99,25 @@
 
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
+/** @defgroup DCACHE_Private_Macros DCACHE Private Macros
+  * @{
+  */
+#define IS_DCACHE_REGION_SIZE(__SIZE__)                ((__SIZE__) > 0U)
+
+#define IS_DCACHE_MONITOR_TYPE(__TYPE__)               (((__TYPE__) & ~DCACHE_MONITOR_ALL) == 0U)
+
+#define IS_DCACHE_SINGLE_MONITOR_TYPE(__TYPE__)        (((__TYPE__) == DCACHE_MONITOR_READ_HIT)  || \
+                                                        ((__TYPE__) == DCACHE_MONITOR_READ_MISS) || \
+                                                        ((__TYPE__) == DCACHE_MONITOR_WRITE_HIT) || \
+                                                        ((__TYPE__) == DCACHE_MONITOR_WRITE_MISS))
+
+#define IS_DCACHE_READ_BURST_TYPE(__OUTPUTBURSTTYPE__) (((__OUTPUTBURSTTYPE__) == DCACHE_READ_BURST_WRAP) || \
+                                                        ((__OUTPUTBURSTTYPE__) == DCACHE_READ_BURST_INCR))
+
+/**
+  * @}
+  */
+
 /* Private typedef -----------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
 /** @addtogroup DCACHE_Private_Constants DCACHE Private Constants
@@ -116,10 +137,10 @@
   * @}
   */
 
-/* Private macros ------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
-static HAL_StatusTypeDef dcache_CommandByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t Command, uint32_t *addr, uint32_t dsize, uint32_t mode);
+static HAL_StatusTypeDef DCACHE_CommandByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t Command,
+                                              const uint32_t *const pAddr, uint32_t dSize, uint32_t mode);
 
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup DCACHE_Exported_Functions DCACHE Exported Functions
@@ -127,8 +148,8 @@ static HAL_StatusTypeDef dcache_CommandByAddr(DCACHE_HandleTypeDef *hdcache, uin
   */
 
 /** @defgroup DCACHE_Exported_Functions_Group1 Initialization and de-initialization functions
- *  @brief    Initialization and Configuration functions
- *
+  *  @brief    Initialization and Configuration functions
+  *
 @verbatim
  ===============================================================================
               ##### Initialization and de-initialization functions #####
@@ -151,13 +172,16 @@ static HAL_StatusTypeDef dcache_CommandByAddr(DCACHE_HandleTypeDef *hdcache, uin
   */
 
 /**
-  * @brief  Initialize the Data cache.
+  * @brief  Initializes the DCACHE according to the specified parameters
+  *         in the DCACHE_InitTypeDef and initialize the associated handle.
   * @param  hdcache Pointer to a DCACHE_HandleTypeDef structure that contains
   *                 the configuration information for the specified DCACHE.
   * @retval HAL status
   */
-HAL_StatusTypeDef  HAL_DCACHE_Init (DCACHE_HandleTypeDef *hdcache)
+HAL_StatusTypeDef  HAL_DCACHE_Init(DCACHE_HandleTypeDef *hdcache)
 {
+  HAL_StatusTypeDef status = HAL_OK;
+
   /* Check the DCACHE handle allocation */
   if (hdcache == NULL)
   {
@@ -170,16 +194,16 @@ HAL_StatusTypeDef  HAL_DCACHE_Init (DCACHE_HandleTypeDef *hdcache)
 
   if (hdcache->State == HAL_DCACHE_STATE_RESET)
   {
-    /* Init the DCACHE Callback settings */
-    hdcache->ErrorCallback                      = HAL_DCACHE_ErrorCallback;                    /* Legacy weak ErrorCallback */
-    hdcache->CleanByAddrCallback                = HAL_DCACHE_CleanByAddrCallback;              /* Legacy weak CleanByAddrCallback */
-    hdcache->InvalidateByAddrCallback           = HAL_DCACHE_InvalidateByAddrCallback;         /* Legacy weak InvalidateByAddrCallback */
-    hdcache->InvalidateCompleteCallback         = HAL_DCACHE_InvalidateCompleteCallback;       /* Legacy weak InvalidateCompleteCallback */
-    hdcache->CleanAndInvalidateByAddrCallback   = HAL_DCACHE_CleanAndInvalidateByAddrCallback; /* Legacy weak CleanAndInvalidateByAddrCallback */
+    /* Init the DCACHE Callback settings with legacy weak */
+    hdcache->ErrorCallback                      = HAL_DCACHE_ErrorCallback;
+    hdcache->CleanByAddrCallback                = HAL_DCACHE_CleanByAddrCallback;
+    hdcache->InvalidateByAddrCallback           = HAL_DCACHE_InvalidateByAddrCallback;
+    hdcache->InvalidateCompleteCallback         = HAL_DCACHE_InvalidateCompleteCallback;
+    hdcache->CleanAndInvalidateByAddrCallback   = HAL_DCACHE_CleanAndInvalidateByAddrCallback;
 
     if (hdcache->MspInitCallback == NULL)
     {
-      hdcache->MspInitCallback = HAL_DCACHE_MspInit; /* Legacy weak MspInit  */
+      hdcache->MspInitCallback = HAL_DCACHE_MspInit;
     }
 
     /* Init the low level hardware */
@@ -191,21 +215,24 @@ HAL_StatusTypeDef  HAL_DCACHE_Init (DCACHE_HandleTypeDef *hdcache)
   /* Disable the selected DCACHE peripheral */
   if (HAL_DCACHE_Disable(hdcache) != HAL_OK)
   {
-    return HAL_TIMEOUT;
+    /* Return timeout status */
+    status =  HAL_TIMEOUT;
   }
-
-  /* Set requested read burst type */
-  MODIFY_REG(hdcache->Instance->CR, DCACHE_CR_HBURST, hdcache->Init.ReadBurstType);
-
-  /* Enable the selected DCACHE peripheral */
-  if (HAL_DCACHE_Enable(hdcache) != HAL_OK)
+  else
   {
-    return HAL_ERROR;
-  }
+    /* Set requested read burst type */
+    MODIFY_REG(hdcache->Instance->CR, DCACHE_CR_HBURST, hdcache->Init.ReadBurstType);
 
+    /* Enable the selected DCACHE peripheral */
+    if (HAL_DCACHE_Enable(hdcache) != HAL_OK)
+    {
+      /* Return error status */
+      status =  HAL_ERROR;
+    }
+  }
   hdcache->State = HAL_DCACHE_STATE_READY;
 
-  return HAL_OK;
+  return status;
 }
 
 /**
@@ -216,6 +243,8 @@ HAL_StatusTypeDef  HAL_DCACHE_Init (DCACHE_HandleTypeDef *hdcache)
   */
 HAL_StatusTypeDef HAL_DCACHE_DeInit(DCACHE_HandleTypeDef *hdcache)
 {
+  HAL_StatusTypeDef status = HAL_OK;
+
   /* Check the dcache handle allocation */
   if (hdcache == NULL)
   {
@@ -238,32 +267,31 @@ HAL_StatusTypeDef HAL_DCACHE_DeInit(DCACHE_HandleTypeDef *hdcache)
       hdcache->State = HAL_DCACHE_STATE_ERROR;
 
       /* Return error status */
-      return HAL_ERROR;
+      status =  HAL_ERROR;
     }
-
-    if (hdcache->MspDeInitCallback == NULL)
-    {
-      hdcache->MspDeInitCallback = HAL_DCACHE_MspDeInit; /* Legacy weak MspDeInit  */
-    }
-
-    /* DeInit the low level hardware */
-    hdcache->MspDeInitCallback(hdcache);
 
     /* reset monitor values */
     (void)HAL_DCACHE_Monitor_Reset(hdcache, DCACHE_MONITOR_ALL);
-
 
     /* Reset all remaining bit */
     WRITE_REG(hdcache->Instance->CR, 0U);
     WRITE_REG(hdcache->Instance->CMDRSADDRR, 0U);
     WRITE_REG(hdcache->Instance->CMDREADDRR, 0U);
-    WRITE_REG(hdcache->Instance->FCR, DCACHE_FCR_CCMDENDF|DCACHE_FCR_CERRF|DCACHE_FCR_CBSYENDF);
+    WRITE_REG(hdcache->Instance->FCR, DCACHE_FCR_CCMDENDF | DCACHE_FCR_CERRF | DCACHE_FCR_CBSYENDF);
+
+    if (hdcache->MspDeInitCallback == NULL)
+    {
+      hdcache->MspDeInitCallback = HAL_DCACHE_MspDeInit;
+    }
+
+    /* DeInit the low level hardware */
+    hdcache->MspDeInitCallback(hdcache);
 
     /* Return to the reset state */
     hdcache->State = HAL_DCACHE_STATE_RESET;
   }
 
-  return HAL_OK;
+  return status;
 }
 
 /**
@@ -298,10 +326,6 @@ __weak void HAL_DCACHE_MspDeInit(DCACHE_HandleTypeDef *hdcache)
    */
 }
 
-/**
-  * @}
-  */
-
 /** @defgroup DCACHE_Exported_Functions_Group2 IO operation functions
   *  @brief    IO operation functions
   *
@@ -313,14 +337,14 @@ __weak void HAL_DCACHE_MspDeInit(DCACHE_HandleTypeDef *hdcache)
       (+) Enable the Data cache.
       (+) Disable the Data cache.
       (+) Set Read Burst Type.
-      (+) Invalidate the Data cache
-      (+) Invalidate the Data cache with interrupt
-      (+) Clean the Data cache by Addr
-      (+) Invalidate the Data cache by Addr
-      (+) Clean and Invalidate the Data cache by Addr
-      (+) Clean the Data cache by Addr with interrupt
-      (+) Invalidate the Data cache by Addr with interrupt
-      (+) Clean and Invalidate the Data cache by Addr with interrupt
+      (+) Invalidate the Data cache.
+      (+) Invalidate the Data cache with interrupt.
+      (+) Clean the Data cache by Addr.
+      (+) Invalidate the Data cache by Addr.
+      (+) Clean and Invalidate the Data cache by Addr.
+      (+) Clean the Data cache by Addr with interrupt.
+      (+) Invalidate the Data cache by Addr with interrupt.
+      (+) Clean and Invalidate the Data cache by Addr with interrupt.
 @endverbatim
   * @{
   */
@@ -333,6 +357,13 @@ __weak void HAL_DCACHE_MspDeInit(DCACHE_HandleTypeDef *hdcache)
   */
 HAL_StatusTypeDef HAL_DCACHE_Enable(DCACHE_HandleTypeDef *hdcache)
 {
+  HAL_StatusTypeDef status = HAL_OK;
+
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
 
   /* Check the parameters */
   assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
@@ -340,7 +371,8 @@ HAL_StatusTypeDef HAL_DCACHE_Enable(DCACHE_HandleTypeDef *hdcache)
   /* Check no ongoing operation */
   if (READ_BIT(hdcache->Instance->SR, (DCACHE_SR_BUSYF | DCACHE_SR_BUSYCMDF)) != 0U)
   {
-     return HAL_ERROR;
+    /* Return error status */
+    status =  HAL_ERROR;
   }
   else
   {
@@ -349,7 +381,7 @@ HAL_StatusTypeDef HAL_DCACHE_Enable(DCACHE_HandleTypeDef *hdcache)
 
   hdcache->State = HAL_DCACHE_STATE_READY;
 
-  return HAL_OK;
+  return status;
 }
 
 /**
@@ -360,6 +392,8 @@ HAL_StatusTypeDef HAL_DCACHE_Enable(DCACHE_HandleTypeDef *hdcache)
   */
 HAL_StatusTypeDef HAL_DCACHE_Disable(DCACHE_HandleTypeDef *hdcache)
 {
+  HAL_StatusTypeDef status = HAL_OK;
+
   uint32_t tickstart;
 
   /* Check the parameters */
@@ -377,7 +411,7 @@ HAL_StatusTypeDef HAL_DCACHE_Disable(DCACHE_HandleTypeDef *hdcache)
     CLEAR_BIT(hdcache->Instance->CR, DCACHE_CR_EN);
 
     /* Wait for end of data cache disabling */
-    while(READ_BIT(hdcache->Instance->SR, (DCACHE_SR_BUSYF | DCACHE_SR_BUSYCMDF)) != 0U)
+    while (READ_BIT(hdcache->Instance->SR, (DCACHE_SR_BUSYF | DCACHE_SR_BUSYCMDF)) != 0U)
     {
       if ((HAL_GetTick() - tickstart) > DCACHE_DISABLE_TIMEOUT_VALUE)
       {
@@ -388,14 +422,14 @@ HAL_StatusTypeDef HAL_DCACHE_Disable(DCACHE_HandleTypeDef *hdcache)
         hdcache->State = HAL_DCACHE_STATE_ERROR;
 
         /* Return error status */
-        return HAL_ERROR;
+        status =  HAL_ERROR;
       }
     }
 
     hdcache->State = HAL_DCACHE_STATE_RESET;
   }
 
-  return HAL_OK;
+  return status;
 }
 
 /**
@@ -406,12 +440,19 @@ HAL_StatusTypeDef HAL_DCACHE_Disable(DCACHE_HandleTypeDef *hdcache)
   *                       DCACHE_READ_BURST_WRAP, DCACHE_READ_BURST_INC.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCACHE_SetReadBurstType(DCACHE_HandleTypeDef *hdcache , uint32_t ReadBurstType)
+HAL_StatusTypeDef HAL_DCACHE_SetReadBurstType(DCACHE_HandleTypeDef *hdcache, uint32_t ReadBurstType)
 {
+  HAL_StatusTypeDef status = HAL_OK;
+
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
 
   /* Check the parameters */
-  assert_param(IS_DCACHE_READ_BURST_TYPE(ReadBurstType));
   assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  assert_param(IS_DCACHE_READ_BURST_TYPE(ReadBurstType));
 
   /* check DCACHE state */
   if (hdcache->State == HAL_DCACHE_STATE_RESET)
@@ -428,10 +469,11 @@ HAL_StatusTypeDef HAL_DCACHE_SetReadBurstType(DCACHE_HandleTypeDef *hdcache , ui
   }
   else
   {
-    return HAL_ERROR;
+    /* Return error status */
+    status =  HAL_ERROR;
   }
 
-  return HAL_OK;
+  return status;
 }
 
 /**
@@ -443,7 +485,14 @@ HAL_StatusTypeDef HAL_DCACHE_SetReadBurstType(DCACHE_HandleTypeDef *hdcache , ui
   */
 HAL_StatusTypeDef HAL_DCACHE_Invalidate(DCACHE_HandleTypeDef *hdcache)
 {
+  HAL_StatusTypeDef status = HAL_OK;
   uint32_t tickstart;
+
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
 
   /* Check the parameters */
   assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
@@ -451,12 +500,16 @@ HAL_StatusTypeDef HAL_DCACHE_Invalidate(DCACHE_HandleTypeDef *hdcache)
   /* Check no ongoing operation */
   if (READ_BIT(hdcache->Instance->SR, (DCACHE_SR_BUSYF | DCACHE_SR_BUSYCMDF)) != 0U)
   {
-    return HAL_ERROR;
+    /* Return error status */
+    status =  HAL_ERROR;
   }
   else
   {
     /* Make sure flags are reset */
     WRITE_REG(hdcache->Instance->FCR, (DCACHE_FCR_CBSYENDF | DCACHE_FCR_CCMDENDF));
+
+    /* Set no operation on address range */
+    MODIFY_REG(hdcache->Instance->CR, DCACHE_CR_CACHECMD, 0U);
 
     /* Get timeout */
     tickstart = HAL_GetTick();
@@ -474,27 +527,34 @@ HAL_StatusTypeDef HAL_DCACHE_Invalidate(DCACHE_HandleTypeDef *hdcache)
     }
   }
 
-  return HAL_OK;
+  return status;
 }
 
 /**
   * @brief  Invalidate the Data cache for a specific region.
   * @param  hdcache Pointer to a DCACHE_HandleTypeDef structure that contains
   *                 the configuration information for the specified DCACHEx peripheral.
-  * @param  addr Start address of the region to be Invalidated
-  * @param  dsize Size of the region to be Invalidated(in bytes)
+  * @param  pAddr Start address of the region to be Invalidated
+  * @param  dSize Size of the region to be Invalidated(in bytes)
   * @note   This function waits for end of cache Invalidation
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCACHE_InvalidateByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize)
+HAL_StatusTypeDef HAL_DCACHE_InvalidateByAddr(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr,
+                                              uint32_t dSize)
 {
   HAL_StatusTypeDef status;
 
-  /* Check the parameters */
-  assert_param(IS_DCACHE_REGION_SIZE(dsize));
-  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
 
-  status = dcache_CommandByAddr(hdcache, DCACHE_COMMAND_INVALIDATE, addr, dsize, DCACHE_POLLING_MODE);
+  /* Check the parameters */
+  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  assert_param(IS_DCACHE_REGION_SIZE(dSize));
+
+  status = DCACHE_CommandByAddr(hdcache, DCACHE_COMMAND_INVALIDATE, pAddr, dSize, DCACHE_POLLING_MODE);
 
   return status;
 }
@@ -503,20 +563,26 @@ HAL_StatusTypeDef HAL_DCACHE_InvalidateByAddr(DCACHE_HandleTypeDef *hdcache, uin
   * @brief  Clean the Data cache by Addr.
   * @param  hdcache Pointer to a DCACHE_HandleTypeDef structure that contains
   *                 the configuration information for the specified DCACHEx peripheral.
-  * @param  addr Start address of the region to be Cleaned
-  * @param  dsize Size of the region to be Cleaned (in bytes)
+  * @param  pAddr Start address of the region to be Cleaned
+  * @param  dSize Size of the region to be Cleaned (in bytes)
   * @note   This function waits for end of cache Clean
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCACHE_CleanByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize)
+HAL_StatusTypeDef HAL_DCACHE_CleanByAddr(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr, uint32_t dSize)
 {
   HAL_StatusTypeDef status;
 
-  /* Check the parameters */
-  assert_param(IS_DCACHE_REGION_SIZE(dsize));
-  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
 
-  status = dcache_CommandByAddr(hdcache, DCACHE_COMMAND_CLEAN, addr, dsize, DCACHE_POLLING_MODE);
+  /* Check the parameters */
+  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  assert_param(IS_DCACHE_REGION_SIZE(dSize));
+
+  status = DCACHE_CommandByAddr(hdcache, DCACHE_COMMAND_CLEAN, pAddr, dSize, DCACHE_POLLING_MODE);
 
   return status;
 }
@@ -525,20 +591,27 @@ HAL_StatusTypeDef HAL_DCACHE_CleanByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t
   * @brief  Clean and Invalidate the Data cache by Addr.
   * @param  hdcache Pointer to a DCACHE_HandleTypeDef structure that contains
   *                 the configuration information for the specified DCACHEx peripheral.
-  * @param  addr Start address of the region to be Cleaned and Invalidated
-  * @param  dsize Size of the region to be Cleaned and Invalidated (in bytes)
+  * @param  pAddr Start address of the region to be Cleaned and Invalidated
+  * @param  dSize Size of the region to be Cleaned and Invalidated (in bytes)
   * @note   This function waits for end of cache Clean and Invalidation
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCACHE_CleanInvalidateByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize)
+HAL_StatusTypeDef HAL_DCACHE_CleanInvalidateByAddr(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr,
+                                                   uint32_t dSize)
 {
   HAL_StatusTypeDef status;
 
-  /* Check the parameters */
-  assert_param(IS_DCACHE_REGION_SIZE(dsize));
-  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
 
-  status = dcache_CommandByAddr(hdcache, DCACHE_COMMAND_CLEAN_INVALIDATE, addr, dsize, DCACHE_POLLING_MODE);
+  /* Check the parameters */
+  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  assert_param(IS_DCACHE_REGION_SIZE(dSize));
+
+  status = DCACHE_CommandByAddr(hdcache, DCACHE_COMMAND_CLEAN_INVALIDATE, pAddr, dSize, DCACHE_POLLING_MODE);
 
   return status;
 }
@@ -547,21 +620,30 @@ HAL_StatusTypeDef HAL_DCACHE_CleanInvalidateByAddr(DCACHE_HandleTypeDef *hdcache
   * @brief  Invalidate the Data cache with interrupt.
   * @param  hdcache Pointer to a DCACHE_HandleTypeDef structure that contains
   *                 the configuration information for the specified DCACHEx peripheral.
-  * @note   This function launches maintenance operation and returns immediatly.
+  * @note   This function launches maintenance operation and returns immediately.
   *         User application shall resort to interrupt generation to check
   *         the end of operation.
   * @retval HAL status
   */
 HAL_StatusTypeDef HAL_DCACHE_Invalidate_IT(DCACHE_HandleTypeDef *hdcache)
 {
+  HAL_StatusTypeDef status = HAL_OK;
+
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
   assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
 
   /* Check no ongoing operation */
   if (READ_BIT(hdcache->Instance->SR, (DCACHE_SR_BUSYF | DCACHE_SR_BUSYCMDF)) != 0U)
   {
+
     /* Return error status */
-    return HAL_ERROR;
+    status =  HAL_ERROR;
   }
   else
   {
@@ -578,29 +660,36 @@ HAL_StatusTypeDef HAL_DCACHE_Invalidate_IT(DCACHE_HandleTypeDef *hdcache)
     SET_BIT(hdcache->Instance->CR, DCACHE_CR_CACHEINV);
   }
 
-  return HAL_OK;
+  return status;
 }
 
 /**
   * @brief  Invalidate the Data cache by Addr with interrupt.
   * @param  hdcache Pointer to a DCACHE_HandleTypeDef structure that contains
   *                 the configuration information for the specified DCACHEx peripheral.
-  * @param  addr Start address of the region to be Invalidated
-  * @param  dsize Size of the region to be Invalidated
-  * @note   This function launches maintenance operation and returns immediatly.
+  * @param  pAddr Start address of the region to be Invalidated
+  * @param  dSize Size of the region to be Invalidated
+  * @note   This function launches maintenance operation and returns immediately.
   *         User application shall resort to interrupt generation to check
   *         the end of operation.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCACHE_InvalidateByAddr_IT(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize)
+HAL_StatusTypeDef HAL_DCACHE_InvalidateByAddr_IT(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr,
+                                                 uint32_t dSize)
 {
   HAL_StatusTypeDef status;
 
-  /* Check the parameters */
-  assert_param(IS_DCACHE_REGION_SIZE(dsize));
-  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
 
-  status = dcache_CommandByAddr(hdcache, DCACHE_COMMAND_INVALIDATE, addr, dsize, DCACHE_IT_MODE);
+  /* Check the parameters */
+  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  assert_param(IS_DCACHE_REGION_SIZE(dSize));
+
+  status = DCACHE_CommandByAddr(hdcache, DCACHE_COMMAND_INVALIDATE, pAddr, dSize, DCACHE_IT_MODE);
 
   return status;
 }
@@ -609,22 +698,29 @@ HAL_StatusTypeDef HAL_DCACHE_InvalidateByAddr_IT(DCACHE_HandleTypeDef *hdcache, 
   * @brief  Clean the Data cache by Addr with interrupt.
   * @param  hdcache Pointer to a DCACHE_HandleTypeDef structure that contains
   *                 the configuration information for the specified DCACHEx peripheral.
-  * @param  addr Start address of the region to be Cleaned
-  * @param  dsize Size of the region to be Cleaned
-  * @note   This function launches maintenance operation and returns immediatly.
+  * @param  pAddr Start address of the region to be Cleaned
+  * @param  dSize Size of the region to be Cleaned
+  * @note   This function launches maintenance operation and returns immediately.
   *         User application shall resort to interrupt generation to check
   *         the end of operation.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCACHE_CleanByAddr_IT(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize)
+HAL_StatusTypeDef HAL_DCACHE_CleanByAddr_IT(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr,
+                                            uint32_t dSize)
 {
   HAL_StatusTypeDef status;
 
-  /* Check the parameters */
-  assert_param(IS_DCACHE_REGION_SIZE(dsize));
-  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
 
-  status = dcache_CommandByAddr(hdcache, DCACHE_COMMAND_CLEAN, addr, dsize, DCACHE_IT_MODE);
+  /* Check the parameters */
+  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  assert_param(IS_DCACHE_REGION_SIZE(dSize));
+
+  status = DCACHE_CommandByAddr(hdcache, DCACHE_COMMAND_CLEAN, pAddr, dSize, DCACHE_IT_MODE);
 
   return status;
 }
@@ -633,22 +729,29 @@ HAL_StatusTypeDef HAL_DCACHE_CleanByAddr_IT(DCACHE_HandleTypeDef *hdcache, uint3
   * @brief  Clean and Invalidate the Data cache by Addr with interrupt.
   * @param  hdcache Pointer to a DCACHE_HandleTypeDef structure that contains
   *                 the configuration information for the specified DCACHEx peripheral.
-  * @param  addr Start address of the region to be Cleaned and Invalidated
-  * @param  dsize Size of the region to be Cleaned and Invalidated
-  * @note   This function launches maintenance operation and returns immediatly.
+  * @param  pAddr Start address of the region to be Cleaned and Invalidated
+  * @param  dSize Size of the region to be Cleaned and Invalidated
+  * @note   This function launches maintenance operation and returns immediately.
   *         User application shall resort to interrupt generation to check
   *         the end of operation.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCACHE_CleanInvalidateByAddr_IT(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize)
+HAL_StatusTypeDef HAL_DCACHE_CleanInvalidateByAddr_IT(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr,
+                                                      uint32_t dSize)
 {
   HAL_StatusTypeDef status;
 
-  /* Check the parameters */
-  assert_param(IS_DCACHE_REGION_SIZE(dsize));
-  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
 
-  status = dcache_CommandByAddr(hdcache, DCACHE_COMMAND_CLEAN_INVALIDATE, addr, dsize, DCACHE_IT_MODE);
+  /* Check the parameters */
+  assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  assert_param(IS_DCACHE_REGION_SIZE(dSize));
+
+  status = DCACHE_CommandByAddr(hdcache, DCACHE_COMMAND_CLEAN_INVALIDATE, pAddr, dSize, DCACHE_IT_MODE);
 
   return status;
 }
@@ -675,11 +778,11 @@ void HAL_DCACHE_IRQHandler(DCACHE_HandleTypeDef *hdcache)
     /* Clear DCACHE error pending flag */
     __HAL_DCACHE_CLEAR_FLAG(hdcache, DCACHE_FLAG_ERROR);
 
-     /* Data cache error interrupt user callback */
-      hdcache->ErrorCallback(hdcache);
+    /* Data cache error interrupt user callback */
+    hdcache->ErrorCallback(hdcache);
   }
 
-  if(READ_BIT(hdcache->Instance->CR,DCACHE_CR_CACHECMD) == 0U) /* no operation by range */
+  if (READ_BIT(hdcache->Instance->CR, DCACHE_CR_CACHECMD) == 0U) /* no operation by range */
   {
     /* Clear DCACHE busyend pending flag */
     __HAL_DCACHE_CLEAR_FLAG(hdcache, DCACHE_FLAG_BUSYEND);
@@ -687,8 +790,8 @@ void HAL_DCACHE_IRQHandler(DCACHE_HandleTypeDef *hdcache)
     /* Data cache invalidate complete interrupt user callback */
     hdcache->InvalidateCompleteCallback(hdcache);
   }
-  else if(READ_BIT(hdcache->Instance->CR,DCACHE_CR_CACHECMD_1|DCACHE_CR_CACHECMD_0) == \
-    (DCACHE_CR_CACHECMD_1|DCACHE_CR_CACHECMD_0))
+  else if (READ_BIT(hdcache->Instance->CR, DCACHE_CR_CACHECMD_1 | DCACHE_CR_CACHECMD_0) == \
+           (DCACHE_CR_CACHECMD_1 | DCACHE_CR_CACHECMD_0))
   {
     /* Clear DCACHE cmdend pending flag */
     __HAL_DCACHE_CLEAR_FLAG(hdcache, DCACHE_FLAG_CMDEND);
@@ -696,7 +799,7 @@ void HAL_DCACHE_IRQHandler(DCACHE_HandleTypeDef *hdcache)
     /* Data cache clean and invalidate range cmdend interrupt user callback */
     hdcache->CleanAndInvalidateByAddrCallback(hdcache);
   }
-  else if(READ_BIT(hdcache->Instance->CR,DCACHE_CR_CACHECMD_0) == DCACHE_CR_CACHECMD_0)
+  else if (READ_BIT(hdcache->Instance->CR, DCACHE_CR_CACHECMD_0) == DCACHE_CR_CACHECMD_0)
   {
     /* Clear DCACHE cmdend pending flag */
     __HAL_DCACHE_CLEAR_FLAG(hdcache, DCACHE_FLAG_CMDEND);
@@ -723,6 +826,9 @@ void HAL_DCACHE_IRQHandler(DCACHE_HandleTypeDef *hdcache)
   */
 __weak void HAL_DCACHE_CleanByAddrCallback(DCACHE_HandleTypeDef *hdcache)
 {
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hdcache);
+
   /* NOTE : This function should not be modified, when the callback is needed,
             the HAL_DCACHE_CleanByAddrCallback() should be implemented in the user file
    */
@@ -736,6 +842,9 @@ __weak void HAL_DCACHE_CleanByAddrCallback(DCACHE_HandleTypeDef *hdcache)
   */
 __weak void HAL_DCACHE_InvalidateByAddrCallback(DCACHE_HandleTypeDef *hdcache)
 {
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hdcache);
+
   /* NOTE : This function should not be modified, when the callback is needed,
             the HAL_DCACHE_InvalidateByAddrCallback() should be implemented in the user file
    */
@@ -749,6 +858,9 @@ __weak void HAL_DCACHE_InvalidateByAddrCallback(DCACHE_HandleTypeDef *hdcache)
   */
 __weak void HAL_DCACHE_CleanAndInvalidateByAddrCallback(DCACHE_HandleTypeDef *hdcache)
 {
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hdcache);
+
   /* NOTE : This function should not be modified, when the callback is needed,
             the HAL_DCACHE_CleanAndInvalidateByAddrCallback() should be implemented in the user file
    */
@@ -762,6 +874,9 @@ __weak void HAL_DCACHE_CleanAndInvalidateByAddrCallback(DCACHE_HandleTypeDef *hd
   */
 __weak void HAL_DCACHE_InvalidateCompleteCallback(DCACHE_HandleTypeDef *hdcache)
 {
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hdcache);
+
   /* NOTE : This function should not be modified, when the callback is needed,
             the HAL_DCACHE_InvalidateCompleteCallback() should be implemented in the user file
    */
@@ -775,6 +890,9 @@ __weak void HAL_DCACHE_InvalidateCompleteCallback(DCACHE_HandleTypeDef *hdcache)
   */
 __weak void HAL_DCACHE_ErrorCallback(DCACHE_HandleTypeDef *hdcache)
 {
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hdcache);
+
   /* NOTE : This function should not be modified, when the callback is needed,
             the HAL_DCACHE_ErrorCallback() should be implemented in the user file
    */
@@ -785,8 +903,8 @@ __weak void HAL_DCACHE_ErrorCallback(DCACHE_HandleTypeDef *hdcache)
   */
 
 /** @defgroup DCACHE_Exported_Functions_Group3 Peripheral State,
- *  @brief   Peripheral State,
- *
+  *  @brief   Peripheral State,
+  *
 @verbatim
  ===============================================================================
             #####          Peripheral State          #####
@@ -809,6 +927,21 @@ HAL_DCACHE_StateTypeDef HAL_DCACHE_GetState(DCACHE_HandleTypeDef *hdcache)
 {
   /* Return DCACHE handle state */
   return hdcache->State;
+}
+
+/**
+  * @}
+  */
+
+/**
+  * @brief  Return the DCACHE error code
+  * @param  hdcache pointer to a DCACHE_HandleTypeDef structure that contains
+  *         the configuration information for the specified DCACHE.
+  * @retval DCACHE Error Code
+  */
+uint32_t HAL_DCACHE_GetError(DCACHE_HandleTypeDef *hdcache)
+{
+  return hdcache->ErrorCode;
 }
 
 /**
@@ -844,7 +977,8 @@ HAL_DCACHE_StateTypeDef HAL_DCACHE_GetState(DCACHE_HandleTypeDef *hdcache)
   * @param  pCallback pointer to the Callback function
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCACHE_RegisterCallback(DCACHE_HandleTypeDef *hdcache, HAL_DCACHE_CallbackIDTypeDef CallbackID, pDCACHE_CallbackTypeDef pCallback)
+HAL_StatusTypeDef HAL_DCACHE_RegisterCallback(DCACHE_HandleTypeDef *hdcache, HAL_DCACHE_CallbackIDTypeDef CallbackID,
+                                              pDCACHE_CallbackTypeDef pCallback)
 {
   HAL_StatusTypeDef status = HAL_OK;
 
@@ -868,9 +1002,9 @@ HAL_StatusTypeDef HAL_DCACHE_RegisterCallback(DCACHE_HandleTypeDef *hdcache, HAL
         hdcache->InvalidateByAddrCallback = pCallback;
         break;
 
-    case HAL_DCACHE_CLEAN_AND_INVALIDATE_BY_ADDRESS_CB_ID :
-      hdcache->CleanAndInvalidateByAddrCallback = pCallback;
-      break;
+      case HAL_DCACHE_CLEAN_AND_INVALIDATE_BY_ADDRESS_CB_ID :
+        hdcache->CleanAndInvalidateByAddrCallback = pCallback;
+        break;
 
       case HAL_DCACHE_INVALIDATE_COMPLETE_CB_ID :
         hdcache->InvalidateCompleteCallback = pCallback;
@@ -955,31 +1089,38 @@ HAL_StatusTypeDef HAL_DCACHE_UnRegisterCallback(DCACHE_HandleTypeDef *hdcache, H
     switch (CallbackID)
     {
       case HAL_DCACHE_CLEAN_BY_ADDRESS_CB_ID :
-        hdcache->CleanByAddrCallback = HAL_DCACHE_CleanByAddrCallback;                   /* Legacy weak Clean By Addr Callback */
+        /* Legacy weak Clean By Addr Callback */
+        hdcache->CleanByAddrCallback = HAL_DCACHE_CleanByAddrCallback;
         break;
 
       case HAL_DCACHE_INVALIDATE_BY_ADDRESS_CB_ID :
-        hdcache->InvalidateByAddrCallback = HAL_DCACHE_InvalidateByAddrCallback;         /* Legacy weak Invalidate By Addr Callback  */
+        /* Legacy weak Invalidate By Addr Callback */
+        hdcache->InvalidateByAddrCallback = HAL_DCACHE_InvalidateByAddrCallback;
         break;
 
       case HAL_DCACHE_CLEAN_AND_INVALIDATE_BY_ADDRESS_CB_ID :
-        hdcache->InvalidateByAddrCallback = HAL_DCACHE_CleanAndInvalidateByAddrCallback; /* Legacy weak Clean and Invalidate By Addr Callback  */
+        /* Legacy weak Clean and Invalidate By Addr Callback */
+        hdcache->InvalidateByAddrCallback = HAL_DCACHE_CleanAndInvalidateByAddrCallback;
         break;
 
       case HAL_DCACHE_INVALIDATE_COMPLETE_CB_ID :
-        hdcache->InvalidateCompleteCallback = HAL_DCACHE_InvalidateCompleteCallback;     /* Legacy weak Invalidate Complete Callback */
+        /* Legacy weak Invalidate Complete Callback */
+        hdcache->InvalidateCompleteCallback = HAL_DCACHE_InvalidateCompleteCallback;
         break;
 
       case HAL_DCACHE_ERROR_CB_ID :
-        hdcache->ErrorCallback = HAL_DCACHE_ErrorCallback;                               /* Legacy weak ErrorCallback        */
+        /* Legacy weak ErrorCallback */
+        hdcache->ErrorCallback = HAL_DCACHE_ErrorCallback;
         break;
 
       case HAL_DCACHE_MSPINIT_CB_ID :
-        hdcache->MspInitCallback = HAL_DCACHE_MspInit;                                   /* Legacy weak MspInit              */
+        /* Legacy weak MspInit */
+        hdcache->MspInitCallback = HAL_DCACHE_MspInit;
         break;
 
       case HAL_DCACHE_MSPDEINIT_CB_ID :
-        hdcache->MspDeInitCallback = HAL_DCACHE_MspDeInit;                               /* Legacy weak MspDeInit            */
+        /* Legacy weak MspDeInit */
+        hdcache->MspDeInitCallback = HAL_DCACHE_MspDeInit;
         break;
 
       default :
@@ -996,11 +1137,13 @@ HAL_StatusTypeDef HAL_DCACHE_UnRegisterCallback(DCACHE_HandleTypeDef *hdcache, H
     switch (CallbackID)
     {
       case HAL_DCACHE_MSPINIT_CB_ID :
-        hdcache->MspInitCallback = HAL_DCACHE_MspInit;                                /* Legacy weak MspInit              */
+        /* Legacy weak MspInit */
+        hdcache->MspInitCallback = HAL_DCACHE_MspInit;
         break;
 
       case HAL_DCACHE_MSPDEINIT_CB_ID :
-        hdcache->MspDeInitCallback = HAL_DCACHE_MspDeInit;                            /* Legacy weak MspDeInit            */
+        /* Legacy weak MspDeInit */
+        hdcache->MspDeInitCallback = HAL_DCACHE_MspDeInit;
         break;
 
       default :
@@ -1025,14 +1168,6 @@ HAL_StatusTypeDef HAL_DCACHE_UnRegisterCallback(DCACHE_HandleTypeDef *hdcache, H
 }
 
 /**
-  * @}
-  */
-
-/**
-  * @}
-  */
-
-/**
   * @brief  Start the Data Cache performance monitoring.
   * @param  hdcache Pointer to a DCACHE_HandleTypeDef structure that contains
   *                 the configuration information for the specified DCACHEx peripheral.
@@ -1047,9 +1182,15 @@ HAL_StatusTypeDef HAL_DCACHE_UnRegisterCallback(DCACHE_HandleTypeDef *hdcache, H
   */
 HAL_StatusTypeDef HAL_DCACHE_Monitor_Start(DCACHE_HandleTypeDef *hdcache, uint32_t MonitorType)
 {
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
-  assert_param(IS_DCACHE_MONITOR_TYPE(MonitorType));
   assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  assert_param(IS_DCACHE_MONITOR_TYPE(MonitorType));
 
   SET_BIT(hdcache->Instance->CR, MonitorType);
 
@@ -1072,9 +1213,15 @@ HAL_StatusTypeDef HAL_DCACHE_Monitor_Start(DCACHE_HandleTypeDef *hdcache, uint32
   */
 HAL_StatusTypeDef HAL_DCACHE_Monitor_Stop(DCACHE_HandleTypeDef *hdcache, uint32_t MonitorType)
 {
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
-  assert_param(IS_DCACHE_MONITOR_TYPE(MonitorType));
   assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  assert_param(IS_DCACHE_MONITOR_TYPE(MonitorType));
 
   CLEAR_BIT(hdcache->Instance->CR, MonitorType);
 
@@ -1096,9 +1243,15 @@ HAL_StatusTypeDef HAL_DCACHE_Monitor_Stop(DCACHE_HandleTypeDef *hdcache, uint32_
   */
 HAL_StatusTypeDef HAL_DCACHE_Monitor_Reset(DCACHE_HandleTypeDef *hdcache, uint32_t MonitorType)
 {
+  /* Check the dcache handle allocation */
+  if (hdcache == NULL)
+  {
+    return HAL_ERROR;
+  }
+
   /* Check the parameters */
-  assert_param(IS_DCACHE_MONITOR_TYPE(MonitorType));
   assert_param(IS_DCACHE_ALL_INSTANCE(hdcache->Instance));
+  assert_param(IS_DCACHE_MONITOR_TYPE(MonitorType));
 
   /* Force/Release reset */
   SET_BIT(hdcache->Instance->CR, (MonitorType << 2U));
@@ -1180,15 +1333,17 @@ uint32_t HAL_DCACHE_Monitor_GetWriteMissValue(DCACHE_HandleTypeDef *hdcache)
   *                 the configuration information for the specified DCACHEx peripheral.
   * @param  Command command to be applied for the dcache
   *                       DCACHE_COMMAND_INVALIDATE, DCACHE_COMMAND_CLEAN, DCACHE_COMMAND_CLEAN_INVALIDATE
-  * @param  addr Start address of region to be Cleaned, Invalidated or Cleaned and Invalidated.
-  * @param  dsize Size of the region to be Cleaned, Invalidated or Cleaned and Invalidated (in bytes).
+  * @param  pAddr Start address of region to be Cleaned, Invalidated or Cleaned and Invalidated.
+  * @param  dSize Size of the region to be Cleaned, Invalidated or Cleaned and Invalidated (in bytes).
   * @param  mode mode to be applied for the dcache
   *                       DCACHE_IT_MODE, DCACHE_POLLING_MODE.
   * @retval HAL status
   */
-static HAL_StatusTypeDef dcache_CommandByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t Command, uint32_t *addr, uint32_t dsize, uint32_t mode)
+static HAL_StatusTypeDef DCACHE_CommandByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t Command,
+                                              const uint32_t *const pAddr, uint32_t dSize, uint32_t mode)
 {
-  uint32_t op_addr = (uint32_t)addr;
+  HAL_StatusTypeDef status = HAL_OK;
+  uint32_t op_addr = (uint32_t)pAddr;
   uint32_t tickstart;
 
   /* Set HAL_DCACHE_STATE_BUSY */
@@ -1211,7 +1366,7 @@ static HAL_StatusTypeDef dcache_CommandByAddr(DCACHE_HandleTypeDef *hdcache, uin
     WRITE_REG(hdcache->Instance->CMDRSADDRR, op_addr);
 
     /* Fill area end address */
-    WRITE_REG(hdcache->Instance->CMDREADDRR, (op_addr + dsize - 1U));
+    WRITE_REG(hdcache->Instance->CMDREADDRR, (op_addr + dSize - 1U));
 
     /* Set command */
     MODIFY_REG(hdcache->Instance->CR, DCACHE_CR_CACHECMD, Command);
@@ -1246,7 +1401,7 @@ static HAL_StatusTypeDef dcache_CommandByAddr(DCACHE_HandleTypeDef *hdcache, uin
           hdcache->State = HAL_DCACHE_STATE_ERROR;
 
           /* Return error status */
-          return HAL_ERROR;
+          status =  HAL_ERROR;
         }
       }
     }
@@ -1255,12 +1410,17 @@ static HAL_StatusTypeDef dcache_CommandByAddr(DCACHE_HandleTypeDef *hdcache, uin
   /* Set HAL_DCACHE_STATE_READY */
   hdcache->State = HAL_DCACHE_STATE_READY;
 
-  return HAL_OK;
+  return status;
 }
 
 
 #endif /* HAL_DCACHE_MODULE_ENABLED */
 
+
+/**
+  * @}
+  */
+
 /**
   * @}
   */
@@ -1268,5 +1428,4 @@ static HAL_StatusTypeDef dcache_CommandByAddr(DCACHE_HandleTypeDef *hdcache, uin
 /**
   * @}
   */
-
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

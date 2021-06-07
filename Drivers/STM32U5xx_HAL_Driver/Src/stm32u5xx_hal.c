@@ -48,20 +48,25 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
+/** @defgroup HAL_Private_Defines HAL Private Defines
+  * @{
+  */
 /**
- * @brief STM32U5xx HAL Driver version number 0.6.0
+  * @brief STM32U5xx HAL Driver version number 1.0.0.rc1
    */
-#define __STM32U5xx_HAL_VERSION_MAIN   (0x00U) /*!< [31:24] main version */
-#define __STM32U5xx_HAL_VERSION_SUB1   (0x06U) /*!< [23:16] sub1 version */
+#define __STM32U5xx_HAL_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
+#define __STM32U5xx_HAL_VERSION_SUB1   (0x00U) /*!< [23:16] sub1 version */
 #define __STM32U5xx_HAL_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
-#define __STM32U5xx_HAL_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
+#define __STM32U5xx_HAL_VERSION_RC     (0x01U) /*!< [7:0]  release candidate */
 #define __STM32U5xx_HAL_VERSION         ((__STM32U5xx_HAL_VERSION_MAIN << 24U)\
-                                        |(__STM32U5xx_HAL_VERSION_SUB1 << 16U)\
-                                        |(__STM32U5xx_HAL_VERSION_SUB2 << 8U )\
-                                        |(__STM32U5xx_HAL_VERSION_RC))
+                                         |(__STM32U5xx_HAL_VERSION_SUB1 << 16U)\
+                                         |(__STM32U5xx_HAL_VERSION_SUB2 << 8U )\
+                                         |(__STM32U5xx_HAL_VERSION_RC))
 
 #define VREFBUF_TIMEOUT_VALUE           10U   /* 10 ms (to be confirmed) */
-
+/**
+  * @}
+  */
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Exported variables --------------------------------------------------------*/
@@ -84,8 +89,8 @@ HAL_TickFreqTypeDef uwTickFreq = HAL_TICK_FREQ_DEFAULT;  /* 1KHz */
   */
 
 /** @defgroup HAL_Exported_Functions_Group1 Initialization and de-initialization Functions
- *  @brief    Initialization and de-initialization functions
- *
+  *  @brief    Initialization and de-initialization functions
+  *
 @verbatim
  ===============================================================================
               ##### Initialization and de-initialization functions #####
@@ -146,7 +151,7 @@ HAL_StatusTypeDef HAL_Init(void)
   SystemCoreClock = HAL_RCC_GetSysClockFreq() >> AHBPrescTable[(RCC->CFGR2 & RCC_CFGR2_HPRE) >> RCC_CFGR2_HPRE_Pos];
 
   /* Use systick as time base source and configure 1ms tick (default clock after Reset is HSI) */
-  if(HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
+  if (HAL_InitTick(TICK_INT_PRIORITY) != HAL_OK)
   {
     return HAL_ERROR;
   }
@@ -229,7 +234,7 @@ __weak void HAL_MspDeInit(void)
 __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
   /* Check uwTickFreq for MisraC 2012 (even if uwTickFreq is a enum type that don't take the value zero)*/
-  if((uint32_t)uwTickFreq == 0UL)
+  if ((uint32_t)uwTickFreq == 0UL)
   {
     return HAL_ERROR;
   }
@@ -260,8 +265,8 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   */
 
 /** @defgroup HAL_Group2 HAL Control functions
- *  @brief    HAL Control functions
- *
+  *  @brief    HAL Control functions
+  *
 @verbatim
  ===============================================================================
                       ##### HAL Control functions #####
@@ -287,7 +292,7 @@ __weak HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   *        used as application time base.
   * @note In the default implementation, this variable is incremented each 1ms
   *       in Systick ISR.
- * @note This function is declared as __weak to be overwritten in case of other
+  * @note This function is declared as __weak to be overwritten in case of other
   *      implementations in user file.
   * @retval None
   */
@@ -413,7 +418,7 @@ __weak void HAL_ResumeTick(void)
   */
 uint32_t HAL_GetHalVersion(void)
 {
- return __STM32U5xx_HAL_VERSION;
+  return __STM32U5xx_HAL_VERSION;
 }
 
 /**
@@ -422,7 +427,7 @@ uint32_t HAL_GetHalVersion(void)
   */
 uint32_t HAL_GetREVID(void)
 {
-   return((DBGMCU->IDCODE & DBGMCU_IDCODE_REV_ID) >> 16);
+  return ((DBGMCU->IDCODE & DBGMCU_IDCODE_REV_ID) >> 16);
 }
 
 /**
@@ -431,7 +436,7 @@ uint32_t HAL_GetREVID(void)
   */
 uint32_t HAL_GetDEVID(void)
 {
-   return(DBGMCU->IDCODE & DBGMCU_IDCODE_DEV_ID);
+  return (DBGMCU->IDCODE & DBGMCU_IDCODE_DEV_ID);
 }
 
 /**
@@ -440,8 +445,8 @@ uint32_t HAL_GetDEVID(void)
 
 
 /** @defgroup HAL_Exported_Functions_Group3 HAL Debug functions
- *  @brief    HAL Debug functions
- *
+  *  @brief    HAL Debug functions
+  *
 @verbatim
  ===============================================================================
                       ##### HAL Debug functions #####
@@ -495,8 +500,8 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void)
   */
 
 /** @defgroup HAL_Exported_Functions_Group4 HAL SYSCFG configuration functions
- *  @brief    HAL SYSCFG configuration functions
- *
+  *  @brief    HAL SYSCFG configuration functions
+  *
 @verbatim
  ===============================================================================
                       ##### HAL SYSCFG configuration functions #####
@@ -514,9 +519,13 @@ void HAL_DBGMCU_DisableDBGStandbyMode(void)
   * @brief Configure the internal voltage reference buffer voltage scale.
   * @param  VoltageScaling: specifies the output voltage to achieve
   *          This parameter can be one of the following values:
-  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE0: VREF_OUT1 around 2.048 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE0: VREF_OUT1 around 1.5 V.
+  *                                                This requires VDDA equal to or higher than 1.8 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE1: VREF_OUT1 around 1.8 V.
+  *                                                This requires VDDA equal to or higher than 2.1 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE2: VREF_OUT1 around 2.048 V.
   *                                                This requires VDDA equal to or higher than 2.4 V.
-  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE1: VREF_OUT1 around 2.5 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE3: VREF_OUT1 around 2.5 V.
   *                                                This requires VDDA equal to or higher than 2.8 V.
   * @retval None
   */
@@ -570,9 +579,9 @@ HAL_StatusTypeDef HAL_SYSCFG_EnableVREFBUF(void)
   tickstart = HAL_GetTick();
 
   /* Wait for VRR bit  */
-  while(READ_BIT(VREFBUF->CSR, VREFBUF_CSR_VRR) == 0UL)
+  while (READ_BIT(VREFBUF->CSR, VREFBUF_CSR_VRR) == 0UL)
   {
-    if((HAL_GetTick() - tickstart) > VREFBUF_TIMEOUT_VALUE)
+    if ((HAL_GetTick() - tickstart) > VREFBUF_TIMEOUT_VALUE)
     {
       return HAL_TIMEOUT;
     }
@@ -614,6 +623,161 @@ void HAL_SYSCFG_DisableIOAnalogSwitchBooster(void)
 /**
   * @}
   */
+
+/** @defgroup HAL_Exported_Functions_Group5 HAL SYSCFG lock management functions
+  *  @brief SYSCFG lock management functions.
+  *
+@verbatim
+ ===============================================================================
+                       ##### SYSCFG lock functions #####
+ ===============================================================================
+
+@endverbatim
+  * @{
+  */
+
+/**
+  * @brief  Lock the SYSCFG item(s).
+  * @note   Setting lock(s) depends on privilege mode in secure/non-secure code
+  *         Lock(s) cleared only at system reset
+  * @param  Item Item(s) to set lock on.
+  *         This parameter can be a combination of @ref SYSCFG_Lock_items
+  * @retval None
+  */
+void HAL_SYSCFG_Lock(uint32_t Item)
+{
+  /* Check the parameters */
+  assert_param(IS_SYSCFG_LOCK_ITEMS(Item));
+
+  /* Privilege secure/non-secure locks */
+  SYSCFG->CNSLCKR = (0xFFFFU & Item);  /* non-secure lock item in 16 lowest bits */
+
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+  /* Privilege secure only locks */
+  SYSCFG->CSLCKR = ((0xFFFF0000U & Item) >> 16U);  /* Secure-only lock item in 16 highest bits */
+#endif /* __ARM_FEATURE_CMSE */
+}
+
+/**
+  * @brief  Get the lock state of SYSCFG item.
+  * @note   Getting lock(s) depends on privilege mode in secure/non-secure code
+  * @param  pItem pointer to return locked items
+  *         the return value can be a combination of @ref SYSCFG_Lock_items
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_SYSCFG_GetLock(uint32_t *pItem)
+{
+  uint32_t tmp_lock;
+
+  /* Check null pointer */
+  if (pItem == NULL)
+  {
+    return HAL_ERROR;
+  }
+
+  /* Get the non-secure lock state */
+  tmp_lock = SYSCFG->CNSLCKR;
+
+  /* Get the secure lock state in secure code */
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+  tmp_lock |= (SYSCFG->CSLCKR << 16U);
+#endif /* __ARM_FEATURE_CMSE */
+
+  /* Return overall lock status */
+  *pItem = tmp_lock;
+
+  return HAL_OK;
+}
+
+/**
+  * @}
+  */
+
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+
+
+/** @defgroup HAL_Exported_Functions_Group6 HAL SYSCFG attributes management functions
+  *  @brief SYSCFG attributes management functions.
+  *
+@verbatim
+ ===============================================================================
+                       ##### SYSCFG attributes functions #####
+ ===============================================================================
+
+@endverbatim
+  * @{
+  */
+
+/**
+  * @brief  Configure the SYSCFG item attribute(s).
+  * @note   Available attributes are to secure SYSCFG items, so this function is
+  *         only available in secure
+  * @param  Item Item(s) to set attributes on.
+  *         This parameter can be a one or a combination of @ref SYSCFG_Attributes_items
+  * @param  Attributes  specifies the secure/non-secure attributes.
+  * @retval None
+  */
+void HAL_SYSCFG_ConfigAttributes(uint32_t Item, uint32_t Attributes)
+{
+  uint32_t tmp;
+
+  /* Check the parameters */
+  assert_param(IS_SYSCFG_ITEMS_ATTRIBUTES(Item));
+  assert_param(IS_SYSCFG_ATTRIBUTES(Attributes));
+
+  tmp = SYSCFG_S->SECCFGR;
+
+  /* Set or reset Item */
+  if ((Attributes & SYSCFG_SEC) != 0x00U)
+  {
+    tmp |= Item;
+  }
+  else
+  {
+    tmp &= ~Item;
+  }
+
+  /* Set secure attributes */
+  SYSCFG_S->SECCFGR = tmp;
+}
+
+/**
+  * @brief  Get the attribute of a SYSCFG item.
+  * @note   Available attributes are to secure SYSCFG items, so this function is
+  *         only available in secure
+  * @param  Item Single item to get secure/non-secure attribute from.
+  * @param  pAttributes pointer to return the attribute.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_SYSCFG_GetConfigAttributes(uint32_t Item, uint32_t *pAttributes)
+{
+  /* Check null pointer */
+  if (pAttributes == NULL)
+  {
+    return HAL_ERROR;
+  }
+
+  /* Check the parameters */
+  assert_param(IS_SYSCFG_ITEMS_ATTRIBUTES(Item));
+
+  /* Get the secure attribute state */
+  if ((SYSCFG_S->SECCFGR & Item) != 0U)
+  {
+    *pAttributes = SYSCFG_SEC;
+  }
+  else
+  {
+    *pAttributes = SYSCFG_NSEC;
+  }
+
+  return HAL_OK;
+}
+
+/**
+  * @}
+  */
+
+#endif /* __ARM_FEATURE_CMSE */
 
 /**
   * @}

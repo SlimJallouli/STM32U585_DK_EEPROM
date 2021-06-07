@@ -32,7 +32,7 @@
         (++) Falling
 
     (+) Exti lines 0 to 15 are linked to gpio pin number 0 to 15. Gpio port can
-        be selected throught multiplexer.
+        be selected through multiplexer.
 
                      ##### How to use this driver #####
   ==============================================================================
@@ -72,7 +72,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -119,8 +119,8 @@
   */
 
 /** @addtogroup EXTI_Exported_Functions_Group1
- *  @brief    Configuration functions
- *
+  *  @brief    Configuration functions
+  *
 @verbatim
  ===============================================================================
               ##### Configuration functions #####
@@ -313,14 +313,14 @@ HAL_StatusTypeDef HAL_EXTI_GetConfigLine(EXTI_HandleTypeDef *hexti, EXTI_ConfigT
     regaddr = (__IO uint32_t *)(&EXTI->RTSR1 + (EXTI_CONFIG_OFFSET * offset));
     regval = *regaddr;
 
+    /* Get default Trigger and GPIOSel configuration */
+    pExtiConfig->Trigger = EXTI_TRIGGER_NONE;
+    pExtiConfig->GPIOSel = 0x00u;
+
     /* Check if configuration of selected line is enable */
     if ((regval & maskline) != 0U)
     {
       pExtiConfig->Trigger = EXTI_TRIGGER_RISING;
-    }
-    else
-    {
-      pExtiConfig->Trigger = EXTI_TRIGGER_NONE;
     }
 
     /* Get falling configuration */
@@ -341,15 +341,6 @@ HAL_StatusTypeDef HAL_EXTI_GetConfigLine(EXTI_HandleTypeDef *hexti, EXTI_ConfigT
       regval = EXTI->EXTICR[(linepos >> 2U) & 0x03UL];
       pExtiConfig->GPIOSel = ((regval << (EXTI_EXTICR1_EXTI1_Pos * (3U - (linepos & 0x03U)))) >> 24U);
     }
-    else
-    {
-      pExtiConfig->GPIOSel = 0U;
-    }
-  }
-  else
-  {
-    pExtiConfig->Trigger = EXTI_TRIGGER_NONE;
-    pExtiConfig->GPIOSel = 0U;
   }
 
   return HAL_OK;
@@ -427,7 +418,8 @@ HAL_StatusTypeDef HAL_EXTI_ClearConfigLine(EXTI_HandleTypeDef *hexti)
   * @param  pPendingCbfn function pointer to be stored as callback.
   * @retval HAL Status.
   */
-HAL_StatusTypeDef HAL_EXTI_RegisterCallback(EXTI_HandleTypeDef *hexti, EXTI_CallbackIDTypeDef CallbackID, void (*pPendingCbfn)(void))
+HAL_StatusTypeDef HAL_EXTI_RegisterCallback(EXTI_HandleTypeDef *hexti, EXTI_CallbackIDTypeDef CallbackID,
+                                            void (*pPendingCbfn)(void))
 {
   HAL_StatusTypeDef status = HAL_OK;
 
@@ -487,8 +479,8 @@ HAL_StatusTypeDef HAL_EXTI_GetHandle(EXTI_HandleTypeDef *hexti, uint32_t ExtiLin
   */
 
 /** @addtogroup EXTI_Exported_Functions_Group2
- *  @brief EXTI IO functions.
- *
+  *  @brief EXTI IO functions.
+  *
 @verbatim
  ===============================================================================
                        ##### IO operation functions #####
@@ -661,8 +653,8 @@ void HAL_EXTI_GenerateSWI(EXTI_HandleTypeDef *hexti)
   */
 
 /** @defgroup EXTI_Exported_Functions_Group3 EXTI line attributes management functions
- *  @brief EXTI attributes management functions.
- *
+  *  @brief EXTI attributes management functions.
+  *
 @verbatim
  ===============================================================================
                        ##### EXTI attributes functions #####
@@ -729,7 +721,7 @@ void HAL_EXTI_ConfigLineAttributes(uint32_t ExtiLine, uint32_t LineAttributes)
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
   /* Configure secure or non-secure attributes */
-  regaddr = (uint32_t *)(&EXTI->SECCFGR1 + (EXTI_SECCFGR_OFFSET * offset));
+  regaddr = (__IO uint32_t *)(&EXTI->SECCFGR1 + (EXTI_SECCFGR_OFFSET * offset));
   regval = *regaddr;
 
   /* Mask or set line */
@@ -798,7 +790,7 @@ HAL_StatusTypeDef HAL_EXTI_GetConfigLineAttributes(uint32_t ExtiLine, uint32_t *
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
   /* Get secure or non-secure attribute */
-  regaddr = (uint32_t *)(&EXTI->SECCFGR1 + (EXTI_SECCFGR_OFFSET * offset));
+  regaddr = (__IO uint32_t *)(&EXTI->SECCFGR1 + (EXTI_SECCFGR_OFFSET * offset));
 
   if ((*regaddr & maskline) != 0U)
   {

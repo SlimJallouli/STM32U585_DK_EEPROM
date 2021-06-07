@@ -132,10 +132,6 @@ typedef struct
 
 typedef  uint32_t HAL_OPAMP_TrimmingValueTypeDef;
 
-/**
-  * @}
-  */
-
 #if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
 /**
   * @brief  HAL OPAMP Callback ID enumeration definition
@@ -154,6 +150,9 @@ typedef enum
 typedef void (*pOPAMP_CallbackTypeDef)(OPAMP_HandleTypeDef *hopamp);
 #endif /* USE_HAL_OPAMP_REGISTER_CALLBACKS */
 
+/**
+  * @}
+  */
 
 /* Exported constants --------------------------------------------------------*/
 
@@ -371,13 +370,6 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef *hopamp);
   */
 
 /* Peripheral Control functions  ************************************************/
-#if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
-/* OPAMP callback registering/unregistering */
-HAL_StatusTypeDef HAL_OPAMP_RegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_OPAMP_CallbackIDTypeDef CallbackID,
-                                             pOPAMP_CallbackTypeDef pCallback);
-HAL_StatusTypeDef HAL_OPAMP_UnRegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_OPAMP_CallbackIDTypeDef CallbackID);
-#endif /* USE_HAL_OPAMP_REGISTER_CALLBACKS */
-
 HAL_StatusTypeDef HAL_OPAMP_Lock(OPAMP_HandleTypeDef *hopamp);
 HAL_OPAMP_TrimmingValueTypeDef HAL_OPAMP_GetTrimOffset(OPAMP_HandleTypeDef *hopamp, uint32_t trimmingoffset);
 
@@ -391,6 +383,21 @@ HAL_OPAMP_TrimmingValueTypeDef HAL_OPAMP_GetTrimOffset(OPAMP_HandleTypeDef *hopa
 
 /* Peripheral State functions  **************************************************/
 HAL_OPAMP_StateTypeDef HAL_OPAMP_GetState(OPAMP_HandleTypeDef *hopamp);
+
+/**
+  * @}
+  */
+
+/** @addtogroup OPAMP_Exported_Functions_Group5
+  * @{
+  */
+
+/* Peripheral Callback functions  **************************************************/
+#if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
+HAL_StatusTypeDef HAL_OPAMP_RegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_OPAMP_CallbackIDTypeDef CallbackID,
+                                             pOPAMP_CallbackTypeDef pCallback);
+HAL_StatusTypeDef HAL_OPAMP_UnRegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_OPAMP_CallbackIDTypeDef CallbackID);
+#endif /* USE_HAL_OPAMP_REGISTER_CALLBACKS */
 
 /**
   * @}

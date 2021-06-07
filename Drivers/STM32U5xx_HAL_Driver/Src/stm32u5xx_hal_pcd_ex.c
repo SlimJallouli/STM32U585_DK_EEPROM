@@ -10,7 +10,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -35,7 +35,7 @@
 
 #ifdef HAL_PCD_MODULE_ENABLED
 
-#if defined (USB_OTG_FS) 
+#if defined (USB_OTG_FS) || defined (USB_OTG_HS)
 /* Private types -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
@@ -60,7 +60,7 @@
 @endverbatim
   * @{
   */
-#if defined (USB_OTG_FS)
+#if defined (USB_OTG_FS) || defined (USB_OTG_HS)
 /**
   * @brief  Set Tx FIFO
   * @param  hpcd PCD handle
@@ -150,7 +150,7 @@ HAL_StatusTypeDef HAL_PCDEx_DeActivateLPM(PCD_HandleTypeDef *hpcd)
   return HAL_OK;
 }
 
-
+#if defined (STM32U575xx) || defined (STM32U585xx) || defined (STM32U595xx) || defined (STM32U5A5xx) || defined (STM32U599xx) || defined (STM32U5A9xx)
 /**
   * @brief  Handle BatteryCharging Process.
   * @param  hpcd PCD handle
@@ -159,11 +159,14 @@ HAL_StatusTypeDef HAL_PCDEx_DeActivateLPM(PCD_HandleTypeDef *hpcd)
 void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
 {
   USB_OTG_GlobalTypeDef *USBx = hpcd->Instance;
+#if defined (STM32U575xx) || defined (STM32U585xx)
   uint32_t tickstart = HAL_GetTick();
+#endif /* defined (STM32U575xx) || defined (STM32U585xx) */
 
   /* Enable DCD : Data Contact Detect */
   USBx->GCCFG |= USB_OTG_GCCFG_DCDEN;
 
+#if defined (STM32U575xx) || defined (STM32U585xx)
   /* Wait Detect flag or a timeout is happen*/
   while ((USBx->GCCFG & USB_OTG_GCCFG_DCDET) == 0U)
   {
@@ -179,10 +182,12 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
       return;
     }
   }
+#endif /* defined (STM32U575xx) || defined (STM32U585xx) */
 
   /* Right response got */
   HAL_Delay(200U);
 
+#if defined (STM32U575xx) || defined (STM32U585xx)
   /* Check Detect flag*/
   if ((USBx->GCCFG & USB_OTG_GCCFG_DCDET) == USB_OTG_GCCFG_DCDET)
   {
@@ -192,6 +197,7 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
     HAL_PCDEx_BCD_Callback(hpcd, PCD_BCD_CONTACT_DETECTION);
 #endif /* USE_HAL_PCD_REGISTER_CALLBACKS */
   }
+#endif /* defined (STM32U575xx) || defined (STM32U585xx) */
 
   /*Primary detection: checks if connected to Standard Downstream Port
   (without charging capability) */
@@ -200,7 +206,11 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
   USBx->GCCFG |=  USB_OTG_GCCFG_PDEN;
   HAL_Delay(50U);
 
+#if defined (STM32U575xx) || defined (STM32U585xx)
   if ((USBx->GCCFG & USB_OTG_GCCFG_PDET) == 0U)
+#else
+  if ((USBx->GCCFG & USB_OTG_GCCFG_CHGDET) == 0U)
+#endif /* defined (STM32U575xx) || defined (STM32U585xx) */
   {
     /* Case of Standard Downstream Port */
 #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
@@ -218,7 +228,11 @@ void HAL_PCDEx_BCD_VBUSDetect(PCD_HandleTypeDef *hpcd)
     USBx->GCCFG |=  USB_OTG_GCCFG_SDEN;
     HAL_Delay(50U);
 
+#if defined (STM32U575xx) || defined (STM32U585xx)
     if ((USBx->GCCFG & USB_OTG_GCCFG_SDET) == USB_OTG_GCCFG_SDET)
+#else
+    if ((USBx->GCCFG & USB_OTG_GCCFG_FSVPLUS) == USB_OTG_GCCFG_FSVPLUS)
+#endif /* defined (STM32U575xx) || defined (STM32U585xx) */
     {
       /* case Dedicated Charging Port  */
 #if (USE_HAL_PCD_REGISTER_CALLBACKS == 1U)
@@ -260,11 +274,13 @@ HAL_StatusTypeDef HAL_PCDEx_ActivateBCD(PCD_HandleTypeDef *hpcd)
   USBx->GCCFG &= ~(USB_OTG_GCCFG_PDEN);
   USBx->GCCFG &= ~(USB_OTG_GCCFG_SDEN);
 
+#if defined (STM32U575xx) || defined (STM32U585xx)
   /* Power Down USB transceiver  */
   USBx->GCCFG &= ~(USB_OTG_GCCFG_PWRDWN);
 
   /* Enable Battery charging */
   USBx->GCCFG |= USB_OTG_GCCFG_BCDEN;
+#endif /* defined (STM32U575xx) || defined (STM32U585xx) */
 
   hpcd->battery_charging_active = 1U;
 
@@ -283,15 +299,17 @@ HAL_StatusTypeDef HAL_PCDEx_DeActivateBCD(PCD_HandleTypeDef *hpcd)
   USBx->GCCFG &= ~(USB_OTG_GCCFG_SDEN);
   USBx->GCCFG &= ~(USB_OTG_GCCFG_PDEN);
 
+#if defined (STM32U575xx) || defined (STM32U585xx)
   /* Disable Battery charging */
   USBx->GCCFG &= ~(USB_OTG_GCCFG_BCDEN);
+#endif /* defined (STM32U575xx) || defined (STM32U585xx) */
 
   hpcd->battery_charging_active = 0U;
 
   return HAL_OK;
 }
-
-#endif /* defined (USB_OTG_FS) */
+#endif /* defined (STM32U575xx) || defined (STM32U585xx) || defined (STM32U595xx) || defined (STM32U5A5xx) || defined (STM32U599xx) || defined (STM32U5A9xx) */
+#endif /* defined (USB_OTG_FS) || defined (USB_OTG_HS) */
 
 /**
   * @brief  Send LPM message to user layer callback.
@@ -334,7 +352,7 @@ __weak void HAL_PCDEx_BCD_Callback(PCD_HandleTypeDef *hpcd, PCD_BCD_MsgTypeDef m
 /**
   * @}
   */
-#endif /* defined (USB_OTG_FS) */
+#endif /* defined (USB_OTG_FS) || defined (USB_OTG_HS) */
 #endif /* HAL_PCD_MODULE_ENABLED */
 
 /**

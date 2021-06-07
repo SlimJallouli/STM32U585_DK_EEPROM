@@ -23,17 +23,16 @@
 #define __STM32U5xx_HAL_DEF
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
 #if defined (__ARM_FEATURE_CMSE) &&  (__ARM_FEATURE_CMSE == 3U)
 #include <arm_cmse.h>
-#endif
+#endif /* __ARM_FEATURE_CMSE */
 
 #include "stm32u5xx.h"
 #include "Legacy/stm32_hal_legacy.h"  /* Aliases file for old names compatibility */
-#include <stdio.h>
 #include <stddef.h>
 #include <math.h>
 
@@ -66,11 +65,11 @@ typedef enum
 #define HAL_IS_BIT_SET(REG, BIT)         (((REG) & (BIT)) == (BIT))
 #define HAL_IS_BIT_CLR(REG, BIT)         (((REG) & (BIT)) == 0U)
 
-#define __HAL_LINKDMA(__HANDLE__, __PPP_DMA_FIELD__, __DMA_HANDLE__)             \
-                        do{                                                      \
-                            (__HANDLE__)->__PPP_DMA_FIELD__ = &(__DMA_HANDLE__); \
-                            (__DMA_HANDLE__).Parent = (__HANDLE__);              \
-                        } while(0)
+#define __HAL_LINKDMA(__HANDLE__, __PPP_DMA_FIELD__, __DMA_HANDLE__)              \
+  do{                                                                             \
+    (__HANDLE__)->__PPP_DMA_FIELD__ = &(__DMA_HANDLE__);                          \
+    (__DMA_HANDLE__).Parent = (__HANDLE__);                                       \
+  } while(0)
 
 #define UNUSED(x) ((void)(x))
 
@@ -92,83 +91,84 @@ typedef enum
 #define __HAL_RESET_HANDLE_STATE(__HANDLE__) ((__HANDLE__)->State = 0)
 
 #if (USE_RTOS == 1)
-  /* Reserved for future use */
-  #error " USE_RTOS should be 0 in the current HAL release "
+/* Reserved for future use */
+#error " USE_RTOS should be 0 in the current HAL release "
 #else
-  #define __HAL_LOCK(__HANDLE__)                                           \
-                                do{                                        \
-                                    if((__HANDLE__)->Lock == HAL_LOCKED)   \
-                                    {                                      \
-                                       return HAL_BUSY;                    \
-                                    }                                      \
-                                    else                                   \
-                                    {                                      \
-                                       (__HANDLE__)->Lock = HAL_LOCKED;    \
-                                    }                                      \
-                                  }while (0)
+#define __HAL_LOCK(__HANDLE__)             \
+  do{                                      \
+    if((__HANDLE__)->Lock == HAL_LOCKED)   \
+    {                                      \
+      return HAL_BUSY;                     \
+    }                                      \
+    else                                   \
+    {                                      \
+      (__HANDLE__)->Lock = HAL_LOCKED;     \
+    }                                      \
+  }while (0)
 
-  #define __HAL_UNLOCK(__HANDLE__)                                          \
-                                  do{                                       \
-                                      (__HANDLE__)->Lock = HAL_UNLOCKED;    \
-                                    }while (0)
+#define __HAL_UNLOCK(__HANDLE__)           \
+  do{                                      \
+    (__HANDLE__)->Lock = HAL_UNLOCKED;     \
+  }while (0)
 #endif /* USE_RTOS */
 
 #if  defined ( __GNUC__ )
-  #ifndef __weak
-    #define __weak   __attribute__((weak))
-  #endif /* __weak */
-  #ifndef __packed
-    #define __packed __attribute__((__packed__))
-  #endif /* __packed */
+#ifndef __weak
+#define __weak  __attribute__((weak))
+#endif /* __weak */
+#ifndef __packed
+#define __packed  __attribute__((__packed__))
+#endif /* __packed */
 #endif /* __GNUC__ */
 
 #if defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-  #ifndef __weak
-    #define __weak  __WEAK
-  #endif /* __weak */
-  #ifndef __packed
-  #define __packed  __PACKED
-  #endif /* __packed */
-#endif
+#ifndef __weak
+#define __weak  __attribute__((weak))
+#endif /* __weak */
+#ifndef __packed
+#define __packed  __attribute__((packed))
+#endif /* __packed */
+#endif /* __ARMCC_VERSION */
 
-/* Macro to get variable aligned on 4-bytes, for __ICCARM__ the directive "#pragma data_alignment=4" must be used instead */
+/* Macro to get variable aligned on 4-bytes, for __ICCARM__ the directive "#pragma data_alignment=4" must be used
+   instead */
 #if defined   (__GNUC__)        /* GNU Compiler */
-  #ifndef __ALIGN_END
-    #define __ALIGN_END    __attribute__ ((aligned (4)))
-  #endif /* __ALIGN_END */
-  #ifndef __ALIGN_BEGIN
-    #define __ALIGN_BEGIN
-  #endif /* __ALIGN_BEGIN */
+#ifndef __ALIGN_END
+#define __ALIGN_END    __attribute__ ((aligned (4)))
+#endif /* __ALIGN_END */
+#ifndef __ALIGN_BEGIN
+#define __ALIGN_BEGIN
+#endif /* __ALIGN_BEGIN */
 #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-  #ifndef __ALIGN_END
-    #define __ALIGN_END    __ALIGNED(4)
-  #endif /* __ALIGN_END */
-  #ifndef __ALIGN_BEGIN
-    #define __ALIGN_BEGIN
-  #endif /* __ALIGN_BEGIN */
+#ifndef __ALIGN_END
+#define __ALIGN_END    __ALIGNED(4)
+#endif /* __ALIGN_END */
+#ifndef __ALIGN_BEGIN
+#define __ALIGN_BEGIN
+#endif /* __ALIGN_BEGIN */
 #else
-  #ifndef __ALIGN_END
-    #define __ALIGN_END
-  #endif /* __ALIGN_END */
-  #ifndef __ALIGN_BEGIN
-    #if defined   (__CC_ARM)      /* ARM Compiler */
-      #define __ALIGN_BEGIN    __align(4)
-    #elif defined (__ICCARM__)    /* IAR Compiler */
-      #define __ALIGN_BEGIN
-    #endif /* __CC_ARM */
-  #endif /* __ALIGN_BEGIN */
+#ifndef __ALIGN_END
+#define __ALIGN_END
+#endif /* __ALIGN_END */
+#ifndef __ALIGN_BEGIN
+#if defined   (__CC_ARM)      /* ARM Compiler */
+#define __ALIGN_BEGIN    __align(4)
+#elif defined (__ICCARM__)    /* IAR Compiler */
+#define __ALIGN_BEGIN
+#endif /* __CC_ARM */
+#endif /* __ALIGN_BEGIN */
 #endif /* __GNUC__ */
 
 /* Macro to get variable aligned on 32-bytes,needed for cache maintenance purpose */
 #if defined   (__GNUC__)        /* GNU Compiler */
-  #define ALIGN_32BYTES(buf)  buf __attribute__ ((aligned (32)))                                    
+#define ALIGN_32BYTES(buf)  buf __attribute__ ((aligned (32)))
 #elif defined (__ICCARM__)    /* IAR Compiler */
-  #define ALIGN_32BYTES(buf) _Pragma("data_alignment=32") buf  
+#define ALIGN_32BYTES(buf) _Pragma("data_alignment=32") buf
 #elif defined (__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
-  #define ALIGN_32BYTES(buf) __ALIGNED(32) buf  
+#define ALIGN_32BYTES(buf) __ALIGNED(32) buf
 #elif defined   (__CC_ARM)      /* ARM Compiler */
-  #define ALIGN_32BYTES(buf) __align(32) buf  
-#endif
+#define ALIGN_32BYTES(buf) __align(32) buf
+#endif /* __GNUC__ */
 
 /**
   * @brief  __RAM_FUNC definition
@@ -201,7 +201,7 @@ typedef enum
 */
 #define __RAM_FUNC HAL_StatusTypeDef  __attribute__((section(".RamFunc")))
 
-#endif
+#endif /* __RAM_FUNC */
 
 /**
   * @brief  __NOINLINE definition
@@ -218,7 +218,7 @@ typedef enum
 */
 #define __NOINLINE _Pragma("optimize = no_inline")
 
-#endif
+#endif /* __NOINLINE */
 
 
 #ifdef __cplusplus

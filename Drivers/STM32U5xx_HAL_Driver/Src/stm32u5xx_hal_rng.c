@@ -115,20 +115,12 @@
 /** @defgroup RNG_Private_Constants RNG Private Constants
   * @{
   */
-#define RNG_TIMEOUT_VALUE     2U
+#define RNG_TIMEOUT_VALUE     4U
 /**
   * @}
   */
 /* Private macros ------------------------------------------------------------*/
 /* Private functions prototypes ----------------------------------------------*/
-/** @addtogroup RNG_Private_Functions
-  * @{
-  */
-HAL_StatusTypeDef RNG_RecoverSeedError(RNG_HandleTypeDef *hrng);
-
-/**
-  * @}
-  */
 /* Exported functions --------------------------------------------------------*/
 
 /** @addtogroup RNG_Exported_Functions
@@ -220,9 +212,13 @@ HAL_StatusTypeDef HAL_RNG_Init(RNG_HandleTypeDef *hrng)
   {
     if ((HAL_GetTick() - tickstart) > RNG_TIMEOUT_VALUE)
     {
-      hrng->State = HAL_RNG_STATE_READY;
-      hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;
-      return HAL_ERROR;
+      /* New check to avoid false timeout detection in case of preemption */
+      if (HAL_IS_BIT_SET(hrng->Instance->CR, RNG_CR_CONDRST))
+      {
+        hrng->State = HAL_RNG_STATE_READY;
+        hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;
+        return HAL_ERROR;
+      }
     }
   }
 
@@ -242,9 +238,13 @@ HAL_StatusTypeDef HAL_RNG_Init(RNG_HandleTypeDef *hrng)
   {
     if ((HAL_GetTick() - tickstart) > RNG_TIMEOUT_VALUE)
     {
-      hrng->State = HAL_RNG_STATE_ERROR;
-      hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;
-      return HAL_ERROR;
+      /* New check to avoid false timeout detection in case of preemption */
+      if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_SECS) != RESET)
+      {
+        hrng->State = HAL_RNG_STATE_ERROR;
+        hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;
+        return HAL_ERROR;
+      }
     }
   }
 
@@ -288,11 +288,15 @@ HAL_StatusTypeDef HAL_RNG_DeInit(RNG_HandleTypeDef *hrng)
   {
     if ((HAL_GetTick() - tickstart) > RNG_TIMEOUT_VALUE)
     {
-      hrng->State = HAL_RNG_STATE_READY;
-      hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;
-      /* Process Unlocked */
-      __HAL_UNLOCK(hrng);
-      return HAL_ERROR;
+      /* New check to avoid false timeout detection in case of preemption */
+      if (HAL_IS_BIT_SET(hrng->Instance->CR, RNG_CR_CONDRST))
+      {
+        hrng->State = HAL_RNG_STATE_READY;
+        hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;
+        /* Process Unlocked */
+        __HAL_UNLOCK(hrng);
+        return HAL_ERROR;
+      }
     }
   }
 
@@ -658,11 +662,15 @@ HAL_StatusTypeDef HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t
     {
       if ((HAL_GetTick() - tickstart) > RNG_TIMEOUT_VALUE)
       {
-        hrng->State = HAL_RNG_STATE_READY;
-        hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;
-        /* Process Unlocked */
-        __HAL_UNLOCK(hrng);
-        return HAL_ERROR;
+        /* New check to avoid false timeout detection in case of preemption */
+        if (__HAL_RNG_GET_FLAG(hrng, RNG_FLAG_DRDY) == RESET)
+        {
+          hrng->State = HAL_RNG_STATE_READY;
+          hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;
+          /* Process Unlocked */
+          __HAL_UNLOCK(hrng);
+          return HAL_ERROR;
+        }
       }
     }
 
@@ -973,7 +981,8 @@ HAL_StatusTypeDef RNG_RecoverSeedError(RNG_HandleTypeDef *hrng)
 #endif /* USE_HAL_RNG_REGISTER_CALLBACKS */
         return HAL_ERROR;
       }
-    } while (HAL_IS_BIT_SET(hrng->Instance->CR, RNG_CR_CONDRST));
+    }
+    while (HAL_IS_BIT_SET(hrng->Instance->CR, RNG_CR_CONDRST));
 
     if (__HAL_RNG_GET_IT(hrng, RNG_IT_SEI) != RESET)
     {
@@ -1001,7 +1010,8 @@ HAL_StatusTypeDef RNG_RecoverSeedError(RNG_HandleTypeDef *hrng)
 #endif /* USE_HAL_RNG_REGISTER_CALLBACKS */
         return HAL_ERROR;
       }
-    } while (HAL_IS_BIT_SET(hrng->Instance->SR, RNG_FLAG_SECS));
+    }
+    while (HAL_IS_BIT_SET(hrng->Instance->SR, RNG_FLAG_SECS));
   }
   /* Update the error code */
   hrng->ErrorCode &= ~ HAL_RNG_ERROR_SEED;

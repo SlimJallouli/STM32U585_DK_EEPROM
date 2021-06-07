@@ -148,7 +148,7 @@ static void              FLASH_OB_RDPKeyConfig(uint32_t RDPKeyType, uint32_t RDP
   */
 
 /* Exported functions -------------------------------------------------------*/
-/** @defgroup FLASHEx_Exported_Functions FLASH Extended Exported Functions
+/** @defgroup FLASHEx_Exported_Functions FLASHEx Exported Functions
   * @{
   */
 
@@ -376,7 +376,7 @@ HAL_StatusTypeDef HAL_FLASHEx_OBProgram(FLASH_OBProgramInitTypeDef *pOBInit)
       /* Configure the unique boot entry point */
       FLASH_OB_BootLockConfig(pOBInit->BootLock);
     }
-#endif
+#endif /* __ARM_FEATURE_CMSE */
 
     /* Boot address configuration */
     if ((pOBInit->OptionType & OPTIONBYTE_BOOTADDR) != 0U)
@@ -439,7 +439,7 @@ void HAL_FLASHEx_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit)
 
   /* Get the configuration of the unique boot entry point */
   pOBInit->BootLock = FLASH_OB_GetBootLock();
-#endif
+#endif /* __ARM_FEATURE_CMSE */
 
   /* Get the value of the selected boot address */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
@@ -447,7 +447,7 @@ void HAL_FLASHEx_OBGetConfig(FLASH_OBProgramInitTypeDef *pOBInit)
       (pOBInit->BootAddrConfig == OB_BOOTADDR_SEC0))
 #else
   if ((pOBInit->BootAddrConfig == OB_BOOTADDR_NS0) || (pOBInit->BootAddrConfig == OB_BOOTADDR_NS1))
-#endif
+#endif /* __ARM_FEATURE_CMSE */
   {
     pOBInit->OptionType |= OPTIONBYTE_BOOTADDR;
     FLASH_OB_GetBootAddr(pOBInit->BootAddrConfig, &(pOBInit->BootAddr));
@@ -609,17 +609,29 @@ void HAL_FLASHEx_EnableSecHideProtection(uint32_t Banks)
     SET_BIT(FLASH->SECHDPCR, FLASH_SECHDPCR_HDP2_ACCDIS);
   }
 }
-#endif
+#endif /* __ARM_FEATURE_CMSE */
+
+/**
+  * @}
+  */
+
+/** @addtogroup FLASHEx_Exported_Functions_Group2 FLASHEx Exported Functions Group2
+  * @{
+  */
 
 /**
   * @brief  Configuration of the privilege attribute.
   *
   * @param  PrivMode indicate privilege mode configuration
-  *          This parameter can be one of the following values:
-  *            @arg FLASH_SPRIV_GRANTED: access to secure Flash registers is granted to privileged or unprivileged access
-  *            @arg FLASH_SPRIV_DENIED: access to secure Flash registers is denied to unprivileged access
-  *            @arg FLASH_NSPRIV_GRANTED: access to non-secure Flash registers is granted to privileged or unprivileged access
-  *            @arg FLASH_NSPRIV_DENIED: access to non-secure Flash registers is denied to unprivilege access
+  *         This parameter can be one of the following values:
+  *            @arg FLASH_SPRIV_GRANTED:  access to secure Flash registers is granted to privileged
+  *                                       or unprivileged access
+  *            @arg FLASH_SPRIV_DENIED:   access to secure Flash registers is denied
+  *                                       to unprivileged access
+  *            @arg FLASH_NSPRIV_GRANTED: access to non-secure Flash registers is granted to privileged
+  *                                       or unprivileged access
+  *            @arg FLASH_NSPRIV_DENIED:  access to non-secure Flash registers is denied
+  *                                       to unprivilege access
   *
   * @retval None
   */
@@ -636,10 +648,14 @@ void HAL_FLASHEx_ConfigPrivMode(uint32_t PrivMode)
   *
   * @retval  It indicates the privilege mode configuration.
   *          This return value can be one of the following values:
-  *            @arg FLASH_SPRIV_GRANTED: access to secure Flash registers is granted to privileged or unprivileged access
-  *            @arg FLASH_SPRIV_DENIED: access to secure Flash registers is denied to unprivileged access
-  *            @arg FLASH_NSPRIV_GRANTED: access to non-secure Flash registers is granted to privileged or unprivileged access
-  *            @arg FLASH_NSPRIV_DENIED: access to Flash registers is denied to unprivilege accessP
+  *            @arg FLASH_SPRIV_GRANTED:  access to secure Flash registers is granted to privileged
+  *                                       or unprivileged access
+  *            @arg FLASH_SPRIV_DENIED:   access to secure Flash registers is denied
+  *                                       to unprivileged access
+  *            @arg FLASH_NSPRIV_GRANTED: access to non-secure Flash registers is granted to privileged
+  *                                       or unprivileged access
+  *            @arg FLASH_NSPRIV_DENIED:  access to Flash registers is denied
+  *                                       to unprivilege accessP
   */
 uint32_t HAL_FLASHEx_GetPrivMode(void)
 {
@@ -707,6 +723,7 @@ uint32_t HAL_FLASHEx_GetSecInversion(void)
 HAL_StatusTypeDef HAL_FLASHEx_EnablePowerDown(uint32_t Banks)
 {
   HAL_StatusTypeDef status = HAL_OK;
+  uint32_t tickstart;
 
   /* Check the parameters */
   assert_param(IS_FLASH_BANK(Banks));
@@ -734,9 +751,13 @@ HAL_StatusTypeDef HAL_FLASHEx_EnablePowerDown(uint32_t Banks)
       SET_BIT(FLASH->ACR, FLASH_ACR_PDREQ1);
 
       /* Check PD1 bit */
-      if ((FLASH->NSSR & FLASH_NSSR_PD1) != FLASH_NSSR_PD1)
+      tickstart = HAL_GetTick();
+      while (((FLASH->NSSR & FLASH_NSSR_PD1) != FLASH_NSSR_PD1))
       {
-        status = HAL_ERROR;
+        if ((HAL_GetTick() - tickstart) > FLASH_TIMEOUT_VALUE)
+        {
+          return HAL_TIMEOUT;
+        }
       }
     }
   }
@@ -764,9 +785,13 @@ HAL_StatusTypeDef HAL_FLASHEx_EnablePowerDown(uint32_t Banks)
       SET_BIT(FLASH->ACR, FLASH_ACR_PDREQ2);
 
       /* Check PD2 bit */
-      if ((FLASH->NSSR & FLASH_NSSR_PD2) != FLASH_NSSR_PD2)
+      tickstart = HAL_GetTick();
+      while (((FLASH->NSSR & FLASH_NSSR_PD2) != FLASH_NSSR_PD2))
       {
-        status = HAL_ERROR;
+        if ((HAL_GetTick() - tickstart) > FLASH_TIMEOUT_VALUE)
+        {
+          return HAL_TIMEOUT;
+        }
       }
     }
   }
@@ -914,7 +939,8 @@ void FLASH_PageErase(uint32_t Page, uint32_t Banks)
   }
 
   /* Proceed to erase the page */
-  MODIFY_REG((*reg_cr), (FLASH_NSCR_PNB | FLASH_NSCR_PER | FLASH_NSCR_STRT), ((Page << FLASH_NSCR_PNB_Pos) | FLASH_NSCR_PER | FLASH_NSCR_STRT));
+  MODIFY_REG((*reg_cr), (FLASH_NSCR_PNB | FLASH_NSCR_PER | FLASH_NSCR_STRT), \
+             ((Page << FLASH_NSCR_PNB_Pos) | FLASH_NSCR_PER | FLASH_NSCR_STRT));
 }
 
 /**
@@ -947,7 +973,8 @@ void FLASH_PageErase(uint32_t Page, uint32_t Banks)
   *
   * @retval None
   */
-static void FLASH_OB_WRPConfig(uint32_t WRPArea, uint32_t WRPStartOffset, uint32_t WRPEndOffset, FunctionalState WRPLock)
+static void FLASH_OB_WRPConfig(uint32_t WRPArea, uint32_t WRPStartOffset, uint32_t WRPEndOffset,
+                               FunctionalState WRPLock)
 {
   /* Check the parameters */
   assert_param(IS_OB_WRPAREA(WRPArea));
@@ -1083,7 +1110,7 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig)
     optr_reg_mask |= FLASH_OPTR_BOR_LEV;
   }
 
-  if ((UserType & OB_USER_nRST_STOP) != 0U)
+  if ((UserType & OB_USER_NRST_STOP) != 0U)
   {
     /* nRST_STOP option byte should be modified */
     assert_param(IS_OB_USER_STOP(UserConfig & FLASH_OPTR_nRST_STOP));
@@ -1093,7 +1120,7 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig)
     optr_reg_mask |= FLASH_OPTR_nRST_STOP;
   }
 
-  if ((UserType & OB_USER_nRST_STDBY) != 0U)
+  if ((UserType & OB_USER_NRST_STDBY) != 0U)
   {
     /* nRST_STDBY option byte should be modified */
     assert_param(IS_OB_USER_STANDBY(UserConfig & FLASH_OPTR_nRST_STDBY));
@@ -1103,7 +1130,7 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig)
     optr_reg_mask |= FLASH_OPTR_nRST_STDBY;
   }
 
-  if ((UserType & OB_USER_nRST_SHDW) != 0U)
+  if ((UserType & OB_USER_NRST_SHDW) != 0U)
   {
     /* nRST_SHDW option byte should be modified */
     assert_param(IS_OB_USER_SHUTDOWN(UserConfig & FLASH_OPTR_nRST_SHDW));
@@ -1223,7 +1250,7 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig)
     optr_reg_mask |= FLASH_OPTR_SRAM2_RST;
   }
 
-  if ((UserType & OB_USER_nSWBOOT0) != 0U)
+  if ((UserType & OB_USER_NSWBOOT0) != 0U)
   {
     /* nSWBOOT0 option byte should be modified */
     assert_param(IS_OB_USER_SWBOOT0(UserConfig & FLASH_OPTR_nSWBOOT0));
@@ -1233,7 +1260,7 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig)
     optr_reg_mask |= FLASH_OPTR_nSWBOOT0;
   }
 
-  if ((UserType & OB_USER_nBOOT0) != 0U)
+  if ((UserType & OB_USER_NBOOT0) != 0U)
   {
     /* nBOOT0 option byte should be modified */
     assert_param(IS_OB_USER_BOOT0(UserConfig & FLASH_OPTR_nBOOT0));
@@ -1313,7 +1340,8 @@ static void FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig)
 static void FLASH_OB_WMSECConfig(uint32_t WMSecConfig, uint32_t WMSecStartPage, uint32_t WMSecEndPage,
                                  uint32_t WMHDPEndPage)
 {
-  uint32_t tmp_secwm1 = 0U, tmp_secwm2 = 0U;
+  uint32_t tmp_secwm1 = 0U;
+  uint32_t tmp_secwm2 = 0U;
 
   /* Check the parameters */
   assert_param(IS_OB_WMSEC_CONFIG(WMSecConfig));
@@ -1460,7 +1488,8 @@ static void FLASH_OB_BootAddrConfig(uint32_t BootAddrConfig, uint32_t BootAddr)
   *
   * @retval None
   */
-static void FLASH_OB_GetWRP(uint32_t WRPArea, uint32_t *WRPStartOffset, uint32_t *WRPEndOffset, FunctionalState *WRPLock)
+static void FLASH_OB_GetWRP(uint32_t WRPArea, uint32_t *WRPStartOffset, uint32_t *WRPEndOffset,
+                            FunctionalState *WRPLock)
 {
   /* Get the configuration of the write protected area */
   if (WRPArea == OB_WRPAREA_BANK1_AREAA)
@@ -1564,7 +1593,8 @@ static uint32_t FLASH_OB_GetUser(void)
 static void FLASH_OB_GetWMSEC(uint32_t *WMSecConfig, uint32_t *WMSecStartPage, uint32_t *WMSecEndPage,
                               uint32_t *WMHDPEndPage)
 {
-  uint32_t tmp_secwm1 = 0U, tmp_secwm2 = 0U;
+  uint32_t tmp_secwm1 = 0U;
+  uint32_t tmp_secwm2 = 0U;
 
   /* Check the parameters */
   assert_param(IS_OB_WMSEC_CONFIG(*WMSecConfig));
@@ -1657,10 +1687,6 @@ static void FLASH_OB_GetBootAddr(uint32_t BootAddrConfig, uint32_t *BootAddr)
   * @}
   */
 
-/**
-  * @}
-  */
-
 #endif /* HAL_FLASH_MODULE_ENABLED */
 
 /**
@@ -1670,5 +1696,4 @@ static void FLASH_OB_GetBootAddr(uint32_t BootAddrConfig, uint32_t *BootAddr)
 /**
   * @}
   */
-
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

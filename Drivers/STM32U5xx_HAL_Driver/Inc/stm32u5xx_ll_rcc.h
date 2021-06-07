@@ -179,7 +179,8 @@ typedef struct
 #define LL_RCC_MSISRANGE_12                 (RCC_ICSCR1_MSISRANGE_2 | RCC_ICSCR1_MSISRANGE_3)                                                  /*!< MSIS = 400 KHz   */
 #define LL_RCC_MSISRANGE_13                 (RCC_ICSCR1_MSISRANGE_0 | RCC_ICSCR1_MSISRANGE_2 | RCC_ICSCR1_MSISRANGE_3)                         /*!< MSIS = 200 KHz   */
 #define LL_RCC_MSISRANGE_14                 (RCC_ICSCR1_MSISRANGE_1 | RCC_ICSCR1_MSISRANGE_2 | RCC_ICSCR1_MSISRANGE_3)                         /*!< MSIS = 150 KHz   */
-#define LL_RCC_MSISRANGE_15                 (RCC_ICSCR1_MSISRANGE_0 | RCC_ICSCR1_MSISRANGE_1| RCC_ICSCR1_MSISRANGE_2 | RCC_ICSCR1_MSISRANGE_3) /*!< MSIS = 100 KHz   */
+#define LL_RCC_MSISRANGE_15                 (RCC_ICSCR1_MSISRANGE_0 | RCC_ICSCR1_MSISRANGE_1| RCC_ICSCR1_MSISRANGE_2 | \
+                                             RCC_ICSCR1_MSISRANGE_3) /*!< MSIS = 100 KHz   */
 /**
   * @}
   */
@@ -202,7 +203,8 @@ typedef struct
 #define LL_RCC_MSIKRANGE_12                (RCC_ICSCR1_MSIKRANGE_2 | RCC_ICSCR1_MSIKRANGE_3)                                                   /*!< MSIK = 400 KHz   */
 #define LL_RCC_MSIKRANGE_13                (RCC_ICSCR1_MSIKRANGE_0 | RCC_ICSCR1_MSIKRANGE_2 | RCC_ICSCR1_MSIKRANGE_3)                          /*!< MSIK = 200 KHz   */
 #define LL_RCC_MSIKRANGE_14                (RCC_ICSCR1_MSIKRANGE_1 | RCC_ICSCR1_MSIKRANGE_2 | RCC_ICSCR1_MSIKRANGE_3)                          /*!< MSIK = 150 KHz   */
-#define LL_RCC_MSIKRANGE_15                (RCC_ICSCR1_MSIKRANGE_0 | RCC_ICSCR1_MSIKRANGE_1 | RCC_ICSCR1_MSIKRANGE_2 | RCC_ICSCR1_MSIKRANGE_3) /*!< MSIK = 100 KHz   */
+#define LL_RCC_MSIKRANGE_15                (RCC_ICSCR1_MSIKRANGE_0 | RCC_ICSCR1_MSIKRANGE_1 | RCC_ICSCR1_MSIKRANGE_2 | \
+                                            RCC_ICSCR1_MSIKRANGE_3) /*!< MSIK = 100 KHz   */
 /**
   * @}
   */
@@ -234,8 +236,8 @@ typedef struct
 /** @defgroup RCC_LL_EC_MSIPLLMODE  MSIS/MSIK Pll Mode
   * @{
   */
-#define LL_RCC_PLLMODE_MSIS                  0U                    /*!< MSIS selection for Pll Mode  */
-#define LL_RCC_PLLMODE_MSIK                  RCC_CR_MSIPLLSEL      /*!< MSIK selection for Pll Mode */
+#define LL_RCC_PLLMODE_MSIS                  RCC_CR_MSIPLLSEL   /*!< MSIS selection for Pll Mode  */
+#define LL_RCC_PLLMODE_MSIK                  0U                 /*!< MSIK selection for Pll Mode */
 /**
   * @}
   */
@@ -243,8 +245,8 @@ typedef struct
 /** @defgroup RCC_LL_EC_MSIBIASMODE  MSI BIAS Mode
   * @{
   */
-#define LL_RCC_MSIBIASMODE_SAMPLING          0U                    /*!< Sampling mode selection for MSI*/
-#define LL_RCC_MSIBIASMODE_CONTINUOUS        RCC_ICSCR1_MSIBIAS    /*!< Continuous mode selection for MSI*/
+#define LL_RCC_MSIBIASMODE_SAMPLING           RCC_ICSCR1_MSIBIAS   /*!< Sampling mode selection for MSI*/
+#define LL_RCC_MSIBIASMODE_CONTINUOUS         0U                   /*!< Continuous mode selection for MSI*/
 /**
   * @}
   */
@@ -278,7 +280,8 @@ typedef struct
 #define LL_RCC_PLL1MBOOST_DIV_8              RCC_PLL1CFGR_PLL1MBOOST_2                                                           /*!< PLL1CLK divided by 8  */
 #define LL_RCC_PLL1MBOOST_DIV_10             (RCC_PLL1CFGR_PLL1MBOOST_2 | RCC_PLL1CFGR_PLL1MBOOST_0)                             /*!< PLL1CLK divided by 10 */
 #define LL_RCC_PLL1MBOOST_DIV_12             (RCC_PLL1CFGR_PLL1MBOOST_2 | RCC_PLL1CFGR_PLL1MBOOST_1)                             /*!< PLL1CLK divided by 12 */
-#define LL_RCC_PLL1MBOOST_DIV_14             (RCC_PLL1CFGR_PLL1MBOOST_2 | RCC_PLL1CFGR_PLL1MBOOST_1 | RCC_PLL1CFGR_PLL1MBOOST_0) /*!< PLL1CLK divided by 14 */
+#define LL_RCC_PLL1MBOOST_DIV_14             (RCC_PLL1CFGR_PLL1MBOOST_2 | RCC_PLL1CFGR_PLL1MBOOST_1 | \
+                                              RCC_PLL1CFGR_PLL1MBOOST_0) /*!< PLL1CLK divided by 14 */
 #define LL_RCC_PLL1MBOOST_DIV_16             RCC_PLL1CFGR_PLL1MBOOST_3                                                           /*!< PLL1CLK divided by 16 */
 /**
   * @}
@@ -319,7 +322,8 @@ typedef struct
 #define LL_RCC_SYSCLK_DIV_64                 (RCC_CFGR2_HPRE_3 | RCC_CFGR2_HPRE_2)                                      /*!< SYSCLK divided by 64 */
 #define LL_RCC_SYSCLK_DIV_128                (RCC_CFGR2_HPRE_3 | RCC_CFGR2_HPRE_2 | RCC_CFGR2_HPRE_0)                   /*!< SYSCLK divided by 128 */
 #define LL_RCC_SYSCLK_DIV_256                (RCC_CFGR2_HPRE_3 | RCC_CFGR2_HPRE_2 | RCC_CFGR2_HPRE_1)                   /*!< SYSCLK divided by 256 */
-#define LL_RCC_SYSCLK_DIV_512                (RCC_CFGR2_HPRE_3 | RCC_CFGR2_HPRE_2 | RCC_CFGR2_HPRE_1 | RCC_CFGR2_HPRE_0)/*!< SYSCLK divided by 512 */
+#define LL_RCC_SYSCLK_DIV_512                (RCC_CFGR2_HPRE_3 | RCC_CFGR2_HPRE_2 | RCC_CFGR2_HPRE_1 | \
+                                              RCC_CFGR2_HPRE_0)/*!< SYSCLK divided by 512 */
 /**
   * @}
   */
@@ -362,8 +366,8 @@ typedef struct
 
 
 /** @defgroup RCC_LL_EC_APB3_DIV  APB high-speed prescaler (APB3)
-* @{
-*/
+  * @{
+  */
 #define LL_RCC_APB3_DIV_1                    0x00000000U                                                 /*!< HCLK not divided */
 #define LL_RCC_APB3_DIV_2                    RCC_CFGR3_PPRE3_2                                           /*!< HCLK divided by 2 */
 #define LL_RCC_APB3_DIV_4                    (RCC_CFGR3_PPRE3_2 | RCC_CFGR3_PPRE3_0)                     /*!< HCLK divided by 4 */
@@ -484,21 +488,33 @@ typedef struct
   * @{
   */
 #define LL_RCC_I2C1_CLKSOURCE_PCLK1         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C1SEL_Pos << 16U))                                                    /*!< PCLK1 clock used as I2C1 clock source */
-#define LL_RCC_I2C1_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C1SEL_Pos << 16U) | (RCC_CCIPR1_I2C1SEL_0 >> RCC_CCIPR1_I2C1SEL_Pos)) /*!< SYSCLK clock used as I2C1 clock source */
-#define LL_RCC_I2C1_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C1SEL_Pos << 16U) | (RCC_CCIPR1_I2C1SEL_1 >> RCC_CCIPR1_I2C1SEL_Pos)) /*!< HSI clock used as I2C1 clock source */
-#define LL_RCC_I2C1_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C1SEL_Pos << 16U) | (RCC_CCIPR1_I2C1SEL >> RCC_CCIPR1_I2C1SEL_Pos))   /*!< MSIK clock used as I2C1 clock source */
+#define LL_RCC_I2C1_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C1SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_I2C1SEL_0 >> RCC_CCIPR1_I2C1SEL_Pos)) /*!< SYSCLK clock used as I2C1 clock source */
+#define LL_RCC_I2C1_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C1SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_I2C1SEL_1 >> RCC_CCIPR1_I2C1SEL_Pos)) /*!< HSI clock used as I2C1 clock source */
+#define LL_RCC_I2C1_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C1SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_I2C1SEL >> RCC_CCIPR1_I2C1SEL_Pos))   /*!< MSIK clock used as I2C1 clock source */
 #define LL_RCC_I2C2_CLKSOURCE_PCLK1         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C2SEL_Pos << 16U))                                                    /*!< PCLK1 clock used as I2C2 clock source */
-#define LL_RCC_I2C2_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C2SEL_Pos << 16U) | (RCC_CCIPR1_I2C2SEL_0 >> RCC_CCIPR1_I2C2SEL_Pos)) /*!< SYSCLK clock used as I2C2 clock source */
-#define LL_RCC_I2C2_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C2SEL_Pos << 16U) | (RCC_CCIPR1_I2C2SEL_1 >> RCC_CCIPR1_I2C2SEL_Pos)) /*!< HSI clock used as I2C2 clock source */
-#define LL_RCC_I2C2_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C2SEL_Pos << 16U) | (RCC_CCIPR1_I2C2SEL >> RCC_CCIPR1_I2C2SEL_Pos))   /*!< MSIK clock used as I2C2 clock source */
+#define LL_RCC_I2C2_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C2SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_I2C2SEL_0 >> RCC_CCIPR1_I2C2SEL_Pos)) /*!< SYSCLK clock used as I2C2 clock source */
+#define LL_RCC_I2C2_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C2SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_I2C2SEL_1 >> RCC_CCIPR1_I2C2SEL_Pos)) /*!< HSI clock used as I2C2 clock source */
+#define LL_RCC_I2C2_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C2SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_I2C2SEL >> RCC_CCIPR1_I2C2SEL_Pos))   /*!< MSIK clock used as I2C2 clock source */
 #define LL_RCC_I2C3_CLKSOURCE_PCLK3         ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_I2C3SEL_Pos << 16U))                                                    /*!< PCLK3 clock used as I2C3 clock source */
-#define LL_RCC_I2C3_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_I2C3SEL_Pos << 16U) | (RCC_CCIPR3_I2C3SEL_0 >> RCC_CCIPR3_I2C3SEL_Pos)) /*!< SYSCLK clock used as I2C3 clock source */
-#define LL_RCC_I2C3_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_I2C3SEL_Pos << 16U) | (RCC_CCIPR3_I2C3SEL_1 >> RCC_CCIPR3_I2C3SEL_Pos)) /*!< HSI clock used as I2C3 clock source */
-#define LL_RCC_I2C3_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_I2C3SEL_Pos << 16U) | (RCC_CCIPR3_I2C3SEL >> RCC_CCIPR3_I2C3SEL_Pos))   /*!< MSIK clock used as I2C3 clock source */
+#define LL_RCC_I2C3_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_I2C3SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_I2C3SEL_0 >> RCC_CCIPR3_I2C3SEL_Pos)) /*!< SYSCLK clock used as I2C3 clock source */
+#define LL_RCC_I2C3_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_I2C3SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_I2C3SEL_1 >> RCC_CCIPR3_I2C3SEL_Pos)) /*!< HSI clock used as I2C3 clock source */
+#define LL_RCC_I2C3_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_I2C3SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_I2C3SEL >> RCC_CCIPR3_I2C3SEL_Pos))   /*!< MSIK clock used as I2C3 clock source */
 #define LL_RCC_I2C4_CLKSOURCE_PCLK1         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C4SEL_Pos << 16U))                                                    /*!< PCLK1 clock used as I2C4 clock source */
-#define LL_RCC_I2C4_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C4SEL_Pos << 16U) | (RCC_CCIPR1_I2C4SEL_0 >> RCC_CCIPR1_I2C4SEL_Pos)) /*!< SYSCLK clock used as I2C4 clock source */
-#define LL_RCC_I2C4_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C4SEL_Pos << 16U) | (RCC_CCIPR1_I2C4SEL_1 >> RCC_CCIPR1_I2C4SEL_Pos)) /*!< HSI clock used as I2C4 clock source */
-#define LL_RCC_I2C4_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C4SEL_Pos << 16U) | (RCC_CCIPR1_I2C4SEL >> RCC_CCIPR1_I2C4SEL_Pos))   /*!< MSIK clock used as I2C4 clock source */
+#define LL_RCC_I2C4_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C4SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_I2C4SEL_0 >> RCC_CCIPR1_I2C4SEL_Pos)) /*!< SYSCLK clock used as I2C4 clock source */
+#define LL_RCC_I2C4_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C4SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_I2C4SEL_1 >> RCC_CCIPR1_I2C4SEL_Pos)) /*!< HSI clock used as I2C4 clock source */
+#define LL_RCC_I2C4_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C4SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_I2C4SEL >> RCC_CCIPR1_I2C4SEL_Pos))   /*!< MSIK clock used as I2C4 clock source */
 /**
   * @}
   */
@@ -507,17 +523,26 @@ typedef struct
   * @{
   */
 #define LL_RCC_SPI1_CLKSOURCE_PCLK2         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U))                                                    /*!< PCLK2 clock used as SPI1 clock source */
-#define LL_RCC_SPI1_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | (RCC_CCIPR1_SPI1SEL_0 >> RCC_CCIPR1_SPI1SEL_Pos)) /*!< SYSCLK clock used as SPI1 clock source */
-#define LL_RCC_SPI1_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | (RCC_CCIPR1_SPI1SEL_1 >> RCC_CCIPR1_SPI1SEL_Pos)) /*!< HSI clock used as SPI1 clock source */
-#define LL_RCC_SPI1_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | (RCC_CCIPR1_SPI1SEL >> RCC_CCIPR1_SPI1SEL_Pos))   /*!< MSIK clock used as SPI1 clock source */
+#define LL_RCC_SPI1_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_SPI1SEL_0 >> RCC_CCIPR1_SPI1SEL_Pos)) /*!< SYSCLK clock used as SPI1 clock source */
+#define LL_RCC_SPI1_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_SPI1SEL_1 >> RCC_CCIPR1_SPI1SEL_Pos)) /*!< HSI clock used as SPI1 clock source */
+#define LL_RCC_SPI1_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_SPI1SEL >> RCC_CCIPR1_SPI1SEL_Pos))   /*!< MSIK clock used as SPI1 clock source */
 #define LL_RCC_SPI2_CLKSOURCE_PCLK1         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI2SEL_Pos << 16U))                                                    /*!< PCLK1 clock used as SPI2 clock source */
-#define LL_RCC_SPI2_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI2SEL_Pos << 16U) | (RCC_CCIPR1_SPI2SEL_0 >> RCC_CCIPR1_SPI2SEL_Pos)) /*!< SYSCLK clock used as SPI2 clock source */
-#define LL_RCC_SPI2_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI2SEL_Pos << 16U) | (RCC_CCIPR1_SPI2SEL_1 >> RCC_CCIPR1_SPI2SEL_Pos)) /*!< HSI clock used as SPI2 clock source */
-#define LL_RCC_SPI2_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI2SEL_Pos << 16U) | (RCC_CCIPR1_SPI2SEL >> RCC_CCIPR1_SPI2SEL_Pos))  /*!< MSIK clock used as SPI2 clock source */
+#define LL_RCC_SPI2_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI2SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_SPI2SEL_0 >> RCC_CCIPR1_SPI2SEL_Pos)) /*!< SYSCLK clock used as SPI2 clock source */
+#define LL_RCC_SPI2_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI2SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_SPI2SEL_1 >> RCC_CCIPR1_SPI2SEL_Pos)) /*!< HSI clock used as SPI2 clock source */
+#define LL_RCC_SPI2_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI2SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_SPI2SEL >> RCC_CCIPR1_SPI2SEL_Pos))  /*!< MSIK clock used as SPI2 clock source */
 #define LL_RCC_SPI3_CLKSOURCE_PCLK3         ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U))                                                    /*!< PCLK3 clock used as SPI3 clock source */
-#define LL_RCC_SPI3_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U) | (RCC_CCIPR3_SPI3SEL_0 >> RCC_CCIPR3_SPI3SEL_Pos)) /*!< SYSCLK clock used as SPI3 clock source */
-#define LL_RCC_SPI3_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U) | (RCC_CCIPR3_SPI3SEL_1 >> RCC_CCIPR3_SPI3SEL_Pos)) /*!< HSI clock used as SPI3 clock source */
-#define LL_RCC_SPI3_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U) | (RCC_CCIPR3_SPI3SEL >> RCC_CCIPR3_SPI3SEL_Pos))   /*!< MSIK clock used as SPI3 clock source */
+#define LL_RCC_SPI3_CLKSOURCE_SYSCLK        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_SPI3SEL_0 >> RCC_CCIPR3_SPI3SEL_Pos)) /*!< SYSCLK clock used as SPI3 clock source */
+#define LL_RCC_SPI3_CLKSOURCE_HSI           ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_SPI3SEL_1 >> RCC_CCIPR3_SPI3SEL_Pos)) /*!< HSI clock used as SPI3 clock source */
+#define LL_RCC_SPI3_CLKSOURCE_MSIK          ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_SPI3SEL >> RCC_CCIPR3_SPI3SEL_Pos))   /*!< MSIK clock used as SPI3 clock source */
 /**
   * @}
   */
@@ -526,17 +551,26 @@ typedef struct
   * @{
   */
 #define LL_RCC_LPTIM1_CLKSOURCE_MSIK        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM1SEL_Pos << 16U))                                                           /*!< MSIK clock used as LPTIM1 clock source */
-#define LL_RCC_LPTIM1_CLKSOURCE_LSI         ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM1SEL_Pos << 16U) | (RCC_CCIPR3_LPTIM1SEL_0 >> RCC_CCIPR3_LPTIM1SEL_Pos))    /*!< LSI clock used as LPTIM1 clock source  */
-#define LL_RCC_LPTIM1_CLKSOURCE_HSI         ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM1SEL_Pos << 16U) | (RCC_CCIPR3_LPTIM1SEL_1 >> RCC_CCIPR3_LPTIM1SEL_Pos))    /*!< HSI clock used as LPTIM1 clock source  */
-#define LL_RCC_LPTIM1_CLKSOURCE_LSE         ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM1SEL_Pos << 16U) | (RCC_CCIPR3_LPTIM1SEL >> RCC_CCIPR3_LPTIM1SEL_Pos))      /*!< LSE clock used as LPTIM1 clock source  */
+#define LL_RCC_LPTIM1_CLKSOURCE_LSI         ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM1SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_LPTIM1SEL_0 >> RCC_CCIPR3_LPTIM1SEL_Pos))    /*!< LSI clock used as LPTIM1 clock source  */
+#define LL_RCC_LPTIM1_CLKSOURCE_HSI         ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM1SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_LPTIM1SEL_1 >> RCC_CCIPR3_LPTIM1SEL_Pos))    /*!< HSI clock used as LPTIM1 clock source  */
+#define LL_RCC_LPTIM1_CLKSOURCE_LSE         ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM1SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_LPTIM1SEL >> RCC_CCIPR3_LPTIM1SEL_Pos))      /*!< LSE clock used as LPTIM1 clock source  */
 #define LL_RCC_LPTIM2_CLKSOURCE_PCLK1       ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_LPTIM2SEL_Pos << 16U))                                                           /*!< PCLK1 clock used as LPTIM2 clock source */
-#define LL_RCC_LPTIM2_CLKSOURCE_LSI         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_LPTIM2SEL_Pos << 16U) | (RCC_CCIPR1_LPTIM2SEL_0 >> RCC_CCIPR1_LPTIM2SEL_Pos))    /*!< LSI clock used as LPTIM2 clock source  */
-#define LL_RCC_LPTIM2_CLKSOURCE_HSI         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_LPTIM2SEL_Pos << 16U) | (RCC_CCIPR1_LPTIM2SEL_1 >> RCC_CCIPR1_LPTIM2SEL_Pos))    /*!< HSI clock used as LPTIM2 clock source  */
-#define LL_RCC_LPTIM2_CLKSOURCE_LSE         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_LPTIM2SEL_Pos << 16U) | (RCC_CCIPR1_LPTIM2SEL >> RCC_CCIPR1_LPTIM2SEL_Pos))      /*!< LSE clock used as LPTIM2 clock source  */
+#define LL_RCC_LPTIM2_CLKSOURCE_LSI         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_LPTIM2SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_LPTIM2SEL_0 >> RCC_CCIPR1_LPTIM2SEL_Pos))    /*!< LSI clock used as LPTIM2 clock source  */
+#define LL_RCC_LPTIM2_CLKSOURCE_HSI         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_LPTIM2SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_LPTIM2SEL_1 >> RCC_CCIPR1_LPTIM2SEL_Pos))    /*!< HSI clock used as LPTIM2 clock source  */
+#define LL_RCC_LPTIM2_CLKSOURCE_LSE         ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_LPTIM2SEL_Pos << 16U) | \
+                                             (RCC_CCIPR1_LPTIM2SEL >> RCC_CCIPR1_LPTIM2SEL_Pos))      /*!< LSE clock used as LPTIM2 clock source  */
 #define LL_RCC_LPTIM34_CLKSOURCE_MSIK       ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM34SEL_Pos << 16U))                                                          /*!< MSIK clock used as LPTIM34 clock source*/
-#define LL_RCC_LPTIM34_CLKSOURCE_LSI        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM34SEL_Pos << 16U) | (RCC_CCIPR3_LPTIM34SEL_0 >> RCC_CCIPR3_LPTIM34SEL_Pos)) /*!< LSI clock used as LPTIM34 clock source */
-#define LL_RCC_LPTIM34_CLKSOURCE_HSI        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM34SEL_Pos << 16U) | (RCC_CCIPR3_LPTIM34SEL_1 >> RCC_CCIPR3_LPTIM34SEL_Pos)) /*!< HSI clock used as LPTIM34 clock source */
-#define LL_RCC_LPTIM34_CLKSOURCE_LSE        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM34SEL_Pos << 16U) | (RCC_CCIPR3_LPTIM34SEL >> RCC_CCIPR3_LPTIM34SEL_Pos))   /*!< LSE clock used as LPTIM34 clock source */
+#define LL_RCC_LPTIM34_CLKSOURCE_LSI        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM34SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_LPTIM34SEL_0 >> RCC_CCIPR3_LPTIM34SEL_Pos)) /*!< LSI clock used as LPTIM34 clock source */
+#define LL_RCC_LPTIM34_CLKSOURCE_HSI        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM34SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_LPTIM34SEL_1 >> RCC_CCIPR3_LPTIM34SEL_Pos)) /*!< HSI clock used as LPTIM34 clock source */
+#define LL_RCC_LPTIM34_CLKSOURCE_LSE        ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM34SEL_Pos << 16U) | \
+                                             (RCC_CCIPR3_LPTIM34SEL >> RCC_CCIPR3_LPTIM34SEL_Pos))   /*!< LSE clock used as LPTIM34 clock source */
 /**
   * @}
   */
@@ -558,12 +592,14 @@ typedef struct
 #define LL_RCC_SAI1_CLKSOURCE_PLL3          ((RCC_CCIPR2_SAI1SEL << 16U) | RCC_CCIPR2_SAI1SEL_0) /*!< PLL3 clock used as SAI1 clock source */
 #define LL_RCC_SAI1_CLKSOURCE_PLL1          ((RCC_CCIPR2_SAI1SEL << 16U) | RCC_CCIPR2_SAI1SEL_1) /*!< PLL1 clock used as SAI1 clock source */
 #define LL_RCC_SAI1_CLKSOURCE_HSI           ((RCC_CCIPR2_SAI1SEL << 16U) | RCC_CCIPR2_SAI1SEL_2) /*!< HSI clock used as SAI1 clock source */
-#define LL_RCC_SAI1_CLKSOURCE_PIN           ((RCC_CCIPR2_SAI1SEL << 16U) | (RCC_CCIPR2_SAI1SEL_1 | RCC_CCIPR2_SAI1SEL_0))  /*!< External input clock used as SAI1 clock source */
+#define LL_RCC_SAI1_CLKSOURCE_PIN           ((RCC_CCIPR2_SAI1SEL << 16U) | (RCC_CCIPR2_SAI1SEL_1 | \
+                                                                            RCC_CCIPR2_SAI1SEL_0))  /*!< External input clock used as SAI1 clock source */
 #define LL_RCC_SAI2_CLKSOURCE_PLL2          (RCC_CCIPR2_SAI2SEL << 16U)                          /*!< PLL2 clock used as SAI2 clock source */
 #define LL_RCC_SAI2_CLKSOURCE_PLL3          ((RCC_CCIPR2_SAI2SEL << 16U) | RCC_CCIPR2_SAI2SEL_0) /*!< PLL3 clock used as SAI2 clock source */
 #define LL_RCC_SAI2_CLKSOURCE_PLL1          ((RCC_CCIPR2_SAI2SEL << 16U) | RCC_CCIPR2_SAI2SEL_1) /*!< PLL1clock used as SAI2 clock source */
 #define LL_RCC_SAI2_CLKSOURCE_HSI           ((RCC_CCIPR2_SAI2SEL << 16U) | RCC_CCIPR2_SAI2SEL_2) /*!< HSI clock used as SAI2 clock source */
-#define LL_RCC_SAI2_CLKSOURCE_PIN           ((RCC_CCIPR2_SAI2SEL << 16U) | (RCC_CCIPR2_SAI2SEL_1 | RCC_CCIPR2_SAI2SEL_0))  /*!< External input clock used as SAI2 clock source */
+#define LL_RCC_SAI2_CLKSOURCE_PIN           ((RCC_CCIPR2_SAI2SEL << 16U) | (RCC_CCIPR2_SAI2SEL_1 | \
+                                                                            RCC_CCIPR2_SAI2SEL_0))  /*!< External input clock used as SAI2 clock source */
 /**
   * @}
   */
@@ -674,7 +710,8 @@ typedef struct
 #define LL_RCC_TIMIC_CLKSOURCE_MSIS_DIV1024          RCC_CCIPR1_TIMICSEL_2                                                   /*!< MSIS/1024 selected for TIM16/TIM17 and LPTIM2 input capture */
 #define LL_RCC_TIMIC_CLKSOURCE_MSIS_DIV4             (RCC_CCIPR1_TIMICSEL_2 | RCC_CCIPR1_TIMICSEL_1)                         /*!< MSIS/4 selected for TIM16/TIM17 and LPTIM2 input capture */
 #define LL_RCC_TIMIC_CLKSOURCE_MSIK_DIV4             (RCC_CCIPR1_TIMICSEL_2 | RCC_CCIPR1_TIMICSEL_0)                         /*!< MSIK/4 selected for TIM16/TIM17 and LPTIM2 input capture */
-#define LL_RCC_TIMIC_CLKSOURCE_MSIK_DIV1024          (RCC_CCIPR1_TIMICSEL_2 | RCC_CCIPR1_TIMICSEL_1 | RCC_CCIPR1_TIMICSEL_0) /*!< MSIK/1024 selected for TIM16/TIM17 and LPTIM2 input capture */
+#define LL_RCC_TIMIC_CLKSOURCE_MSIK_DIV1024          (RCC_CCIPR1_TIMICSEL_2 | RCC_CCIPR1_TIMICSEL_1 | \
+                                                      RCC_CCIPR1_TIMICSEL_0) /*!< MSIK/1024 selected for TIM16/TIM17 and LPTIM2 input capture */
 /**
   * @}
   */
@@ -711,9 +748,12 @@ typedef struct
 /** @defgroup RCC_LL_EC_SPI Peripheral SPIx get clock source
   * @{
   */
-#define LL_RCC_SPI1_CLKSOURCE            ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | (RCC_CCIPR1_SPI1SEL >> RCC_CCIPR1_SPI1SEL_Pos)) /*!< SPI1 Clock source selection */
-#define LL_RCC_SPI2_CLKSOURCE            ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI2SEL_Pos << 16U) | (RCC_CCIPR1_SPI2SEL >> RCC_CCIPR1_SPI2SEL_Pos)) /*!< SPI2 Clock source selection */
-#define LL_RCC_SPI3_CLKSOURCE            ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U) | (RCC_CCIPR3_SPI3SEL >> RCC_CCIPR3_SPI3SEL_Pos)) /*!< SPI3 Clock source selection */
+#define LL_RCC_SPI1_CLKSOURCE            ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI1SEL_Pos << 16U) | \
+                                          (RCC_CCIPR1_SPI1SEL >> RCC_CCIPR1_SPI1SEL_Pos)) /*!< SPI1 Clock source selection */
+#define LL_RCC_SPI2_CLKSOURCE            ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_SPI2SEL_Pos << 16U) | \
+                                          (RCC_CCIPR1_SPI2SEL >> RCC_CCIPR1_SPI2SEL_Pos)) /*!< SPI2 Clock source selection */
+#define LL_RCC_SPI3_CLKSOURCE            ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_SPI3SEL_Pos << 16U) | \
+                                          (RCC_CCIPR3_SPI3SEL >> RCC_CCIPR3_SPI3SEL_Pos)) /*!< SPI3 Clock source selection */
 /**
   * @}
   */
@@ -729,10 +769,14 @@ typedef struct
 /** @defgroup RCC_LL_EC_I2C Peripheral I2Cx get clock source
   * @{
   */
-#define LL_RCC_I2C1_CLKSOURCE             ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C1SEL_Pos << 16U) | (RCC_CCIPR1_I2C1SEL >> RCC_CCIPR1_I2C1SEL_Pos)) /*!< I2C1 Clock source selection */
-#define LL_RCC_I2C2_CLKSOURCE             ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C2SEL_Pos << 16U) | (RCC_CCIPR1_I2C2SEL >> RCC_CCIPR1_I2C2SEL_Pos)) /*!< I2C2 Clock source selection */
-#define LL_RCC_I2C3_CLKSOURCE             ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_I2C3SEL_Pos << 16U) | (RCC_CCIPR3_I2C3SEL >> RCC_CCIPR3_I2C3SEL_Pos)) /*!< I2C3 Clock source selection */
-#define LL_RCC_I2C4_CLKSOURCE             ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C4SEL_Pos << 16U) | (RCC_CCIPR1_I2C4SEL >> RCC_CCIPR1_I2C4SEL_Pos)) /*!< I2C4 Clock source selection */
+#define LL_RCC_I2C1_CLKSOURCE             ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C1SEL_Pos << 16U) | \
+                                           (RCC_CCIPR1_I2C1SEL >> RCC_CCIPR1_I2C1SEL_Pos)) /*!< I2C1 Clock source selection */
+#define LL_RCC_I2C2_CLKSOURCE             ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C2SEL_Pos << 16U) | \
+                                           (RCC_CCIPR1_I2C2SEL >> RCC_CCIPR1_I2C2SEL_Pos)) /*!< I2C2 Clock source selection */
+#define LL_RCC_I2C3_CLKSOURCE             ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_I2C3SEL_Pos << 16U) | \
+                                           (RCC_CCIPR3_I2C3SEL >> RCC_CCIPR3_I2C3SEL_Pos)) /*!< I2C3 Clock source selection */
+#define LL_RCC_I2C4_CLKSOURCE             ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_I2C4SEL_Pos << 16U) | \
+                                           (RCC_CCIPR1_I2C4SEL >> RCC_CCIPR1_I2C4SEL_Pos)) /*!< I2C4 Clock source selection */
 /**
   * @}
   */
@@ -740,9 +784,12 @@ typedef struct
 /** @defgroup RCC_LL_EC_LPTIM Peripheral LPTIMx get clock source
   * @{
   */
-#define LL_RCC_LPTIM1_CLKSOURCE           ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM1SEL_Pos << 16U) | (RCC_CCIPR3_LPTIM1SEL >> RCC_CCIPR3_LPTIM1SEL_Pos)) /*!< LPTIM1 Clock source selection */
-#define LL_RCC_LPTIM2_CLKSOURCE           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_LPTIM2SEL_Pos << 16U) | (RCC_CCIPR1_LPTIM2SEL >> RCC_CCIPR1_LPTIM2SEL_Pos)) /*!< LPTIM2 Clock source selection */
-#define LL_RCC_LPTIM34_CLKSOURCE          ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM34SEL_Pos << 16U) | (RCC_CCIPR3_LPTIM34SEL >> RCC_CCIPR3_LPTIM34SEL_Pos)) /*!< LPTIM3 and LPTIM4 Clock source selection */
+#define LL_RCC_LPTIM1_CLKSOURCE           ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM1SEL_Pos << 16U) | \
+                                           (RCC_CCIPR3_LPTIM1SEL >> RCC_CCIPR3_LPTIM1SEL_Pos)) /*!< LPTIM1 Clock source selection */
+#define LL_RCC_LPTIM2_CLKSOURCE           ((RCC_OFFSET_CCIPR1 << 24U) | (RCC_CCIPR1_LPTIM2SEL_Pos << 16U) | \
+                                           (RCC_CCIPR1_LPTIM2SEL >> RCC_CCIPR1_LPTIM2SEL_Pos)) /*!< LPTIM2 Clock source selection */
+#define LL_RCC_LPTIM34_CLKSOURCE          ((RCC_OFFSET_CCIPR3 << 24U) | (RCC_CCIPR3_LPTIM34SEL_Pos << 16U) | \
+                                           (RCC_CCIPR3_LPTIM34SEL >> RCC_CCIPR3_LPTIM34SEL_Pos)) /*!< LPTIM3 and LPTIM4 Clock source selection */
 /**
   * @}
   */
@@ -899,8 +946,8 @@ typedef struct
   * @note Only available when system implements security (TZEN=1)
   * @{
   */
-#define LL_RCC_ALL_NSEC                    0U                      /*!< No security on RCC ressources (default) */
-#define LL_RCC_ALL_SEC                     RCC_SECURE_MASK         /*!< Security on all RCC ressources          */
+#define LL_RCC_ALL_NSEC                    0U                      /*!< No security on RCC resources (default) */
+#define LL_RCC_ALL_SEC                     RCC_SECURE_MASK         /*!< Security on all RCC resources          */
 
 #define LL_RCC_HSI_SEC                     RCC_SECCFGR_HSISEC      /*!< HSI clock configuration security */
 #define LL_RCC_HSI_NSEC                    0U                      /*!< HSI clock configuration secure/non-secure access */
@@ -978,7 +1025,8 @@ typedef struct
   * @retval PLL1 clock frequency (in Hz)
   */
 
-#define __LL_RCC_CALC_PLL1CLK_FREQ(__INPUTFREQ__, __PLL1M__, __PLL1N__, __PLL1R__) ((((__INPUTFREQ__) /(__PLL1M__)) * (__PLL1N__)) / (__PLL1R__))
+#define __LL_RCC_CALC_PLL1CLK_FREQ(__INPUTFREQ__, __PLL1M__, __PLL1N__, __PLL1R__) ((((__INPUTFREQ__) /(__PLL1M__)) * \
+    (__PLL1N__)) / (__PLL1R__))
 
 /**
   * @brief  Helper macro to calculate the PLL1CLK frequency used on SAI domain
@@ -990,7 +1038,8 @@ typedef struct
   * @param __PLL1P__ parameter can be a value between 2 and 128
   * @retval PLL1 clock frequency (in Hz)
   */
-#define __LL_RCC_CALC_PLL1CLK_SAI_FREQ(__INPUTFREQ__, __PLL1M__, __PLL1N__, __PLL1P__) ((((__INPUTFREQ__) /(__PLL1M__)) * (__PLL1N__)) / (__PLL1P__))
+#define __LL_RCC_CALC_PLL1CLK_SAI_FREQ(__INPUTFREQ__, __PLL1M__, __PLL1N__, __PLL1P__) ((((__INPUTFREQ__) \
+    /(__PLL1M__)) * (__PLL1N__)) / (__PLL1P__))
 
 /**
   * @brief  Helper macro to calculate the PLL1CLK frequency used on 48M domain
@@ -1003,7 +1052,8 @@ typedef struct
   * @retval PLL clock frequency (in Hz)
   */
 
-#define __LL_RCC_CALC_PLL1CLK_48M_FREQ(__INPUTFREQ__, __PLL1M__, __PLL1N__, __PLL1Q__) ((((__INPUTFREQ__) /(__PLL1M__)) * (__PLL1N__)) / (__PLL1Q__))
+#define __LL_RCC_CALC_PLL1CLK_48M_FREQ(__INPUTFREQ__, __PLL1M__, __PLL1N__, __PLL1Q__) ((((__INPUTFREQ__) \
+    /(__PLL1M__)) * (__PLL1N__)) / (__PLL1Q__))
 
 /**
   * @brief  Helper macro to calculate the PLL2 frequency used for SAI domain
@@ -1015,7 +1065,8 @@ typedef struct
   * @param __PLL2P__ parameter can be a value between 2 and 128
   * @retval PLL2 clock frequency (in Hz)
   */
-#define __LL_RCC_CALC_PLL2CLK_SAI_FREQ(__INPUTFREQ__, __PLL2M__, __PLL2N__, __PLL2P__) ((((__INPUTFREQ__) /(__PLL2M__)) * (__PLL2N__)) / (__PLL2P__))
+#define __LL_RCC_CALC_PLL2CLK_SAI_FREQ(__INPUTFREQ__, __PLL2M__, __PLL2N__, __PLL2P__) ((((__INPUTFREQ__) \
+    /(__PLL2M__)) * (__PLL2N__)) / (__PLL2P__))
 
 /**
   * @brief  Helper macro to calculate the PLL2 frequency used on 48M domain
@@ -1027,7 +1078,8 @@ typedef struct
   * @param __PLL2Q__ parameter can be a value between 1 and 128
   * @retval PLL2 clock frequency (in Hz)
   */
-#define __LL_RCC_CALC_PLL2CLK_48M_FREQ(__INPUTFREQ__, __PLL2M__, __PLL2N__, __PLL2Q__) ((((__INPUTFREQ__) /(__PLL2M__)) * (__PLL2N__)) / (__PLL2Q__))
+#define __LL_RCC_CALC_PLL2CLK_48M_FREQ(__INPUTFREQ__, __PLL2M__, __PLL2N__, __PLL2Q__) ((((__INPUTFREQ__) \
+    /(__PLL2M__)) * (__PLL2N__)) / (__PLL2Q__))
 
 /**
   * @brief  Helper macro to calculate the PLL2 frequency used on ADC domain
@@ -1039,7 +1091,8 @@ typedef struct
   * @param __PLL2R__ parameter can be a value between 1 and 128
   * @retval PLL2 clock frequency (in Hz)
   */
-#define __LL_RCC_CALC_PLL2CLK_ADC_FREQ(__INPUTFREQ__, __PLL2M__, __PLL2N__, __PLL2R__) ((((__INPUTFREQ__) /(__PLL2M__)) * (__PLL2N__)) / (__PLL2R__))
+#define __LL_RCC_CALC_PLL2CLK_ADC_FREQ(__INPUTFREQ__, __PLL2M__, __PLL2N__, __PLL2R__) ((((__INPUTFREQ__) \
+    /(__PLL2M__)) * (__PLL2N__)) / (__PLL2R__))
 
 /**
   * @brief  Helper macro to calculate the PLL3 frequency used for SAI domain
@@ -1051,7 +1104,8 @@ typedef struct
   * @param __PLL3P__ parameter can be a value between 2 and 128
   * @retval PLL3 clock frequency (in Hz)
   */
-#define __LL_RCC_CALC_PLL3CLK_SAI_FREQ(__INPUTFREQ__, __PLL3M__, __PLL3N__, __PLL3P__)((((__INPUTFREQ__) /(__PLL3M__)) * (__PLL3N__)) / (__PLL3P__))
+#define __LL_RCC_CALC_PLL3CLK_SAI_FREQ(__INPUTFREQ__, __PLL3M__, __PLL3N__, __PLL3P__)((((__INPUTFREQ__) \
+    /(__PLL3M__)) * (__PLL3N__)) / (__PLL3P__))
 
 /**
   * @brief  Helper macro to calculate the PLL2 frequency used on 48M domain
@@ -1063,7 +1117,8 @@ typedef struct
   * @param __PLL3Q__ parameter can be a value between 1 and 128
   * @retval PLL3 clock frequency (in Hz)
   */
-#define __LL_RCC_CALC_PLL3CLK_48M_FREQ(__INPUTFREQ__, __PLL3M__, __PLL3N__, __PLL3Q__) ((((__INPUTFREQ__) /(__PLL3M__)) * (__PLL3N__)) / (__PLL3Q__))
+#define __LL_RCC_CALC_PLL3CLK_48M_FREQ(__INPUTFREQ__, __PLL3M__, __PLL3N__, __PLL3Q__) ((((__INPUTFREQ__) \
+    /(__PLL3M__)) * (__PLL3N__)) / (__PLL3Q__))
 
 /**
   * @brief  Helper macro to calculate the HCLK frequency
@@ -1080,7 +1135,9 @@ typedef struct
   *         @arg @ref LL_RCC_SYSCLK_DIV_512
   * @retval HCLK clock frequency (in Hz)
   */
-#define __LL_RCC_CALC_HCLK_FREQ(__SYSCLKFREQ__, __AHBPRESCALER__) ((__SYSCLKFREQ__) >> AHBPrescTable[((__AHBPRESCALER__) & RCC_CFGR2_HPRE) >>  RCC_CFGR2_HPRE_Pos])
+#define __LL_RCC_CALC_HCLK_FREQ(__SYSCLKFREQ__, __AHBPRESCALER__) ((__SYSCLKFREQ__) >> \
+                                                                   AHBPrescTable[((__AHBPRESCALER__)& RCC_CFGR2_HPRE) \
+                                                                       >>  RCC_CFGR2_HPRE_Pos])
 
 /**
   * @brief  Helper macro to calculate the PCLK1 frequency (ABP1)
@@ -1093,7 +1150,9 @@ typedef struct
   *         @arg @ref LL_RCC_APB1_DIV_16
   * @retval PCLK1 clock frequency (in Hz)
   */
-#define __LL_RCC_CALC_PCLK1_FREQ(__HCLKFREQ__, __APB1PRESCALER__) ((__HCLKFREQ__) >> (APBPrescTable[((__APB1PRESCALER__) & RCC_CFGR2_PPRE1) >>  RCC_CFGR2_PPRE1_Pos]))
+#define __LL_RCC_CALC_PCLK1_FREQ(__HCLKFREQ__, __APB1PRESCALER__) ((__HCLKFREQ__) >> \
+                                                                   (APBPrescTable[((__APB1PRESCALER__)& \
+                                                                       RCC_CFGR2_PPRE1) >>  RCC_CFGR2_PPRE1_Pos]))
 
 /**
   * @brief  Helper macro to calculate the PCLK2 frequency (ABP2)
@@ -1106,8 +1165,9 @@ typedef struct
   *         @arg @ref LL_RCC_APB2_DIV_16
   * @retval PCLK2 clock frequency (in Hz)
   */
-#define __LL_RCC_CALC_PCLK2_FREQ(__HCLKFREQ__, __APB2PRESCALER__) ((__HCLKFREQ__) >> APBPrescTable[(__APB2PRESCALER__) >>  RCC_CFGR2_PPRE2_Pos])
-
+#define __LL_RCC_CALC_PCLK2_FREQ(__HCLKFREQ__, __APB2PRESCALER__) ((__HCLKFREQ__) >>\
+                                                                   APBPrescTable[(__APB2PRESCALER__) >> \
+                                                                       RCC_CFGR2_PPRE2_Pos])
 
 /**
   * @brief  Helper macro to calculate the PCLK3 frequency (ABP3)
@@ -1120,7 +1180,9 @@ typedef struct
   *         @arg @ref LL_RCC_APB3_DIV_16
   * @retval PCLK3 clock frequency (in Hz)
   */
-#define __LL_RCC_CALC_PCLK3_FREQ(__HCLKFREQ__, __APB3PRESCALER__) ((__HCLKFREQ__) >> APBPrescTable[(__APB3PRESCALER__) >>  RCC_CFGR3_PPRE3_Pos])
+#define __LL_RCC_CALC_PCLK3_FREQ(__HCLKFREQ__, __APB3PRESCALER__) ((__HCLKFREQ__) >> \
+                                                                   APBPrescTable[(__APB3PRESCALER__) >> \
+                                                                       RCC_CFGR3_PPRE3_Pos])
 
 /**
   * @brief  Helper macro to calculate the MSIS frequency (in Hz)
@@ -1155,8 +1217,8 @@ typedef struct
   * @retval MSI clock frequency (in Hz)
   */
 #define __LL_RCC_CALC_MSIS_FREQ(__MSISSEL__, __MSISRANGE__)   (((__MSISSEL__) == LL_RCC_MSIRANGESEL_RUN) ? \
-                           (MSIRangeTable[((__MSISRANGE__) >> 28U) & 0x0FU]) : \
-                           (MSIRangeTable[((__MSISRANGE__) >> 12U) & 0x0FU]))
+                                                               (MSIRangeTable[((__MSISRANGE__) >> 28U) & 0x0FU]) : \
+                                                               (MSIRangeTable[((__MSISRANGE__) >> 12U) & 0x0FU]))
 
 
 /**
@@ -1192,8 +1254,8 @@ typedef struct
   * @retval MSIK clock frequency (in Hz)
   */
 #define __LL_RCC_CALC_MSIK_FREQ(__MSIKSEL__, __MSIKRANGE__)   (((__MSIKSEL__) == LL_RCC_MSIRANGESEL_RUN) ? \
-                           (MSIRangeTable[((__MSIKRANGE__) >> 24U) & 0x0FU]) : \
-                           (MSIRangeTable[((__MSIKRANGE__) >> 8U) & 0x0FU]))
+                                                               (MSIRangeTable[((__MSIKRANGE__) >> 24U) & 0x0FU]) : \
+                                                               (MSIRangeTable[((__MSIKRANGE__) >> 8U) & 0x0FU]))
 /**
   * @}
   */
@@ -2065,7 +2127,8 @@ __STATIC_INLINE void LL_RCC_MSI_SetCalibTrimming(uint32_t Value, uint32_t Oscill
   */
 __STATIC_INLINE uint32_t LL_RCC_MSI_GetCalibTrimming(uint32_t Oscillator)
 {
-  return (uint32_t)(READ_BIT(RCC->ICSCR2, (RCC_ICSCR2_MSITRIM0  >> Oscillator)) >> (RCC_ICSCR2_MSITRIM0_Pos - Oscillator));
+  return (uint32_t)(READ_BIT(RCC->ICSCR2,
+                             (RCC_ICSCR2_MSITRIM0  >> Oscillator)) >> (RCC_ICSCR2_MSITRIM0_Pos - Oscillator));
 }
 
 /**
@@ -2581,7 +2644,9 @@ __STATIC_INLINE void LL_RCC_SetLPUARTClockSource(uint32_t LPUARTxSource)
 __STATIC_INLINE void LL_RCC_SetI2CClockSource(uint32_t I2CxSource)
 {
   __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)(RCC_BASE + 0xE0U + (I2CxSource >> 24U));
-  MODIFY_REG(*reg, 3U << (((I2CxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((I2CxSource & 0x000000FFU) << (((I2CxSource & 0x00FF0000U) >> 16U) & 0x1FU)));
+  MODIFY_REG(*reg, 3U << (((I2CxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((I2CxSource & 0x000000FFU) << \
+                                                                         (((I2CxSource & 0x00FF0000U) >> 16U) & \
+                                                                          0x1FU)));
 }
 
 /**
@@ -2608,7 +2673,9 @@ __STATIC_INLINE void LL_RCC_SetI2CClockSource(uint32_t I2CxSource)
 __STATIC_INLINE void LL_RCC_SetSPIClockSource(uint32_t SPIxSource)
 {
   __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)(RCC_BASE + 0xE0U + (SPIxSource >> 24U));
-  MODIFY_REG(*reg, 3U << (((SPIxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((SPIxSource & 0x000000FFU) << (((SPIxSource & 0x00FF0000U) >> 16U) & 0x1FU)));
+  MODIFY_REG(*reg, 3U << (((SPIxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((SPIxSource & 0x000000FFU) << \
+                                                                         (((SPIxSource & 0x00FF0000U) >> 16U) & \
+                                                                          0x1FU)));
 }
 
 /**
@@ -2634,7 +2701,9 @@ __STATIC_INLINE void LL_RCC_SetSPIClockSource(uint32_t SPIxSource)
 __STATIC_INLINE void LL_RCC_SetLPTIMClockSource(uint32_t LPTIMxSource)
 {
   __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)(RCC_BASE + 0xE0U + (LPTIMxSource >> 24U));
-  MODIFY_REG(*reg, 3U << (((LPTIMxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((LPTIMxSource & 0x000000FFU) << (((LPTIMxSource & 0x00FF0000U) >> 16U) & 0x1FU)));
+  MODIFY_REG(*reg, 3U << (((LPTIMxSource & 0x00FF0000U) >> 16U) & 0x1FU), ((LPTIMxSource & 0x000000FFU) << \
+                                                                           (((LPTIMxSource & 0x00FF0000U) >> 16U) & \
+                                                                            0x1FU)));
 }
 
 /**
@@ -2706,7 +2775,7 @@ __STATIC_INLINE void LL_RCC_SetSDMMCClockSource(uint32_t SDMMCxSource)
   * @rmtoll CCIPR2       RNGSEL      LL_RCC_SetRNGClockSource
   * @param  RNGxSource This parameter can be one of the following values:
   *         @arg @ref LL_RCC_RNG_CLKSOURCE_HSI48
-  *         @arg @ref LL_RCC_RNG_CLKSOURCE_HSI48DIV2
+  *         @arg @ref LL_RCC_RNG_CLKSOURCE_HSI48_DIV2
   *         @arg @ref LL_RCC_RNG_CLKSOURCE_HSI
   * @retval None
   */
@@ -2812,7 +2881,7 @@ __STATIC_INLINE void LL_RCC_SetOCTOSPIClockSource(uint32_t Source)
   * @rmtoll CCIPR2        SAESSEL        LL_RCC_SetSAESClockSource
   * @param  Source This parameter can be one of the following values:
   *         @arg @ref LL_RCC_SAES_CLKSOURCE_SHSI
-  *         @arg @ref LL_RCC_SAES_CLKSOURCE_SHSIDIV2
+  *         @arg @ref LL_RCC_SAES_CLKSOURCE_SHSI_DIV2
   * @retval None
   */
 __STATIC_INLINE void LL_RCC_SetSAESClockSource(uint32_t Source)
@@ -2914,7 +2983,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetLPUARTClockSource(uint32_t LPUARTx)
 __STATIC_INLINE uint32_t LL_RCC_GetI2CClockSource(uint32_t I2Cx)
 {
   __IO const uint32_t *reg = (__IO uint32_t *)(uint32_t)(RCC_BASE + 0xE0U + (I2Cx >> 24U));
-  return (uint32_t)((READ_BIT(*reg, (3UL << (((I2Cx & 0x00FF0000UL) >> 16U) & 0x1FUL))) >> (((I2Cx & 0x00FF0000UL) >> 16U) & 0x1FUL)) | (I2Cx & 0xFFFF0000UL));
+  return (uint32_t)((READ_BIT(*reg, (3UL << (((I2Cx & 0x00FF0000UL) >> 16U) & 0x1FUL))) >> \
+                     (((I2Cx & 0x00FF0000UL) >> 16U) & 0x1FUL)) | (I2Cx & 0xFFFF0000UL));
 }
 
 /**
@@ -2943,7 +3013,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetI2CClockSource(uint32_t I2Cx)
 __STATIC_INLINE uint32_t LL_RCC_GetSPIClockSource(uint32_t SPIx)
 {
   __IO const uint32_t *reg = (__IO uint32_t *)(uint32_t)(RCC_BASE + 0xE0U + (SPIx >> 24U));
-  return (uint32_t)((READ_BIT(*reg, (3UL << (((SPIx & 0x00FF0000UL) >> 16U) & 0x1FUL))) >> (((SPIx & 0x00FF0000UL) >> 16U) & 0x1FUL)) | (SPIx & 0xFFFF0000UL));
+  return (uint32_t)((READ_BIT(*reg, (3UL << (((SPIx & 0x00FF0000UL) >> 16U) & 0x1FUL))) >> \
+                     (((SPIx & 0x00FF0000UL) >> 16U) & 0x1FUL)) | (SPIx & 0xFFFF0000UL));
 }
 
 /**
@@ -2972,7 +3043,8 @@ __STATIC_INLINE uint32_t LL_RCC_GetSPIClockSource(uint32_t SPIx)
 __STATIC_INLINE uint32_t LL_RCC_GetLPTIMClockSource(uint32_t LPTIMx)
 {
   __IO const uint32_t *reg = (__IO uint32_t *)(uint32_t)(RCC_BASE + 0xE0U + (LPTIMx >> 24U));
-  return (uint32_t)((READ_BIT(*reg, (3UL << (((LPTIMx & 0x00FF0000UL) >> 16U) & 0x1FUL))) >> (((LPTIMx & 0x00FF0000UL) >> 16U) & 0x1FUL)) | (LPTIMx & 0xFFFF0000UL));
+  return (uint32_t)((READ_BIT(*reg, (3UL << (((LPTIMx & 0x00FF0000UL) >> 16U) & 0x1FUL))) >> \
+                     (((LPTIMx & 0x00FF0000UL) >> 16U) & 0x1FUL)) | (LPTIMx & 0xFFFF0000UL));
 }
 
 /**
@@ -3088,7 +3160,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetSDMMCClockSource(uint32_t SDMMCx)
   *         @arg @ref LL_RCC_RNG_CLKSOURCE
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_RCC_RNG_CLKSOURCE_HSI48
-  *         @arg @ref LL_RCC_RNG_CLKSOURCE_HSI48DIV2
+  *         @arg @ref LL_RCC_RNG_CLKSOURCE_HSI48_DIV2
   *         @arg @ref LL_RCC_RNG_CLKSOURCE_HSI
   */
 __STATIC_INLINE uint32_t LL_RCC_GetRNGClockSource(uint32_t RNGx)
@@ -3203,7 +3275,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetOCTOSPIClockSource(uint32_t OCTOSPIx)
   *         @arg @ref LL_RCC_SAES_CLKSOURCE
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_RCC_SAES_CLKSOURCE_SHSI
-  *         @arg @ref LL_RCC_SAES_CLKSOURCE_SHSIDIV2
+  *         @arg @ref LL_RCC_SAES_CLKSOURCE_SHSI_DIV2
   */
 __STATIC_INLINE uint32_t LL_RCC_GetSAESClockSource(uint32_t SAESx)
 {
@@ -3356,8 +3428,11 @@ __STATIC_INLINE uint32_t LL_RCC_PLL1_IsReady(void)
   */
 __STATIC_INLINE void LL_RCC_PLL1_ConfigDomain_SYS(uint32_t Source, uint32_t PLLM, uint32_t PLLN, uint32_t PLLR)
 {
-  MODIFY_REG(RCC->PLL1CFGR, RCC_PLL1CFGR_PLL1SRC | RCC_PLL1CFGR_PLL1M, Source | ((PLLM - 1UL) << RCC_PLL1CFGR_PLL1M_Pos));
-  MODIFY_REG(RCC->PLL1DIVR, RCC_PLL1DIVR_PLL1N | RCC_PLL1DIVR_PLL1R, ((PLLN - 1UL) << RCC_PLL1DIVR_PLL1N_Pos) | ((PLLR - 1UL) << RCC_PLL1DIVR_PLL1R_Pos));
+  MODIFY_REG(RCC->PLL1CFGR, RCC_PLL1CFGR_PLL1SRC | RCC_PLL1CFGR_PLL1M, Source | \
+             ((PLLM - 1UL) << RCC_PLL1CFGR_PLL1M_Pos));
+  MODIFY_REG(RCC->PLL1DIVR, RCC_PLL1DIVR_PLL1N | RCC_PLL1DIVR_PLL1R, ((PLLN - 1UL) << \
+                                                                      RCC_PLL1DIVR_PLL1N_Pos) | ((PLLR - 1UL) << \
+                                                                          RCC_PLL1DIVR_PLL1R_Pos));
 }
 
 /**
@@ -3380,8 +3455,11 @@ __STATIC_INLINE void LL_RCC_PLL1_ConfigDomain_SYS(uint32_t Source, uint32_t PLLM
   */
 __STATIC_INLINE void LL_RCC_PLL1_ConfigDomain_SAI(uint32_t Source, uint32_t PLLM, uint32_t PLLN, uint32_t PLLP)
 {
-  MODIFY_REG(RCC->PLL1CFGR, RCC_PLL1CFGR_PLL1SRC | RCC_PLL1CFGR_PLL1M, Source | ((PLLM - 1UL) << RCC_PLL1CFGR_PLL1M_Pos));
-  MODIFY_REG(RCC->PLL1DIVR, RCC_PLL1DIVR_PLL1N | RCC_PLL1DIVR_PLL1P, ((PLLN - 1UL) << RCC_PLL1DIVR_PLL1N_Pos) | ((PLLP - 1UL) << RCC_PLL1DIVR_PLL1P_Pos));
+  MODIFY_REG(RCC->PLL1CFGR, RCC_PLL1CFGR_PLL1SRC | RCC_PLL1CFGR_PLL1M, Source | \
+             ((PLLM - 1UL) << RCC_PLL1CFGR_PLL1M_Pos));
+  MODIFY_REG(RCC->PLL1DIVR, RCC_PLL1DIVR_PLL1N | RCC_PLL1DIVR_PLL1P, ((PLLN - 1UL) << \
+                                                                      RCC_PLL1DIVR_PLL1N_Pos) | ((PLLP - 1UL) << \
+                                                                          RCC_PLL1DIVR_PLL1P_Pos));
 }
 
 /**
@@ -3404,8 +3482,11 @@ __STATIC_INLINE void LL_RCC_PLL1_ConfigDomain_SAI(uint32_t Source, uint32_t PLLM
   */
 __STATIC_INLINE void LL_RCC_PLL1_ConfigDomain_48M(uint32_t Source, uint32_t PLLM, uint32_t PLLN, uint32_t PLLQ)
 {
-  MODIFY_REG(RCC->PLL1CFGR, RCC_PLL1CFGR_PLL1SRC | RCC_PLL1CFGR_PLL1M, Source | ((PLLM - 1UL) << RCC_PLL1CFGR_PLL1M_Pos));
-  MODIFY_REG(RCC->PLL1DIVR, RCC_PLL1DIVR_PLL1N | RCC_PLL1DIVR_PLL1Q, ((PLLN - 1UL) << RCC_PLL1DIVR_PLL1N_Pos) | ((PLLQ - 1UL) << RCC_PLL1DIVR_PLL1Q_Pos));
+  MODIFY_REG(RCC->PLL1CFGR, RCC_PLL1CFGR_PLL1SRC | RCC_PLL1CFGR_PLL1M, Source | \
+             ((PLLM - 1UL) << RCC_PLL1CFGR_PLL1M_Pos));
+  MODIFY_REG(RCC->PLL1DIVR, RCC_PLL1DIVR_PLL1N | RCC_PLL1DIVR_PLL1Q, ((PLLN - 1UL) << \
+                                                                      RCC_PLL1DIVR_PLL1N_Pos) | ((PLLQ - 1UL) << \
+                                                                          RCC_PLL1DIVR_PLL1Q_Pos));
 }
 
 /**
@@ -3441,7 +3522,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL1_GetMainSource(void)
   * @brief  Set Main PLL1 multiplication factor for VCO
   * @rmtoll PLL1CFGR      PLL1N          LL_RCC_PLL1_SetN
   * @param PLL1N parameter can be a value between 4 and 512
-*/
+  */
 __STATIC_INLINE void LL_RCC_PLL1_SetN(uint32_t PLL1N)
 {
   MODIFY_REG(RCC->PLL1DIVR, RCC_PLL1DIVR_PLL1N, (PLL1N - 1UL) << RCC_PLL1DIVR_PLL1N_Pos);
@@ -3529,7 +3610,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL1_GetR(void)
   * @brief  Set Division factor for the main PLL and other PLL
   * @rmtoll PLL1CFGR      PLL1M          LL_RCC_PLL1_SetDivider
   * @param PLL1M parameter can be a value between 1 and 16
-*/
+  */
 __STATIC_INLINE void LL_RCC_PLL1_SetDivider(uint32_t PLL1M)
 {
   MODIFY_REG(RCC->PLL1CFGR, RCC_PLL1CFGR_PLL1M, (PLL1M - 1UL) << RCC_PLL1CFGR_PLL1M_Pos);
@@ -3777,8 +3858,11 @@ __STATIC_INLINE uint32_t LL_RCC_PLL2_IsReady(void)
   */
 __STATIC_INLINE void LL_RCC_PLL2_ConfigDomain_48M(uint32_t Source, uint32_t PLLM, uint32_t PLLN, uint32_t PLLQ)
 {
-  MODIFY_REG(RCC->PLL2CFGR, RCC_PLL2CFGR_PLL2SRC | RCC_PLL2CFGR_PLL2M, Source | ((PLLM - 1UL) << RCC_PLL2CFGR_PLL2M_Pos));
-  MODIFY_REG(RCC->PLL2DIVR, RCC_PLL2DIVR_PLL2N | RCC_PLL2DIVR_PLL2Q, ((PLLN - 1UL) << RCC_PLL2DIVR_PLL2N_Pos) | ((PLLQ - 1UL) << RCC_PLL2DIVR_PLL2Q_Pos));
+  MODIFY_REG(RCC->PLL2CFGR, RCC_PLL2CFGR_PLL2SRC | RCC_PLL2CFGR_PLL2M, Source | \
+             ((PLLM - 1UL) << RCC_PLL2CFGR_PLL2M_Pos));
+  MODIFY_REG(RCC->PLL2DIVR, RCC_PLL2DIVR_PLL2N | RCC_PLL2DIVR_PLL2Q, ((PLLN - 1UL) << \
+                                                                      RCC_PLL2DIVR_PLL2N_Pos) | ((PLLQ - 1UL) << \
+                                                                          RCC_PLL2DIVR_PLL2Q_Pos));
 }
 
 /**
@@ -3801,8 +3885,11 @@ __STATIC_INLINE void LL_RCC_PLL2_ConfigDomain_48M(uint32_t Source, uint32_t PLLM
   */
 __STATIC_INLINE void LL_RCC_PLL2_ConfigDomain_SAI(uint32_t Source, uint32_t PLLM, uint32_t PLLN, uint32_t PLLP)
 {
-  MODIFY_REG(RCC->PLL2CFGR, RCC_PLL2CFGR_PLL2SRC | RCC_PLL2CFGR_PLL2M, Source | ((PLLM - 1UL) << RCC_PLL2CFGR_PLL2M_Pos));
-  MODIFY_REG(RCC->PLL2DIVR, RCC_PLL2DIVR_PLL2N | RCC_PLL2DIVR_PLL2P, ((PLLN - 1UL) << RCC_PLL2DIVR_PLL2N_Pos) | ((PLLP - 1UL) << RCC_PLL2DIVR_PLL2P_Pos));
+  MODIFY_REG(RCC->PLL2CFGR, RCC_PLL2CFGR_PLL2SRC | RCC_PLL2CFGR_PLL2M, Source | \
+             ((PLLM - 1UL) << RCC_PLL2CFGR_PLL2M_Pos));
+  MODIFY_REG(RCC->PLL2DIVR, RCC_PLL2DIVR_PLL2N | RCC_PLL2DIVR_PLL2P, ((PLLN - 1UL) << \
+                                                                      RCC_PLL2DIVR_PLL2N_Pos) | ((PLLP - 1UL) << \
+                                                                          RCC_PLL2DIVR_PLL2P_Pos));
 }
 
 /**
@@ -3825,8 +3912,11 @@ __STATIC_INLINE void LL_RCC_PLL2_ConfigDomain_SAI(uint32_t Source, uint32_t PLLM
   */
 __STATIC_INLINE void LL_RCC_PLL2_ConfigDomain_ADC(uint32_t Source, uint32_t PLLM, uint32_t PLLN, uint32_t PLLR)
 {
-  MODIFY_REG(RCC->PLL2CFGR, RCC_PLL2CFGR_PLL2SRC | RCC_PLL2CFGR_PLL2M, Source | ((PLLM - 1UL) << RCC_PLL2CFGR_PLL2M_Pos));
-  MODIFY_REG(RCC->PLL2DIVR, RCC_PLL2DIVR_PLL2N | RCC_PLL2DIVR_PLL2R, ((PLLN - 1UL) << RCC_PLL2DIVR_PLL2N_Pos) | ((PLLR - 1UL) << RCC_PLL2DIVR_PLL2R_Pos));
+  MODIFY_REG(RCC->PLL2CFGR, RCC_PLL2CFGR_PLL2SRC | RCC_PLL2CFGR_PLL2M, Source | \
+             ((PLLM - 1UL) << RCC_PLL2CFGR_PLL2M_Pos));
+  MODIFY_REG(RCC->PLL2DIVR, RCC_PLL2DIVR_PLL2N | RCC_PLL2DIVR_PLL2R, ((PLLN - 1UL) << \
+                                                                      RCC_PLL2DIVR_PLL2N_Pos) | ((PLLR - 1UL) << \
+                                                                          RCC_PLL2DIVR_PLL2R_Pos));
 }
 
 /**
@@ -3862,7 +3952,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL2_GetSource(void)
   * @brief  Set Main PLL2 multiplication factor for VCO
   * @rmtoll PLL2CFGR      PLL2N          LL_RCC_PLL2_SetN
   * @param PLL2N parameter can be a value between 4 and 512
-*/
+  */
 __STATIC_INLINE void LL_RCC_PLL2_SetN(uint32_t PLL2N)
 {
   MODIFY_REG(RCC->PLL2DIVR, RCC_PLL2DIVR_PLL2N, (PLL2N - 1UL) << RCC_PLL2DIVR_PLL2N_Pos);
@@ -3950,7 +4040,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL2_GetR(void)
   * @brief  Set Division factor for the main PLL and other PLL
   * @rmtoll PLL2CFGR      PLL2M          LL_RCC_PLL2_SetDivider
   * @param PLL2M parameter can be a value between 1 and 16
-*/
+  */
 __STATIC_INLINE void LL_RCC_PLL2_SetDivider(uint32_t PLL2M)
 {
   MODIFY_REG(RCC->PLL2CFGR, RCC_PLL2CFGR_PLL2M, (PLL2M - 1UL) << RCC_PLL2CFGR_PLL2M_Pos);
@@ -4154,8 +4244,11 @@ __STATIC_INLINE uint32_t LL_RCC_PLL3_IsReady(void)
   */
 __STATIC_INLINE void LL_RCC_PLL3_ConfigDomain_SAI(uint32_t Source, uint32_t PLLM, uint32_t PLLN, uint32_t PLLP)
 {
-  MODIFY_REG(RCC->PLL3CFGR, RCC_PLL3CFGR_PLL3SRC | RCC_PLL3CFGR_PLL3M, Source | ((PLLM - 1UL) << RCC_PLL3CFGR_PLL3M_Pos));
-  MODIFY_REG(RCC->PLL3DIVR, RCC_PLL3DIVR_PLL3N | RCC_PLL3DIVR_PLL3P, ((PLLN - 1UL) << RCC_PLL3DIVR_PLL3N_Pos) | ((PLLP - 1UL) << RCC_PLL3DIVR_PLL3P_Pos));
+  MODIFY_REG(RCC->PLL3CFGR, RCC_PLL3CFGR_PLL3SRC | RCC_PLL3CFGR_PLL3M, Source | \
+             ((PLLM - 1UL) << RCC_PLL3CFGR_PLL3M_Pos));
+  MODIFY_REG(RCC->PLL3DIVR, RCC_PLL3DIVR_PLL3N | RCC_PLL3DIVR_PLL3P, ((PLLN - 1UL) << \
+                                                                      RCC_PLL3DIVR_PLL3N_Pos) | ((PLLP - 1UL) << \
+                                                                          RCC_PLL3DIVR_PLL3P_Pos));
 }
 
 
@@ -4179,8 +4272,11 @@ __STATIC_INLINE void LL_RCC_PLL3_ConfigDomain_SAI(uint32_t Source, uint32_t PLLM
   */
 __STATIC_INLINE void LL_RCC_PLL3_ConfigDomain_48M(uint32_t Source, uint32_t PLLM, uint32_t PLLN, uint32_t PLLQ)
 {
-  MODIFY_REG(RCC->PLL3CFGR, RCC_PLL3CFGR_PLL3SRC | RCC_PLL3CFGR_PLL3M, Source | ((PLLM - 1UL) << RCC_PLL3CFGR_PLL3M_Pos));
-  MODIFY_REG(RCC->PLL3DIVR, RCC_PLL3DIVR_PLL3N | RCC_PLL3DIVR_PLL3Q, ((PLLN - 1UL) << RCC_PLL3DIVR_PLL3N_Pos) | ((PLLQ - 1UL) << RCC_PLL3DIVR_PLL3Q_Pos));
+  MODIFY_REG(RCC->PLL3CFGR, RCC_PLL3CFGR_PLL3SRC | RCC_PLL3CFGR_PLL3M, Source | \
+             ((PLLM - 1UL) << RCC_PLL3CFGR_PLL3M_Pos));
+  MODIFY_REG(RCC->PLL3DIVR, RCC_PLL3DIVR_PLL3N | RCC_PLL3DIVR_PLL3Q, ((PLLN - 1UL) << \
+                                                                      RCC_PLL3DIVR_PLL3N_Pos) | ((PLLQ - 1UL) << \
+                                                                          RCC_PLL3DIVR_PLL3Q_Pos));
 }
 
 
@@ -4217,7 +4313,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL3_GetSource(void)
   * @brief  Set Main PLL3 multiplication factor for VCO
   * @rmtoll PLL3CFGR      PLL3N          LL_RCC_PLL3_SetN
   * @param PLL3N parameter can be a value between 4 and 512
-*/
+  */
 __STATIC_INLINE void LL_RCC_PLL3_SetN(uint32_t PLL3N)
 {
   MODIFY_REG(RCC->PLL3DIVR, RCC_PLL3DIVR_PLL3N, (PLL3N - 1UL) << RCC_PLL3DIVR_PLL3N_Pos);
@@ -4305,7 +4401,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL3_GetR(void)
   * @brief  Set Division factor for the main PLL and other PLL
   * @rmtoll PLL3CFGR      PLL3M          LL_RCC_PLL3_SetDivider
   * @param PLL3M parameter can be a value between 1 and 16
-*/
+  */
 __STATIC_INLINE void LL_RCC_PLL3_SetDivider(uint32_t PLL3M)
 {
   MODIFY_REG(RCC->PLL3CFGR, RCC_PLL3CFGR_PLL3M, (PLL3M - 1UL) << RCC_PLL3CFGR_PLL3M_Pos);

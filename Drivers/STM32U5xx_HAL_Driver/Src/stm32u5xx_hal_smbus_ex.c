@@ -69,17 +69,15 @@
   * @{
   */
 
-/** @defgroup SMBUSEx_Exported_Functions_Group1 Extended features functions
-  * @brief    Extended features functions
- *
+/** @defgroup SMBUSEx_Exported_Functions_Group2 SMBUS Extended WakeUp Mode Functions
+  *  @brief    WakeUp configuration functions
+  *
 @verbatim
  ===============================================================================
-                      ##### Extended features functions #####
+              ##### Extended WakeUp Mode Functions #####
  ===============================================================================
-    [..] This section provides functions allowing to:
-      (+) Configure Wake Up Feature
-
-      (+) Configure Fast Mode Plus
+    [..]  This subsection provides a set of functions allowing to enable and
+          disable WakeUp from Stop mode(s).
 
 @endverbatim
   * @{
@@ -164,6 +162,24 @@ HAL_StatusTypeDef HAL_SMBUSEx_DisableWakeUp(SMBUS_HandleTypeDef *hsmbus)
 }
 
 /**
+  * @}
+  */
+
+/** @defgroup SMBUSEx_Exported_Functions_Group3 SMBUS Extended FastModePlus Functions
+  *  @brief    FastModePlus Configuration functions
+  *
+@verbatim
+ ===============================================================================
+              ##### Extended FastModePlus Function #####
+ ===============================================================================
+    [..]  This subsection provides a set of functions allowing to configure
+          Fast Mode Plus.
+
+@endverbatim
+  * @{
+  */
+
+/**
   * @brief  Configure SMBUS Fast Mode Plus.
   * @param  hsmbus Pointer to a SMBUS_HandleTypeDef structure that contains
   *                the configuration information for the specified SMBUSx peripheral.
@@ -174,7 +190,7 @@ HAL_StatusTypeDef HAL_SMBUSEx_ConfigFastModePlus(SMBUS_HandleTypeDef *hsmbus, ui
 {
   /* Check the parameters */
   assert_param(IS_SMBUS_ALL_INSTANCE(hsmbus->Instance));
-  assert_param(IS_SMBUS_FAST_MODE_PLUS(FastModePlus));
+  assert_param(IS_SMBUS_FASTMODEPLUS(FastModePlus));
 
   if (hsmbus->State == HAL_SMBUS_STATE_READY)
   {
@@ -213,6 +229,24 @@ HAL_StatusTypeDef HAL_SMBUSEx_ConfigFastModePlus(SMBUS_HandleTypeDef *hsmbus, ui
 }
 
 /**
+  * @}
+  */
+
+/** @addtogroup SMBUSEx_Exported_Functions_Group4 SMBUS Extended Autonomous Mode Functions
+  * @brief    SMBUS Extended Autonomous Mode Functions
+  *
+@verbatim
+ ===============================================================================
+                   ##### Extended Autonomous Mode functions #####
+ ===============================================================================
+    [..] This section provides functions allowing Set,Get and clear
+         Autonomous Mode configuration.
+
+@endverbatim
+  * @{
+  */
+
+/**
   * @brief  Set Autonomous Mode configuration
   * @param  hsmbus Pointer to a SMBUS_HandleTypeDef structure that contains
   *                the configuration information for the specified SMBUSx peripheral.
@@ -220,7 +254,8 @@ HAL_StatusTypeDef HAL_SMBUSEx_ConfigFastModePlus(SMBUS_HandleTypeDef *hsmbus, ui
   *                the configuration information of the autonomous mode for the specified SMBUSx peripheral.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_SMBUSEx_SetConfigAutonomousMode(SMBUS_HandleTypeDef *hsmbus, SMBUS_AutonomousModeConfTypeDef *sConfig)
+HAL_StatusTypeDef HAL_SMBUSEx_SetConfigAutonomousMode(SMBUS_HandleTypeDef *hsmbus,
+                                                      SMBUS_AutonomousModeConfTypeDef *sConfig)
 {
   if (hsmbus->State == HAL_SMBUS_STATE_READY)
   {
@@ -238,7 +273,8 @@ HAL_StatusTypeDef HAL_SMBUSEx_SetConfigAutonomousMode(SMBUS_HandleTypeDef *hsmbu
     __HAL_SMBUS_DISABLE(hsmbus);
 
     /* SMBUSx AUTOCR Configuration */
-    WRITE_REG(hsmbus->Instance->AUTOCR, (sConfig->TriggerState | ((sConfig->TriggerSelection) & I2C_AUTOCR_TRIGSEL_Msk) | sConfig->TriggerPolarity));
+    WRITE_REG(hsmbus->Instance->AUTOCR, (sConfig->TriggerState | ((sConfig->TriggerSelection) &                        \
+                                                                  I2C_AUTOCR_TRIGSEL_Msk) | sConfig->TriggerPolarity));
 
     /* Enable the selected SMBUS peripheral */
     __HAL_SMBUS_ENABLE(hsmbus);
@@ -264,7 +300,8 @@ HAL_StatusTypeDef HAL_SMBUSEx_SetConfigAutonomousMode(SMBUS_HandleTypeDef *hsmbu
   *                the configuration information of the autonomous mode for the specified SMBUSx peripheral.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_SMBUSEx_GetConfigAutonomousMode(SMBUS_HandleTypeDef *hsmbus, SMBUS_AutonomousModeConfTypeDef *sConfig)
+HAL_StatusTypeDef HAL_SMBUSEx_GetConfigAutonomousMode(SMBUS_HandleTypeDef *hsmbus,                                     \
+                                                      SMBUS_AutonomousModeConfTypeDef *sConfig)
 {
   uint32_t autocr_tmp;
 
@@ -319,6 +356,7 @@ HAL_StatusTypeDef HAL_SMBUSEx_ClearConfigAutonomousMode(SMBUS_HandleTypeDef *hsm
     return HAL_ERROR;
   }
 }
+
 /**
   * @}
   */

@@ -347,6 +347,13 @@ typedef struct
 
 
 /* External variables --------------------------------------------------------*/
+/** @defgroup FMAC_External_variables FMAC External variables
+  * @{
+  */
+/**
+  * @}
+  */
+
 /* Exported macros -----------------------------------------------------------*/
 /** @defgroup FMAC_Exported_Macros FMAC Exported Macros
   * @{
@@ -458,7 +465,8 @@ typedef struct
   * @}
   */
 
-/** @addtogroup  FMAC_Private_Macros
+/* Private Macros-----------------------------------------------------------*/
+/** @addtogroup  FMAC_Private_Macros FMAC Private Macros
   * @{
   */
 

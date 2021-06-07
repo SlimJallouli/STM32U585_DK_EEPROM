@@ -969,6 +969,7 @@ HAL_StatusTypeDef HAL_CORDIC_Calculate_DMA(CORDIC_HandleTypeDef *hcordic, int32_
       outputaddr = (uint32_t)pOutBuff;
 
       /* Enable the DMA stream managing CORDIC output data read */
+
       if ((hcordic->hdmaOut->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
       {
         if ((hcordic->hdmaOut->LinkedListQueue != NULL) && (hcordic->hdmaOut->LinkedListQueue->Head != NULL))

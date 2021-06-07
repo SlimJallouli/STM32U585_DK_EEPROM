@@ -6,11 +6,11 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics. 
+  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the 
+  * the "License"; You may not use this file except in compliance with the
   * License. You may obtain a copy of the License at:
   *                        opensource.org/licenses/BSD-3-Clause
   *
@@ -27,7 +27,7 @@
 #include "stm32_assert.h"
 #else
 #define assert_param(expr) ((void)0U)
-#endif
+#endif /* USE_FULL_ASSERT */
 
 /** @addtogroup STM32U5xx_LL_Driver
   * @{
@@ -83,7 +83,7 @@ ErrorStatus LL_UCPD_DeInit(UCPD_TypeDef *UCPDx)
 
   /* Check the parameters */
   assert_param(IS_UCPD_ALL_INSTANCE(UCPDx));
-  
+
   LL_UCPD_Disable(UCPDx);
 
   if (UCPD1 == UCPDx)
@@ -105,8 +105,9 @@ ErrorStatus LL_UCPD_DeInit(UCPD_TypeDef *UCPDx)
 
 /**
   * @brief  Initialize the ucpd registers according to the specified parameters in UCPD_InitStruct.
-  * @note   As some bits in ucpd configuration registers can only be written when the ucpd is disabled (ucpd_CR1_SPE bit =0),
-  *         UCPD peripheral should be in disabled state prior calling this function. Otherwise, ERROR result will be returned.
+  * @note   As some bits in ucpd configuration registers can only be written when the ucpd is disabled
+  *         (ucpd_CR1_SPE bit =0), UCPD peripheral should be in disabled state prior calling this function.
+  *         Otherwise, ERROR result will be returned.
   * @param  UCPDx UCPD Instance
   * @param  UCPD_InitStruct pointer to a @ref LL_UCPD_InitTypeDef structure that contains
   *         the configuration information for the UCPD peripheral.
@@ -117,7 +118,7 @@ ErrorStatus LL_UCPD_Init(UCPD_TypeDef *UCPDx, LL_UCPD_InitTypeDef *UCPD_InitStru
   /* Check the ucpd Instance UCPDx*/
   assert_param(IS_UCPD_ALL_INSTANCE(UCPDx));
 
-  if(UCPD1 == UCPDx)
+  if (UCPD1 == UCPDx)
   {
     LL_APB1_GRP2_EnableClock(LL_APB1_GRP2_PERIPH_UCPD1);
   }

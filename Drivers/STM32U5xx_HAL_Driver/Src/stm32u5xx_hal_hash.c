@@ -1528,14 +1528,16 @@ HAL_StatusTypeDef HAL_HASH_DMAFeed_ProcessSuspend(HASH_HandleTypeDef *hhash)
     /* Wait until the last DMA transfer is complete (DMAS = 0 in the HASH_SR register) */
     if (HASH_WaitOnFlagUntilTimeout(hhash, HASH_FLAG_DMAS, SET, HASH_TIMEOUTVALUE) != HAL_OK)
     {
-       return HAL_TIMEOUT;
+      return HAL_TIMEOUT;
     }
 
     /* At this point, DMA interface is disabled and no transfer is on-going */
     /* Retrieve from the DMA handle how many words remain to be written */
     /* DMA3 used, DMA_CBR1_BNDT in bytes, DMA_CSR_FIFOL in words */
-    tmp_remaining_DMATransferSize_inWords = ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CBR1) & DMA_CBR1_BNDT)/4U;
-    tmp_remaining_DMATransferSize_inWords += ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CSR) & DMA_CSR_FIFOL) >> DMA_CSR_FIFOL_Pos;
+    tmp_remaining_DMATransferSize_inWords = ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CBR1) \
+                                             & DMA_CBR1_BNDT) / 4U;
+    tmp_remaining_DMATransferSize_inWords += ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CSR) \
+                                              & DMA_CSR_FIFOL) >> DMA_CSR_FIFOL_Pos;
 
     /* Disable DMA channel */
     /* Note that the Abort function will
@@ -1543,7 +1545,7 @@ HAL_StatusTypeDef HAL_HASH_DMAFeed_ProcessSuspend(HASH_HandleTypeDef *hhash)
       - Unlock
       - Set the State
     */
-    if (HAL_DMA_Abort(hhash->hdmain) !=HAL_OK)
+    if (HAL_DMA_Abort(hhash->hdmain) != HAL_OK)
     {
       return HAL_ERROR;
     }
@@ -1556,7 +1558,7 @@ HAL_StatusTypeDef HAL_HASH_DMAFeed_ProcessSuspend(HASH_HandleTypeDef *hhash)
     /* Wait until the hash processor is ready (no block is being processed), that is wait for DINIS=1 in HASH_SR */
     if (HASH_WaitOnFlagUntilTimeout(hhash, HASH_FLAG_DINIS, RESET, HASH_TIMEOUTVALUE) != HAL_OK)
     {
-       return HAL_TIMEOUT;
+      return HAL_TIMEOUT;
     }
 
     if (tmp_remaining_DMATransferSize_inWords == 0U)
@@ -2980,11 +2982,11 @@ HAL_StatusTypeDef HASH_Start_DMA(HASH_HandleTypeDef *hhash, uint8_t *pInBuffer, 
   HAL_StatusTypeDef status ;
   HAL_HASH_StateTypeDef State_tmp = hhash->State;
 
-  
+
   /* Make sure the input buffer size (in bytes) is a multiple of 4 when MDMAT bit is set
      (case of multi-buffer HASH processing) */
   assert_param(IS_HASH_DMA_MULTIBUFFER_SIZE(Size));
-  
+
   /* If State is ready or suspended, start or resume polling-based HASH processing */
   if ((State_tmp == HAL_HASH_STATE_READY) || (State_tmp == HAL_HASH_STATE_SUSPENDED))
   {

@@ -18,7 +18,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -59,14 +59,14 @@ extern "C" {
   */
 
 /**
- * @brief Power-down in Run mode Flash key
- */
-#define FLASH_PDKEY1_1                 0x04152637U /*!< Flash Bank1 power down key1 */
-#define FLASH_PDKEY1_2                 0xFAFBFCFDU /*!< Flash Bank1 power down key2: used with FLASH_PDKEY1
+  * @brief Power-down in Run mode Flash key
+  */
+#define LL_FLASH_PDKEY1_1                 0x04152637U /*!< Flash Bank1 power down key1 */
+#define LL_FLASH_PDKEY1_2                 0xFAFBFCFDU /*!< Flash Bank1 power down key2: used with FLASH_PDKEY1
                                                        to unlock the RUN_PD bit in FLASH_ACR */
 
-#define FLASH_PDKEY2_1                 0x40516273U /*!< Flash Bank2 power down key1 */
-#define FLASH_PDKEY2_2                 0xAFBFCFDFU /*!< Flash Bank2 power down key2: used with FLASH_PDKEY2_1
+#define LL_FLASH_PDKEY2_1                 0x40516273U /*!< Flash Bank2 power down key1 */
+#define LL_FLASH_PDKEY2_2                 0xAFBFCFDFU /*!< Flash Bank2 power down key2: used with FLASH_PDKEY2_1
                                                        to unlock the RUN_PD bit in FLASH_ACR */
 /**
   * @}
@@ -75,8 +75,10 @@ extern "C" {
 /** @defgroup SYSTEM_LL_EC_CS1 SYSCFG Vdd compensation cell Code selection
   * @{
   */
-#define LL_SYSCFG_VDD_CELL_CODE                  0U               /*VDD I/Os code from the cell (available in the SYSCFG_CCVR)*/
-#define LL_SYSCFG_VDD_REGISTER_CODE              SYSCFG_CCCSR_CS1 /*VDD I/Os code from the SYSCFG compensation cell code register (SYSCFG_CCCR)*/
+#define LL_SYSCFG_VDD_CELL_CODE                  0U               /*VDD I/Os code from the cell
+                                                                   (available in the SYSCFG_CCVR)*/
+#define LL_SYSCFG_VDD_REGISTER_CODE              SYSCFG_CCCSR_CS1 /*VDD I/Os code from the SYSCFG compensation
+                                                                   cell code register (SYSCFG_CCCR)*/
 /**
   * @}
   */
@@ -84,13 +86,15 @@ extern "C" {
 /** @defgroup SYSTEM_LL_EC_CS2 SYSCFG VddIO2 compensation cell Code selection
   * @{
   */
-#define LL_SYSCFG_VDDIO2_CELL_CODE                0U               /*VDDIO2 I/Os code from the cell (available in the SYSCFG_CCVR)*/
-#define LL_SYSCFG_VDDIO2_REGISTER_CODE            SYSCFG_CCCSR_CS2 /*VDDIO2 I/Os code from the SYSCFG compensation cell code register (SYSCFG_CCCR)*/
+#define LL_SYSCFG_VDDIO2_CELL_CODE                0U               /*VDDIO2 I/Os code from the cell
+                                                                    (available in the SYSCFG_CCVR)*/
+#define LL_SYSCFG_VDDIO2_REGISTER_CODE            SYSCFG_CCCSR_CS2 /*VDDIO2 I/Os code from the SYSCFG compensation
+                                                                    cell code register (SYSCFG_CCCR)*/
 /**
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EC_ERASE_MEMORIES_STATUS
+/** @defgroup SYSTEM_LL_EC_ERASE_MEMORIES_STATUS SYSCFG MEMORIES ERASE STATUS
   * @{
   */
 #define LL_SYSCFG_MEMORIES_ERASE_ON_GOING         0U               /*Memory erase on going*/
@@ -110,10 +114,10 @@ extern "C" {
 /** @defgroup SYSTEM_LL_EC_I2C_FASTMODEPLUS SYSCFG I2C FASTMODEPLUS
   * @{
   */
-#define LL_SYSCFG_I2C_FASTMODEPLUS_PB6     SYSCFG_CFGR1_I2C_PB6_FMP  /*!< Enable Fast Mode Plus on PB6 */
-#define LL_SYSCFG_I2C_FASTMODEPLUS_PB7     SYSCFG_CFGR1_I2C_PB7_FMP  /*!< Enable Fast Mode Plus on PB7 */
-#define LL_SYSCFG_I2C_FASTMODEPLUS_PB8     SYSCFG_CFGR1_I2C_PB8_FMP  /*!< Enable Fast Mode Plus on PB8 */
-#define LL_SYSCFG_I2C_FASTMODEPLUS_PB9     SYSCFG_CFGR1_I2C_PB9_FMP  /*!< Enable Fast Mode Plus on PB9 */
+#define LL_SYSCFG_I2C_FASTMODEPLUS_PB6     SYSCFG_CFGR1_PB6_FMP  /*!< Enable Fast Mode Plus on PB6 */
+#define LL_SYSCFG_I2C_FASTMODEPLUS_PB7     SYSCFG_CFGR1_PB7_FMP  /*!< Enable Fast Mode Plus on PB7 */
+#define LL_SYSCFG_I2C_FASTMODEPLUS_PB8     SYSCFG_CFGR1_PB8_FMP  /*!< Enable Fast Mode Plus on PB8 */
+#define LL_SYSCFG_I2C_FASTMODEPLUS_PB9     SYSCFG_CFGR1_PB9_FMP  /*!< Enable Fast Mode Plus on PB9 */
 /**
   * @}
   */
@@ -122,13 +126,14 @@ extern "C" {
   * @{
   */
 #define LL_SYSCFG_TIMBREAK_ECC             SYSCFG_CFGR2_ECCL  /*!< Enables and locks the ECC error signal
-                                                                   with Break Input of TIM1/8/15/16/17                           */
+                                                                   with Break Input of TIM1/8/15/16/17 */
 #define LL_SYSCFG_TIMBREAK_PVD             SYSCFG_CFGR2_PVDL  /*!< Enables and locks the PVD connection
-                                                                   with TIM1/8/15/16/17 Break Input                                                                 and also the PVDE and PLS bits of the Power Control Interface */
+                                                                   with TIM1/8/15/16/17 Break Input and also the PVDE
+                                                                   and PLS bits of the Power Control Interface */
 #define LL_SYSCFG_TIMBREAK_SRAM_ECC_LOCK   SYSCFG_CFGR2_SPL   /*!< Enables and locks the SRAM ECC double error signal
-                                                                   with Break Input of TIM1/8/15/16/17                           */
+                                                                   with Break Input of TIM1/8/15/16/17 */
 #define LL_SYSCFG_TIMBREAK_LOCKUP          SYSCFG_CFGR2_CLL   /*!< Enables and locks the LOCKUP output of CortexM33
-                                                                   with Break Input of TIM1/15/16/17                             */
+                                                                   with Break Input of TIM1/15/16/17 */
 /**
   * @}
   */
@@ -198,7 +203,7 @@ extern "C" {
   * @}
   */
 
-  /** @defgroup SYSTEM_LL_EC_APB3_GRP1_STOP_IP DBGMCU APB3 GRP1 STOP IP
+/** @defgroup SYSTEM_LL_EC_APB3_GRP1_STOP_IP DBGMCU APB3 GRP1 STOP IP
   * @{
   */
 #define LL_DBGMCU_APB3_GRP1_I2C3_STOP      DBGMCU_APB3FZR_DBG_I2C3_STOP    /*!< The counter clock of I2C3 is stopped when the core is halted*/
@@ -544,7 +549,8 @@ __STATIC_INLINE void LL_SYSCFG_SetTIMBreakInputs(uint32_t Break)
   */
 __STATIC_INLINE uint32_t LL_SYSCFG_GetTIMBreakInputs(void)
 {
-  return (uint32_t)(READ_BIT(SYSCFG->CFGR2, SYSCFG_CFGR2_CLL | SYSCFG_CFGR2_SPL | SYSCFG_CFGR2_PVDL | SYSCFG_CFGR2_ECCL));
+  return (uint32_t)(READ_BIT(SYSCFG->CFGR2, SYSCFG_CFGR2_CLL | SYSCFG_CFGR2_SPL | SYSCFG_CFGR2_PVDL
+                             | SYSCFG_CFGR2_ECCL));
 }
 
 
@@ -599,7 +605,7 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetConfigSecure(void)
   * @}
   */
 
-/** @defgroup SYSTEM_LL_EF_COMPENSATION
+/** @defgroup SYSTEM_LL_EF_COMPENSATION SYSCFG COMPENSATION
   * @{
   */
 
@@ -653,7 +659,7 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetNMOSVddIO2CompensationValue(void)
   */
 __STATIC_INLINE void LL_SYSCFG_SetPMOSVddCompensationCode(uint32_t PMOSCode)
 {
-  MODIFY_REG(SYSCFG->CCCR, SYSCFG_CCCR_PCC1, PMOSCode<<SYSCFG_CCCR_PCC1_Pos);
+  MODIFY_REG(SYSCFG->CCCR, SYSCFG_CCCR_PCC1, PMOSCode << SYSCFG_CCCR_PCC1_Pos);
 }
 
 /**
@@ -676,7 +682,7 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetPMOSVddCompensationCode(void)
   */
 __STATIC_INLINE void LL_SYSCFG_SetPMOSVddIO2CompensationCode(uint32_t PMOSCode)
 {
-  MODIFY_REG(SYSCFG->CCCR, SYSCFG_CCCR_PCC2, PMOSCode<<SYSCFG_CCCR_PCC2_Pos);
+  MODIFY_REG(SYSCFG->CCCR, SYSCFG_CCCR_PCC2, PMOSCode << SYSCFG_CCCR_PCC2_Pos);
 }
 
 
@@ -700,7 +706,7 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetPMOSVddIO2CompensationCode(void)
   */
 __STATIC_INLINE void LL_SYSCFG_SetNMOSVddCompensationCode(uint32_t NMOSCode)
 {
-  MODIFY_REG(SYSCFG->CCCR, SYSCFG_CCCR_NCC1, NMOSCode<<SYSCFG_CCCR_NCC1_Pos);
+  MODIFY_REG(SYSCFG->CCCR, SYSCFG_CCCR_NCC1, NMOSCode << SYSCFG_CCCR_NCC1_Pos);
 }
 
 /**
@@ -716,14 +722,14 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetNMOSVddCompensationCode(void)
 /**
   * @brief  Set the compensation cell code of the GPIO NMOS transistor supplied by VDDIO2
   * @rmtoll CCCR    NCC2  LL_SYSCFG_SetNMOSVddIO2CompensationCode
-  * @param  PMOSCode PMOS compensation cell code
+  * @param  NMOSCode NMOS compensation code
   *         This code is applied to the NMOS compensation cell when the CS2 bit of the
   *         SYSCFG_CMPCR is set
   * @retval None
   */
 __STATIC_INLINE void LL_SYSCFG_SetNMOSVddIO2CompensationCode(uint32_t NMOSCode)
 {
-  MODIFY_REG(SYSCFG->CCCR, SYSCFG_CCCR_NCC2, NMOSCode<<SYSCFG_CCCR_NCC2_Pos);
+  MODIFY_REG(SYSCFG->CCCR, SYSCFG_CCCR_NCC2, NMOSCode << SYSCFG_CCCR_NCC2_Pos);
 }
 
 
@@ -871,7 +877,8 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetVddCellCompensationCode(void)
   * @rmtoll CCCSR   CS2    LL_SYSCFG_GetVddIOCellCompensationCode
   * @retval Returned value can be one of the following values:
   *   @arg LL_SYSCFG_VDDIO2_CELL_CODE : Selected Code is from the cell (available in the SYSCFG_CCVR)
-  *   @arg LL_SYSCFG_VDDIO2_REGISTER_CODE: Selected Code is from the SYSCFG compensation cell code register (SYSCFG_CCCR)
+  *   @arg LL_SYSCFG_VDDIO2_REGISTER_CODE: Selected Code is from the SYSCFG compensation
+      cell code register (SYSCFG_CCCR)
   */
 __STATIC_INLINE uint32_t LL_SYSCFG_GetVddIO2CellCompensationCode(void)
 {
@@ -1022,7 +1029,6 @@ __STATIC_INLINE uint32_t LL_DBGMCU_GetTracePinAssignment(void)
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM5_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM6_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM7_STOP
-  *         @arg @ref LL_DBGMCU_APB1_GRP1_RTC_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_WWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_IWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C1_STOP
@@ -1040,7 +1046,7 @@ __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_FreezePeriph(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_DBGMCU_APB1_GRP2_I2C4_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP2_LPTIM2_STOP
-   *        @arg @ref LL_DBGMCU_APB1_GRP2_FDCAN_STOP
+  *        @arg @ref LL_DBGMCU_APB1_GRP2_FDCAN_STOP
   * @retval None
   */
 __STATIC_INLINE void LL_DBGMCU_APB1_GRP2_FreezePeriph(uint32_t Periphs)
@@ -1058,14 +1064,11 @@ __STATIC_INLINE void LL_DBGMCU_APB1_GRP2_FreezePeriph(uint32_t Periphs)
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM5_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM6_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_TIM7_STOP
-  *         @arg @ref LL_DBGMCU_APB1_GRP1_RTC_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_WWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_IWDG_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C1_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C2_STOP
-  *         @arg @ref LL_DBGMCU_APB1_GRP1_I2C3_STOP
-  *         @arg @ref LL_DBGMCU_APB1_GRP1_FDCAN1_STOP
-  *         @arg @ref LL_DBGMCU_APB1_GRP1_LPTIM1_STOP
+
   * @retval None
   */
 __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_UnFreezePeriph(uint32_t Periphs)
@@ -1079,7 +1082,7 @@ __STATIC_INLINE void LL_DBGMCU_APB1_GRP1_UnFreezePeriph(uint32_t Periphs)
   * @param  Periphs This parameter can be a combination of the following values:
   *         @arg @ref LL_DBGMCU_APB1_GRP2_I2C4_STOP
   *         @arg @ref LL_DBGMCU_APB1_GRP2_LPTIM2_STOP
-  *         @arg @ref LL_DBGMCU_APB1_GRP2_LPTIM3_STOP
+  *         @arg @ref LL_DBGMCU_APB1_GRP2_FDCAN_STOP
   * @retval None
   */
 __STATIC_INLINE void LL_DBGMCU_APB1_GRP2_UnFreezePeriph(uint32_t Periphs)
@@ -1339,10 +1342,10 @@ __STATIC_INLINE void LL_FLASH_EnableRunPowerDown(void)
 {
   /* Following values must be written consecutively to unlock the RUN_PD bit in
   FLASH_ACR */
-  WRITE_REG(FLASH->PDKEY1R, FLASH_PDKEY1_1);
-  WRITE_REG(FLASH->PDKEY1R, FLASH_PDKEY1_2);
-  WRITE_REG(FLASH->PDKEY2R, FLASH_PDKEY2_1);
-  WRITE_REG(FLASH->PDKEY2R, FLASH_PDKEY2_2);
+  WRITE_REG(FLASH->PDKEY1R, LL_FLASH_PDKEY1_1);
+  WRITE_REG(FLASH->PDKEY1R, LL_FLASH_PDKEY1_2);
+  WRITE_REG(FLASH->PDKEY2R, LL_FLASH_PDKEY2_1);
+  WRITE_REG(FLASH->PDKEY2R, LL_FLASH_PDKEY2_2);
 
   /*Request to enter flash in power mode */
   SET_BIT(FLASH->ACR, FLASH_ACR_PDREQ1 | FLASH_ACR_PDREQ2);
@@ -1364,8 +1367,8 @@ __STATIC_INLINE void LL_FLASH_EnableRunPowerDownBank1(void)
 {
   /* Following values must be written consecutively to unlock the RUN_PD bit in
   FLASH_ACR */
-  WRITE_REG(FLASH->PDKEY1R, FLASH_PDKEY1_1);
-  WRITE_REG(FLASH->PDKEY1R, FLASH_PDKEY1_2);
+  WRITE_REG(FLASH->PDKEY1R, LL_FLASH_PDKEY1_1);
+  WRITE_REG(FLASH->PDKEY1R, LL_FLASH_PDKEY1_2);
 
   /*Request to enter flash in power mode */
   SET_BIT(FLASH->ACR, FLASH_ACR_PDREQ1);
@@ -1387,8 +1390,8 @@ __STATIC_INLINE void LL_FLASH_EnableRunPowerDownBank2(void)
 {
   /* Following values must be written consecutively to unlock the RUN_PD bit in
   FLASH_ACR */
-  WRITE_REG(FLASH->PDKEY2R, FLASH_PDKEY2_1);
-  WRITE_REG(FLASH->PDKEY2R, FLASH_PDKEY2_2);
+  WRITE_REG(FLASH->PDKEY2R, LL_FLASH_PDKEY2_1);
+  WRITE_REG(FLASH->PDKEY2R, LL_FLASH_PDKEY2_2);
 
   /*Request to enter flash in power mode */
   SET_BIT(FLASH->ACR, FLASH_ACR_PDREQ2);
@@ -1420,7 +1423,7 @@ __STATIC_INLINE void LL_FLASH_DisableSleepPowerDown(void)
   */
 
 
-/** @defgroup SYSTEM_LL_EF_ERASE_MEMORIE_STATUS
+/** @defgroup SYSTEM_LL_EF_ERASE_MEMORIE_STATUS ERASE MEMORIE STATUS
   * @{
   */
 
@@ -1429,7 +1432,7 @@ __STATIC_INLINE void LL_FLASH_DisableSleepPowerDown(void)
   * @rmtoll MESR   IPMEE    LL_SYSCFG_ClearEraseEndStatus
   * @retval None
   */
-__STATIC_INLINE void LL_SYSCFG_ClearEraseEndStatus()
+__STATIC_INLINE void LL_SYSCFG_ClearEraseEndStatus(void)
 {
   SET_BIT(SYSCFG->MESR, SYSCFG_MESR_IPMEE);
 }
@@ -1452,7 +1455,7 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetEraseEndStatus(void)
   * @rmtoll MESR   MCLR    LL_SYSCFG_ClearEraseAfterResetStatus
   * @retval None
   */
-__STATIC_INLINE void LL_SYSCFG_ClearEraseAfterResetStatus()
+__STATIC_INLINE void LL_SYSCFG_ClearEraseAfterResetStatus(void)
 {
   SET_BIT(SYSCFG->MESR, SYSCFG_MESR_MCLR);
 }
@@ -1473,6 +1476,14 @@ __STATIC_INLINE uint32_t LL_SYSCFG_GetEraseAfterResetStatus(void)
   */
 
 #endif /* defined (FLASH) || defined (SYSCFG) || defined (DBGMCU) || defined (VREFBUF) */
+
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 
 /**
   * @}

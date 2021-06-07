@@ -19,6 +19,18 @@
   *          Other functions (extended functions) are available in file
   *          "stm32u5xx_hal_adc_ex.c".
   *
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                      ##### ADC peripheral features #####
@@ -288,17 +300,6 @@
 
   @endverbatim
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -409,7 +410,7 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
   uint32_t tmpCFGR1 = 0UL;
   uint32_t tmpCFGR2 = 0UL;
   uint32_t tmp_adc_reg_is_conversion_on_going;
-  __IO uint32_t wait_loop_index = 0UL;
+  __IO uint32_t wait_loop_index;
   uint32_t tmp_adc_is_conversion_on_going_regular;
   uint32_t tmp_adc_is_conversion_on_going_injected;
 
@@ -528,7 +529,7 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
     /* Note: Variable divided by 2 to compensate partially              */
     /*       CPU processing cycles, scaling in us split to not          */
     /*       exceed 32 bits register capacity and handle low frequency. */
-    wait_loop_index = ((LL_ADC_DELAY_INTERNAL_REGUL_STAB_US / 10UL) * (SystemCoreClock / (100000UL * 2UL)));
+    wait_loop_index = ((LL_ADC_DELAY_INTERNAL_REGUL_STAB_US / 10UL) * ((SystemCoreClock / (100000UL * 2UL)) + 1UL));
     while (wait_loop_index != 0UL)
     {
       wait_loop_index--;
@@ -612,8 +613,6 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
 
         /* Configuration of ADC clock mode: clock source AHB or HSI with        */
         /* selectable prescaler.                                                */
-
-
         MODIFY_REG(ADC4_COMMON->CCR,
                    ADC_CCR_PRESC,
                    hadc->Init.ClockPrescaler & ADC_CCR_PRESC);
@@ -650,17 +649,11 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
       /*  - resolution                                                          */
       /*  - scan direction                                                      */
       /*  - DMA continuous request                                              */
-      /*tmpCFGR1 |= (ADC_CFGR1_AUTOWAIT((uint32_t)hadc->Init.LowPowerAutoWait)        |
-                   ADC_CFGR1_CONTINUOUS((uint32_t)hadc->Init.ContinuousConvMode)    |
-                   ADC_CFGR1_OVERRUN(hadc->Init.Overrun)                            |
-                   hadc->Init.DataAlign                                             |
-                   ADC_SCAN_SEQ_MODE(hadc->Init.ScanConvMode)                       |
-                   ADC_CFGR1_DMACONTREQ((uint32_t)hadc->Init.DMAContinuousRequests)  ); */
       tmpCFGR1 |= (ADC_CFGR_AUTOWAIT((uint32_t)hadc->Init.LowPowerAutoWait)        |
                    ADC_CFGR_CONTINUOUS((uint32_t)hadc->Init.ContinuousConvMode)    |
                    ADC_CFGR_OVERRUN(hadc->Init.Overrun)                            |
-                   hadc->Init.DataAlign                                             |
-                   ADC_SCAN_SEQ_MODE(hadc->Init.ScanConvMode)                       |
+                   hadc->Init.DataAlign                                            |
+                   ADC_SCAN_SEQ_MODE(hadc->Init.ScanConvMode)                      |
                    ADC_CFGR_DMACONTREQ(hadc, (uint32_t)hadc->Init.DMAContinuousRequests));
     }
 
@@ -701,9 +694,7 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
       /*       software start.                                                  */
       if (hadc->Init.ExternalTrigConv != ADC_SOFTWARE_START)
       {
-        tmpCFGR1 |= ((hadc->Init.ExternalTrigConv & ADC_CFGR1_EXTSEL)
-                     | hadc->Init.ExternalTrigConvEdge
-                    );
+        tmpCFGR1 |= ((hadc->Init.ExternalTrigConv & ADC_CFGR1_EXTSEL) | hadc->Init.ExternalTrigConvEdge);
       }
       /* Update Configuration Register CFGR */
       MODIFY_REG(hadc->Instance->CFGR1, ADC_CFGR_FIELDS_1, tmpCFGR1);
@@ -717,9 +708,7 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
       /*       software start.                                                  */
       if (hadc->Init.ExternalTrigConv != ADC_SOFTWARE_START)
       {
-        tmpCFGR1 |= ((hadc->Init.ExternalTrigConv & ADC4_CFGR1_EXTSEL)
-                     | hadc->Init.ExternalTrigConvEdge
-                    );
+        tmpCFGR1 |= ((hadc->Init.ExternalTrigConv & ADC4_CFGR1_EXTSEL) | hadc->Init.ExternalTrigConvEdge);
       }
       /* Update ADC configuration register with previous settings */
       MODIFY_REG(hadc->Instance->CFGR1,
@@ -736,14 +725,12 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
 
       if (hadc->Init.LowPowerAutoPowerOff != ADC_LOW_POWER_NONE)
       {
-        SET_BIT(hadc->Instance->PW,
-                hadc->Init.LowPowerAutoPowerOff);
+        SET_BIT(hadc->Instance->PW, hadc->Init.LowPowerAutoPowerOff);
       }
 
       if (hadc->Init.VrefProtection != ADC_VREF_PPROT_NONE)
       {
-        SET_BIT(hadc->Instance->PW,
-                hadc->Init.VrefProtection);
+        SET_BIT(hadc->Instance->PW, hadc->Init.VrefProtection);
       }
 
     }
@@ -762,9 +749,8 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
           && (tmp_adc_is_conversion_on_going_injected == 0UL)
          )
       {
-        tmpCFGR1 = (
-                     ADC_CFGR_AUTODELAY((uint32_t)hadc->Init.LowPowerAutoWait)        |
-                     ADC_CFGR_DMACONTREQ(hadc, (uint32_t)hadc->Init.ConversionDataManagement));
+        tmpCFGR1 = (ADC_CFGR_AUTODELAY((uint32_t)hadc->Init.LowPowerAutoWait)        |
+                    ADC_CFGR_DMACONTREQ(hadc, (uint32_t)hadc->Init.ConversionDataManagement));
 
         MODIFY_REG(hadc->Instance->CFGR1, ADC4_CFGR_FIELDS_2, tmpCFGR1);
         if (hadc->Init.GainCompensation != 0UL)
@@ -798,7 +784,6 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
                      hadc->Init.Oversampling.RightBitShift |
                      hadc->Init.Oversampling.TriggeredMode |
                      hadc->Init.Oversampling.OversamplingStopReset);
-
         }
         else
         {
@@ -817,7 +802,6 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
       /*   emulated by software for alignment over all STM32 devices.           */
       /* - if scan mode is enabled, regular channels sequence length is set to  */
       /*   parameter "NbrOfConversion".                                         */
-
       if (hadc->Init.ScanConvMode == ADC_SCAN_ENABLE)
       {
         /* Set number of ranks in regular group sequencer */
@@ -851,11 +835,7 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
         SET_BIT(tmpCFGR2, ADC_CFGR2_ROVSE);
       }
       MODIFY_REG(hadc->Instance->CFGR2,
-                 ADC_CFGR2_LFTRIG |
-                 ADC_CFGR2_ROVSE  |
-                 ADC4_CFGR2_OVSR   |
-                 ADC_CFGR2_OVSS   |
-                 ADC_CFGR2_TROVS,
+                 ADC_CFGR2_LFTRIG | ADC_CFGR2_ROVSE | ADC4_CFGR2_OVSR | ADC_CFGR2_OVSS | ADC_CFGR2_TROVS,
                  tmpCFGR2);
 
 
@@ -879,8 +859,7 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
       {
         /* Set sequencer scan length by clearing ranks above rank 1             */
         /* and do not modify rank 1 value.                                      */
-        SET_BIT(hadc->Instance->CHSELR,
-                ADC_CHSELR_SQ2_TO_SQ8);
+        SET_BIT(hadc->Instance->CHSELR, ADC_CHSELR_SQ2_TO_SQ8);
 
       }
       else if (hadc->Init.ScanConvMode == ADC4_SCAN_ENABLE)
@@ -905,8 +884,7 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
           /* Set ADC group regular sequencer:                                   */
           /* Set sequencer scan length by clearing ranks above rank 1           */
           /* and do not modify rank 1 value.                                    */
-          SET_BIT(hadc->Instance->CHSELR,
-                  ADC_CHSELR_SQ2_TO_SQ8);
+          SET_BIT(hadc->Instance->CHSELR, ADC_CHSELR_SQ2_TO_SQ8);
         }
         else
         {
@@ -939,25 +917,19 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
         ADC_CLEAR_ERRORCODE(hadc);
 
         /* Set the ADC state */
-        ADC_STATE_CLR_SET(hadc->State,
-                          HAL_ADC_STATE_BUSY_INTERNAL,
-                          HAL_ADC_STATE_READY);
+        ADC_STATE_CLR_SET(hadc->State, HAL_ADC_STATE_BUSY_INTERNAL, HAL_ADC_STATE_READY);
       }
       else
       {
         /* Update ADC state machine to error */
-        ADC_STATE_CLR_SET(hadc->State,
-                          HAL_ADC_STATE_BUSY_INTERNAL,
-                          HAL_ADC_STATE_ERROR_INTERNAL);
+        ADC_STATE_CLR_SET(hadc->State, HAL_ADC_STATE_BUSY_INTERNAL, HAL_ADC_STATE_ERROR_INTERNAL);
 
         /* Set ADC error code to ADC IP internal error */
         SET_BIT(hadc->ErrorCode, HAL_ADC_ERROR_INTERNAL);
 
         tmp_hal_status = HAL_ERROR;
       }
-
     }
-
   }
   else
   {
@@ -967,7 +939,6 @@ HAL_StatusTypeDef HAL_ADC_Init(ADC_HandleTypeDef *hadc)
     tmp_hal_status = HAL_ERROR;
   }
 
-  /* Return function status */
   return tmp_hal_status;
 }
 
@@ -1197,15 +1168,12 @@ HAL_StatusTypeDef HAL_ADC_DeInit(ADC_HandleTypeDef *hadc)
   }
 
   /* DeInit the low level hardware.
-
      For example:
     __HAL_RCC_ADC_FORCE_RESET();
     __HAL_RCC_ADC_RELEASE_RESET();
     __HAL_RCC_ADC_CLK_DISABLE();
-
     Keep in mind that all ADCs use the same clock: disabling
     the clock will reset all ADCs.
-
   */
 #if (USE_HAL_ADC_REGISTER_CALLBACKS == 1)
   if (hadc->MspDeInitCallback == NULL)
@@ -1238,10 +1206,8 @@ HAL_StatusTypeDef HAL_ADC_DeInit(ADC_HandleTypeDef *hadc)
   /* Set ADC state */
   hadc->State = HAL_ADC_STATE_RESET;
 
-  /* Process unlocked */
   __HAL_UNLOCK(hadc);
 
-  /* Return function status */
   return tmp_hal_status;
 }
 
@@ -1308,7 +1274,6 @@ HAL_StatusTypeDef HAL_ADC_RegisterCallback(ADC_HandleTypeDef *hadc, HAL_ADC_Call
 
   if (pCallback == NULL)
   {
-    /* Update the error code */
     hadc->ErrorCode |= HAL_ADC_ERROR_INVALID_CALLBACK;
 
     return HAL_ERROR;
@@ -1363,10 +1328,7 @@ HAL_StatusTypeDef HAL_ADC_RegisterCallback(ADC_HandleTypeDef *hadc, HAL_ADC_Call
         break;
 
       default :
-        /* Update the error code */
         hadc->ErrorCode |= HAL_ADC_ERROR_INVALID_CALLBACK;
-
-        /* Return error status */
         status = HAL_ERROR;
         break;
     }
@@ -1384,20 +1346,15 @@ HAL_StatusTypeDef HAL_ADC_RegisterCallback(ADC_HandleTypeDef *hadc, HAL_ADC_Call
         break;
 
       default :
-        /* Update the error code */
         hadc->ErrorCode |= HAL_ADC_ERROR_INVALID_CALLBACK;
-
-        /* Return error status */
         status = HAL_ERROR;
         break;
     }
   }
   else
   {
-    /* Update the error code */
     hadc->ErrorCode |= HAL_ADC_ERROR_INVALID_CALLBACK;
 
-    /* Return error status */
     status =  HAL_ERROR;
   }
 
@@ -1479,10 +1436,7 @@ HAL_StatusTypeDef HAL_ADC_UnRegisterCallback(ADC_HandleTypeDef *hadc, HAL_ADC_Ca
         break;
 
       default :
-        /* Update the error code */
         hadc->ErrorCode |= HAL_ADC_ERROR_INVALID_CALLBACK;
-
-        /* Return error status */
         status =  HAL_ERROR;
         break;
     }
@@ -1500,20 +1454,14 @@ HAL_StatusTypeDef HAL_ADC_UnRegisterCallback(ADC_HandleTypeDef *hadc, HAL_ADC_Ca
         break;
 
       default :
-        /* Update the error code */
         hadc->ErrorCode |= HAL_ADC_ERROR_INVALID_CALLBACK;
-
-        /* Return error status */
         status =  HAL_ERROR;
         break;
     }
   }
   else
   {
-    /* Update the error code */
     hadc->ErrorCode |= HAL_ADC_ERROR_INVALID_CALLBACK;
-
-    /* Return error status */
     status =  HAL_ERROR;
   }
 
@@ -1567,7 +1515,6 @@ HAL_StatusTypeDef HAL_ADC_Start(ADC_HandleTypeDef *hadc)
   /* Perform ADC enable and conversion start if no conversion is on going */
   if (LL_ADC_REG_IsConversionOngoing(hadc->Instance) == 0UL)
   {
-    /* Process locked */
     __HAL_LOCK(hadc);
 
     /* Enable the ADC peripheral */
@@ -1609,7 +1556,6 @@ HAL_StatusTypeDef HAL_ADC_Start(ADC_HandleTypeDef *hadc)
       /* (To ensure of no unknown state from potential previous ADC operations) */
       __HAL_ADC_CLEAR_FLAG(hadc, (ADC_FLAG_EOC | ADC_FLAG_EOS | ADC_FLAG_OVR));
 
-      /* Process unlocked */
       /* Unlock before starting ADC conversions: in case of potential         */
       /* interruption, to let the process to ADC IRQ Handler.                 */
       __HAL_UNLOCK(hadc);
@@ -1633,11 +1579,9 @@ HAL_StatusTypeDef HAL_ADC_Start(ADC_HandleTypeDef *hadc)
 
       /* Start ADC group regular conversion */
       LL_ADC_REG_StartConversion(hadc->Instance);
-
     }
     else
     {
-      /* Process unlocked */
       __HAL_UNLOCK(hadc);
     }
   }
@@ -1646,7 +1590,6 @@ HAL_StatusTypeDef HAL_ADC_Start(ADC_HandleTypeDef *hadc)
     tmp_hal_status = HAL_BUSY;
   }
 
-  /* Return function status */
   return tmp_hal_status;
 }
 
@@ -1666,7 +1609,6 @@ HAL_StatusTypeDef HAL_ADC_Stop(ADC_HandleTypeDef *hadc)
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
 
-  /* Process locked */
   __HAL_LOCK(hadc);
 
   /* 1. Stop potential conversion on going, on ADC groups regular and injected */
@@ -1688,10 +1630,8 @@ HAL_StatusTypeDef HAL_ADC_Stop(ADC_HandleTypeDef *hadc)
     }
   }
 
-  /* Process unlocked */
   __HAL_UNLOCK(hadc);
 
-  /* Return function status */
   return tmp_hal_status;
 }
 
@@ -1716,7 +1656,7 @@ HAL_StatusTypeDef HAL_ADC_Stop(ADC_HandleTypeDef *hadc)
 HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef *hadc, uint32_t Timeout)
 {
   uint32_t tickstart;
-  uint32_t tmp_Flag_End;
+  uint32_t tmp_flag_end;
   uint32_t tmp_cfgr;
 
   /* Check the parameters */
@@ -1725,7 +1665,7 @@ HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef *hadc, uint32_t Ti
   /* If end of conversion selected to end of sequence conversions */
   if (hadc->Init.EOCSelection == ADC_EOC_SEQ_CONV)
   {
-    tmp_Flag_End = ADC_FLAG_EOS;
+    tmp_flag_end = ADC_FLAG_EOS;
   }
   /* If end of conversion selected to end of unitary conversion */
   else /* ADC_EOC_SINGLE_CONV */
@@ -1747,44 +1687,45 @@ HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef *hadc, uint32_t Ti
       }
       else
       {
-        tmp_Flag_End = (ADC_FLAG_EOC);
+        tmp_flag_end = (ADC_FLAG_EOC);
       }
     }
     else
     {
       if ((hadc->Instance->CFGR1 & ADC4_CFGR1_DMAEN) != 0UL)
       {
-        /* Update ADC state machine to error */
         SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_CONFIG);
-
         return HAL_ERROR;
       }
       else
       {
-        tmp_Flag_End = (ADC_FLAG_EOC);
+        tmp_flag_end = (ADC_FLAG_EOC);
       }
     }
-
   }
 
   /* Get tick count */
   tickstart = HAL_GetTick();
 
   /* Wait until End of unitary conversion or sequence conversions flag is raised */
-  while ((hadc->Instance->ISR & tmp_Flag_End) == 0UL)
+  while ((hadc->Instance->ISR & tmp_flag_end) == 0UL)
   {
     /* Check if timeout is disabled (set to infinite wait) */
     if (Timeout != HAL_MAX_DELAY)
     {
       if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0UL))
       {
-        /* Update ADC state machine to timeout */
-        SET_BIT(hadc->State, HAL_ADC_STATE_TIMEOUT);
+        /* New check to avoid false timeout detection in case of preemption */
+        if ((hadc->Instance->ISR & tmp_flag_end) == 0UL)
+        {
+          /* Update ADC state machine to timeout */
+          SET_BIT(hadc->State, HAL_ADC_STATE_TIMEOUT);
 
-        /* Process unlocked */
-        __HAL_UNLOCK(hadc);
+          /* Process unlocked */
+          __HAL_UNLOCK(hadc);
 
-        return HAL_TIMEOUT;
+          return HAL_TIMEOUT;
+        }
       }
     }
   }
@@ -1815,9 +1756,8 @@ HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef *hadc, uint32_t Ti
       /* Retrieve handle ADC CFGR register */
       tmp_cfgr = READ_REG(hadc->Instance->CFGR1);
 
-
       /* Clear polled flag */
-      if (tmp_Flag_End == ADC_FLAG_EOS)
+      if (tmp_flag_end == ADC_FLAG_EOS)
       {
         __HAL_ADC_CLEAR_FLAG(hadc, ADC_FLAG_EOS);
       }
@@ -1831,7 +1771,6 @@ HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef *hadc, uint32_t Ti
           __HAL_ADC_CLEAR_FLAG(hadc, (ADC_FLAG_EOC | ADC_FLAG_EOS));
         }
       }
-
     }
     else
     {
@@ -1875,7 +1814,6 @@ HAL_StatusTypeDef HAL_ADC_PollForConversion(ADC_HandleTypeDef *hadc, uint32_t Ti
     }
   }
 
-  /* Return function status */
   return HAL_OK;
 }
 
@@ -1921,13 +1859,17 @@ HAL_StatusTypeDef HAL_ADC_PollForEvent(ADC_HandleTypeDef *hadc, uint32_t EventTy
     {
       if (((HAL_GetTick() - tickstart) > Timeout) || (Timeout == 0UL))
       {
-        /* Update ADC state machine to timeout */
-        SET_BIT(hadc->State, HAL_ADC_STATE_TIMEOUT);
+        /* New check to avoid false timeout detection in case of preemption */
+        if (__HAL_ADC_GET_FLAG(hadc, EventType) == 0UL)
+        {
+          /* Update ADC state machine to timeout */
+          SET_BIT(hadc->State, HAL_ADC_STATE_TIMEOUT);
 
-        /* Process unlocked */
-        __HAL_UNLOCK(hadc);
+          /* Process unlocked */
+          __HAL_UNLOCK(hadc);
 
-        return HAL_TIMEOUT;
+          return HAL_TIMEOUT;
+        }
       }
     }
   }
@@ -2020,7 +1962,6 @@ HAL_StatusTypeDef HAL_ADC_PollForEvent(ADC_HandleTypeDef *hadc, uint32_t EventTy
       break;
   }
 
-  /* Return function status */
   return HAL_OK;
 }
 
@@ -2057,10 +1998,8 @@ HAL_StatusTypeDef HAL_ADC_Start_IT(ADC_HandleTypeDef *hadc)
   /* Perform ADC enable and conversion start if no conversion is on going */
   if (LL_ADC_REG_IsConversionOngoing(hadc->Instance) == 0UL)
   {
-    /* Process locked */
     __HAL_LOCK(hadc);
 
-    /* Enable the ADC peripheral */
     tmp_hal_status = ADC_Enable(hadc);
 
     /* Start conversion if ADC is effectively enabled */
@@ -2091,7 +2030,6 @@ HAL_StatusTypeDef HAL_ADC_Start_IT(ADC_HandleTypeDef *hadc)
       /* (To ensure of no unknown state from potential previous ADC operations) */
       __HAL_ADC_CLEAR_FLAG(hadc, (ADC_FLAG_EOC | ADC_FLAG_EOS | ADC_FLAG_OVR));
 
-      /* Process unlocked */
       /* Unlock before starting ADC conversions: in case of potential         */
       /* interruption, to let the process to ADC IRQ Handler.                 */
       __HAL_UNLOCK(hadc);
@@ -2157,7 +2095,6 @@ HAL_StatusTypeDef HAL_ADC_Start_IT(ADC_HandleTypeDef *hadc)
     }
     else
     {
-      /* Process unlocked */
       __HAL_UNLOCK(hadc);
     }
 
@@ -2167,7 +2104,6 @@ HAL_StatusTypeDef HAL_ADC_Start_IT(ADC_HandleTypeDef *hadc)
     tmp_hal_status = HAL_BUSY;
   }
 
-  /* Return function status */
   return tmp_hal_status;
 }
 
@@ -2185,7 +2121,6 @@ HAL_StatusTypeDef HAL_ADC_Stop_IT(ADC_HandleTypeDef *hadc)
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
 
-  /* Process locked */
   __HAL_LOCK(hadc);
 
   /* 1. Stop potential conversion on going, on ADC groups regular and injected */
@@ -2211,10 +2146,8 @@ HAL_StatusTypeDef HAL_ADC_Stop_IT(ADC_HandleTypeDef *hadc)
     }
   }
 
-  /* Process unlocked */
   __HAL_UNLOCK(hadc);
 
-  /* Return function status */
   return tmp_hal_status;
 }
 
@@ -2231,9 +2164,10 @@ HAL_StatusTypeDef HAL_ADC_Stop_IT(ADC_HandleTypeDef *hadc)
   * @param Length Number of data to be transferred from ADC peripheral to memory
   * @retval HAL status.
   */
-HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, uint32_t *pData, uint32_t Length)
+HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, const uint32_t *pData, uint32_t Length)
 {
   HAL_StatusTypeDef tmp_hal_status;
+  uint32_t LengthInBytes;
 
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
@@ -2241,11 +2175,8 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, uint32_t *pData, ui
   /* Perform ADC enable and conversion start if no conversion is on going */
   if (LL_ADC_REG_IsConversionOngoing(hadc->Instance) == 0UL)
   {
-    /* Process locked */
     __HAL_LOCK(hadc);
 
-
-    /* Enable the ADC peripheral */
     tmp_hal_status = ADC_Enable(hadc);
 
     /* Start conversion if ADC is effectively enabled */
@@ -2274,7 +2205,6 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, uint32_t *pData, ui
       }
       else
       {
-        /* Set ADC error code */
         /* Reset all ADC error code fields */
         ADC_CLEAR_ERRORCODE(hadc);
       }
@@ -2297,7 +2227,6 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, uint32_t *pData, ui
       /* operations)                                                        */
       __HAL_ADC_CLEAR_FLAG(hadc, (ADC_FLAG_EOC | ADC_FLAG_EOS | ADC_FLAG_OVR));
 
-      /* Process unlocked */
       /* Unlock before starting ADC conversions: in case of potential         */
       /* interruption, to let the process to ADC IRQ Handler.                 */
       __HAL_UNLOCK(hadc);
@@ -2313,16 +2242,18 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, uint32_t *pData, ui
         hadc->Instance->CFGR1 |= ADC4_CFGR1_DMAEN;
       }
 
+      /* Length should be converted to number of bytes */
+      LengthInBytes = Length * 4U;
 
       /* Start the DMA channel */
       if ((hadc->DMA_Handle->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
       {
         if ((hadc->DMA_Handle->LinkedListQueue != NULL) && (hadc->DMA_Handle->LinkedListQueue->Head != NULL))
         {
-          hadc->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = (uint32_t)Length;
-          hadc->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = (uint32_t)&hadc->Instance->DR;
+          hadc->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = (uint32_t)LengthInBytes;
+          hadc->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =                  \
+              (uint32_t)&hadc->Instance->DR;
           hadc->DMA_Handle->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = (uint32_t)pData;
-          
           tmp_hal_status = HAL_DMAEx_List_Start_IT(hadc->DMA_Handle);
         }
         else
@@ -2332,7 +2263,8 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, uint32_t *pData, ui
       }
       else
       {
-        tmp_hal_status = HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&hadc->Instance->DR, (uint32_t)pData, Length);
+        tmp_hal_status = HAL_DMA_Start_IT(hadc->DMA_Handle, (uint32_t)&hadc->Instance->DR, (uint32_t)pData,        \
+                                          LengthInBytes);
       }
 
       /* Enable conversion of regular group.                                  */
@@ -2344,17 +2276,14 @@ HAL_StatusTypeDef HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, uint32_t *pData, ui
     }
     else
     {
-      /* Process unlocked */
       __HAL_UNLOCK(hadc);
     }
-
   }
   else
   {
     tmp_hal_status = HAL_BUSY;
   }
 
-  /* Return function status */
   return tmp_hal_status;
 }
 
@@ -2378,7 +2307,6 @@ HAL_StatusTypeDef HAL_ADC_Stop_DMA(ADC_HandleTypeDef *hadc)
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
 
-  /* Process locked */
   __HAL_LOCK(hadc);
 
   /* 1. Stop potential ADC group regular conversion on going */
@@ -2433,25 +2361,18 @@ HAL_StatusTypeDef HAL_ADC_Stop_DMA(ADC_HandleTypeDef *hadc)
       if (hadc->Instance != ADC4)  /* ADC1 or ADC2 */
       {
         /* Set ADC state */
-        ADC_STATE_CLR_SET(hadc->State,
-                          HAL_ADC_STATE_REG_BUSY | HAL_ADC_STATE_INJ_BUSY,
-                          HAL_ADC_STATE_READY);
+        ADC_STATE_CLR_SET(hadc->State, HAL_ADC_STATE_REG_BUSY | HAL_ADC_STATE_INJ_BUSY, HAL_ADC_STATE_READY);
       }
       else
       {
         /* Set ADC state */
-        ADC_STATE_CLR_SET(hadc->State,
-                          HAL_ADC_STATE_REG_BUSY,
-                          HAL_ADC_STATE_READY);
+        ADC_STATE_CLR_SET(hadc->State, HAL_ADC_STATE_REG_BUSY, HAL_ADC_STATE_READY);
       }
     }
-
   }
 
-  /* Process unlocked */
   __HAL_UNLOCK(hadc);
 
-  /* Return function status */
   return tmp_hal_status;
 }
 
@@ -2500,7 +2421,6 @@ void HAL_ADC_IRQHandler(ADC_HandleTypeDef *hadc)
   uint32_t tmp_adc_reg_is_trigger_source_sw_start;
   uint32_t tmp_cfgr;
 
-
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
   assert_param(IS_ADC_EOC_SELECTION(hadc->Init.EOCSelection));
@@ -2548,7 +2468,6 @@ void HAL_ADC_IRQHandler(ADC_HandleTypeDef *hadc)
         /* in function of multimode state (for devices with multimode           */
         /* available).                                                          */
         tmp_cfgr = READ_REG(hadc->Instance->CFGR1);
-
 
         /* Carry on if continuous mode is disabled */
         if (READ_BIT(tmp_cfgr, ADC_CFGR1_CONT) != ADC_CFGR1_CONT)
@@ -2609,9 +2528,7 @@ void HAL_ADC_IRQHandler(ADC_HandleTypeDef *hadc)
             __HAL_ADC_DISABLE_IT(hadc, ADC_IT_EOC | ADC_IT_EOS);
 
             /* Set ADC state */
-            ADC_STATE_CLR_SET(hadc->State,
-                              HAL_ADC_STATE_REG_BUSY,
-                              HAL_ADC_STATE_READY);
+            ADC_STATE_CLR_SET(hadc->State, HAL_ADC_STATE_REG_BUSY, HAL_ADC_STATE_READY);
           }
           else
           {
@@ -2666,42 +2583,44 @@ void HAL_ADC_IRQHandler(ADC_HandleTypeDef *hadc)
 
       tmp_cfgr = READ_REG(hadc->Instance->CFGR1);
 
-
       /* Disable interruption if no further conversion upcoming by injected     */
       /* external trigger or by automatic injected conversion with regular      */
       /* group having no further conversion upcoming (same conditions as        */
       /* regular group interruption disabling above),                           */
       /* and if injected scan sequence is completed.                            */
-      if ((tmp_adc_inj_is_trigger_source_sw_start != 0UL)            ||
-          ((READ_BIT(tmp_cfgr, ADC_CFGR1_JAUTO) == 0UL)      &&
-           ((tmp_adc_reg_is_trigger_source_sw_start != 0UL)  &&
-            (READ_BIT(tmp_cfgr, ADC_CFGR1_CONT) == 0UL))))
+      if (tmp_adc_inj_is_trigger_source_sw_start != 0UL)
       {
-        /* If End of Sequence is reached, disable interrupts */
-        if (__HAL_ADC_GET_FLAG(hadc, ADC_FLAG_JEOS))
+        if ((READ_BIT(tmp_cfgr, ADC_CFGR1_JAUTO) == 0UL) ||
+            ((tmp_adc_reg_is_trigger_source_sw_start != 0UL) &&
+             (READ_BIT(tmp_cfgr, ADC_CFGR1_CONT) == 0UL)))
         {
-          /* Particular case if injected contexts queue is enabled:             */
-          /* when the last context has been fully processed, JSQR is reset      */
-          /* by the hardware. Even if no injected conversion is planned to come */
-          /* (queue empty, triggers are ignored), it can start again            */
-          /* immediately after setting a new context (JADSTART is still set).   */
-          /* Therefore, state of HAL ADC injected group is kept to busy.        */
-          /* Allowed to modify bits ADC_IT_JEOC/ADC_IT_JEOS only if bit       */
-          /* JADSTART==0 (no conversion on going)                             */
-          if (LL_ADC_INJ_IsConversionOngoing(hadc->Instance) == 0UL)
+          /* If End of Sequence is reached, disable interrupts */
+          if (__HAL_ADC_GET_FLAG(hadc, ADC_FLAG_JEOS))
           {
-            /* Disable ADC end of sequence conversion interrupt  */
-            __HAL_ADC_DISABLE_IT(hadc, ADC_IT_JEOC | ADC_IT_JEOS);
+            /* Particular case if injected contexts queue is enabled:             */
+            /* when the last context has been fully processed, JSQR is reset      */
+            /* by the hardware. Even if no injected conversion is planned to come */
+            /* (queue empty, triggers are ignored), it can start again            */
+            /* immediately after setting a new context (JADSTART is still set).   */
+            /* Therefore, state of HAL ADC injected group is kept to busy.        */
+            /* No ADC_CFGR1_JQM for STM32U5                                       */
 
-            /* Set ADC state */
-            CLEAR_BIT(hadc->State, HAL_ADC_STATE_INJ_BUSY);
-
-            if ((hadc->State & HAL_ADC_STATE_REG_BUSY) == 0UL)
+            /* Allowed to modify bits ADC_IT_JEOC/ADC_IT_JEOS only if bit       */
+            /* JADSTART==0 (no conversion on going)                             */
+            if (LL_ADC_INJ_IsConversionOngoing(hadc->Instance) == 0UL)
             {
-              SET_BIT(hadc->State, HAL_ADC_STATE_READY);
+              /* Disable ADC end of sequence conversion interrupt  */
+              __HAL_ADC_DISABLE_IT(hadc, ADC_IT_JEOC | ADC_IT_JEOS);
+
+              /* Set ADC state */
+              CLEAR_BIT(hadc->State, HAL_ADC_STATE_INJ_BUSY);
+
+              if ((hadc->State & HAL_ADC_STATE_REG_BUSY) == 0UL)
+              {
+                SET_BIT(hadc->State, HAL_ADC_STATE_READY);
+              }
             }
           }
- 
         }
       }
 
@@ -2856,8 +2775,6 @@ void HAL_ADC_IRQHandler(ADC_HandleTypeDef *hadc)
 
 }
 
-
-
 /**
   * @brief  Conversion complete callback in non-blocking mode.
   * @param hadc ADC handle
@@ -2958,13 +2875,13 @@ __weak void HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc)
   *         The setting of these parameters is conditioned to ADC state:
   *         Refer to comments of structure "ADC_ChannelConfTypeDef".
   * @param hadc ADC handle
-  * @param sConfig Structure of ADC channel assigned to ADC group regular.
+  * @param pConfig Structure of ADC channel assigned to ADC group regular.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConfTypeDef *sConfig)
+HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConfTypeDef *pConfig)
 {
   HAL_StatusTypeDef tmp_hal_status = HAL_OK;
-  uint32_t tmpOffsetShifted;
+  uint32_t tmp_offset_shifted;
   uint32_t tmp_config_internal_channel;
   __IO uint32_t wait_loop_index = 0;
   uint32_t tmp_adc_is_conversion_on_going_regular;
@@ -2976,44 +2893,42 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
 
   if (hadc->Instance != ADC4)  /* ADC1 or ADC2 */
   {
-    assert_param(IS_ADC_REGULAR_RANK(sConfig->Rank));
-    assert_param(IS_ADC_SAMPLE_TIME(sConfig->SamplingTime));
-    assert_param(IS_ADC_SINGLE_DIFFERENTIAL(sConfig->SingleDiff));
-    assert_param(IS_ADC_OFFSET_NUMBER(sConfig->OffsetNumber));
-    assert_param(IS_ADC_RANGE(hadc->Instance, ADC_GET_RESOLUTION(hadc), sConfig->Offset));
+    assert_param(IS_ADC_REGULAR_RANK(pConfig->Rank));
+    assert_param(IS_ADC_SAMPLE_TIME(pConfig->SamplingTime));
+    assert_param(IS_ADC_SINGLE_DIFFERENTIAL(pConfig->SingleDiff));
+    assert_param(IS_ADC_OFFSET_NUMBER(pConfig->OffsetNumber));
+    assert_param(IS_ADC_RANGE(hadc->Instance, ADC_GET_RESOLUTION(hadc), pConfig->Offset));
     /* if ROVSE is set, the value of the OFFSETy_EN bit in ADCx_OFRy register is
     ignored (considered as reset) */
-    assert_param(!((sConfig->OffsetNumber != ADC_OFFSET_NONE) && (hadc->Init.OversamplingMode == ENABLE)));
+    assert_param(!((pConfig->OffsetNumber != ADC_OFFSET_NONE) && (hadc->Init.OversamplingMode == ENABLE)));
 
     /* Verification of channel number */
-    if (sConfig->SingleDiff != ADC_DIFFERENTIAL_ENDED)
+    if (pConfig->SingleDiff != ADC_DIFFERENTIAL_ENDED)
     {
-      assert_param(IS_ADC_CHANNEL(sConfig->Channel));
+      assert_param(IS_ADC_CHANNEL(pConfig->Channel));
     }
     else
     {
-      assert_param(IS_ADC1_DIFF_CHANNEL(sConfig->Channel));
+      assert_param(IS_ADC1_DIFF_CHANNEL(pConfig->Channel));
     }
   }
   else
   {
-    assert_param(IS_ADC4_SAMPLE_TIME(sConfig->SamplingTime));
+    assert_param(IS_ADC4_SAMPLE_TIME(pConfig->SamplingTime));
 
     if ((hadc->Init.ScanConvMode == ADC_SCAN_SEQ_FIXED)          ||
         (hadc->Init.ScanConvMode == ADC_SCAN_SEQ_FIXED_BACKWARD))
     {
-      assert_param(IS_ADC4_REGULAR_RANK_SEQ_FIXED(sConfig->Rank));
+      assert_param(IS_ADC4_REGULAR_RANK_SEQ_FIXED(pConfig->Rank));
     }
     else
     {
       assert_param(IS_ADC4_REGULAR_NB_CONV(hadc->Init.NbrOfConversion));
 
-      assert_param(IS_ADC4_REGULAR_RANK(sConfig->Rank));
+      assert_param(IS_ADC4_REGULAR_RANK(pConfig->Rank));
     }
   }
 
-
-  /* Process locked */
   __HAL_LOCK(hadc);
 
   /* Parameters update conditioned to ADC state:                              */
@@ -3026,10 +2941,10 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
     if (hadc->Instance != ADC4)  /* ADC1 or ADC2 */
     {
       /* ADC channels preselection */
-      hadc->Instance->PCSEL |= (1UL << (__LL_ADC_CHANNEL_TO_DECIMAL_NB((uint32_t)sConfig->Channel) & 0x1FUL));
+      hadc->Instance->PCSEL |= (1UL << (__LL_ADC_CHANNEL_TO_DECIMAL_NB((uint32_t)pConfig->Channel) & 0x1FUL));
 
       /* Set ADC group regular sequence: channel on the selected scan sequence rank */
-      LL_ADC_REG_SetSequencerRanks(hadc->Instance, sConfig->Rank, sConfig->Channel);
+      LL_ADC_REG_SetSequencerRanks(hadc->Instance, pConfig->Rank, pConfig->Channel);
 
       /* Parameters update conditioned to ADC state:                              */
       /* Parameters that can be updated when ADC is disabled or enabled without   */
@@ -3043,47 +2958,46 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
          )
       {
         /* Set sampling time of the selected ADC channel */
-        LL_ADC_SetChannelSamplingTime(hadc->Instance, sConfig->Channel, sConfig->SamplingTime);
+        LL_ADC_SetChannelSamplingTime(hadc->Instance, pConfig->Channel, pConfig->SamplingTime);
 
         /* Configure the offset: offset enable/disable, channel, offset value */
 
         /* Shift the offset with respect to the selected ADC resolution. */
         /* Offset has to be left-aligned on bit 11, the LSB (right bits) are set to 0 */
-        tmpOffsetShifted = ADC_OFFSET_SHIFT_RESOLUTION(hadc, (uint32_t)sConfig->Offset);
+        tmp_offset_shifted = ADC_OFFSET_SHIFT_RESOLUTION(hadc, (uint32_t)pConfig->Offset);
 
-        if (sConfig->OffsetNumber != ADC_OFFSET_NONE)
+        if (pConfig->OffsetNumber != ADC_OFFSET_NONE)
         {
           /* Set ADC selected offset number */
-          LL_ADC_SetOffset(hadc->Instance, sConfig->OffsetNumber, sConfig->Channel, tmpOffsetShifted);
-          assert_param(IS_ADC_OFFSET_SIGN(sConfig->OffsetSign));
-          assert_param(IS_FUNCTIONAL_STATE(sConfig->OffsetSignedSaturation));
+          LL_ADC_SetOffset(hadc->Instance, pConfig->OffsetNumber, pConfig->Channel, tmp_offset_shifted);
+          assert_param(IS_ADC_OFFSET_SIGN(pConfig->OffsetSign));
+          assert_param(IS_FUNCTIONAL_STATE(pConfig->OffsetSignedSaturation));
           /* Set ADC selected offset sign */
-          LL_ADC_SetOffsetSign(hadc->Instance, sConfig->OffsetNumber, sConfig->OffsetSign);
+          LL_ADC_SetOffsetSign(hadc->Instance, pConfig->OffsetNumber, pConfig->OffsetSign);
           /* Set ADC selected offset signed saturation */
-          LL_ADC_SetOffsetSignedSaturation(hadc->Instance, sConfig->OffsetNumber,                  \
-                                           (sConfig->OffsetSignedSaturation == ENABLE)             \
+          LL_ADC_SetOffsetSignedSaturation(hadc->Instance, pConfig->OffsetNumber,                  \
+                                           (pConfig->OffsetSignedSaturation == ENABLE)             \
                                            ? LL_ADC_OFFSET_SIGNED_SATURATION_ENABLE                \
                                            : LL_ADC_OFFSET_SIGNED_SATURATION_DISABLE);
-
         }
         else
         {
           /* Scan OFR1, OFR2, OFR3, OFR4 to check if the selected channel is enabled.
             If this is the case, offset OFRx is disabled since
-            sConfig->OffsetNumber = ADC_OFFSET_NONE. */
-          if (((hadc->Instance->OFR1) & ADC_OFR1_OFFSET1_CH) == ADC_OFR_CHANNEL(sConfig->Channel))
+            pConfig->OffsetNumber = ADC_OFFSET_NONE. */
+          if (((hadc->Instance->OFR1) & ADC_OFR1_OFFSET1_CH) == ADC_OFR_CHANNEL(pConfig->Channel))
           {
             CLEAR_BIT(hadc->Instance->OFR1, ADC_OFR1_SSAT);
           }
-          if (((hadc->Instance->OFR2) & ADC_OFR2_OFFSET2_CH) == ADC_OFR_CHANNEL(sConfig->Channel))
+          if (((hadc->Instance->OFR2) & ADC_OFR2_OFFSET2_CH) == ADC_OFR_CHANNEL(pConfig->Channel))
           {
             CLEAR_BIT(hadc->Instance->OFR2, ADC_OFR2_SSAT);
           }
-          if (((hadc->Instance->OFR3) & ADC_OFR3_OFFSET3_CH) == ADC_OFR_CHANNEL(sConfig->Channel))
+          if (((hadc->Instance->OFR3) & ADC_OFR3_OFFSET3_CH) == ADC_OFR_CHANNEL(pConfig->Channel))
           {
             CLEAR_BIT(hadc->Instance->OFR3, ADC_OFR3_SSAT);
           }
-          if (((hadc->Instance->OFR4) & ADC_OFR4_OFFSET4_CH) == ADC_OFR_CHANNEL(sConfig->Channel))
+          if (((hadc->Instance->OFR4) & ADC_OFR4_OFFSET4_CH) == ADC_OFR_CHANNEL(pConfig->Channel))
           {
             CLEAR_BIT(hadc->Instance->OFR4, ADC_OFR4_SSAT);
           }
@@ -3097,16 +3011,16 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
       if (LL_ADC_IsEnabled(hadc->Instance) == 0UL)
       {
         /* Set mode single-ended or differential input of the selected ADC channel */
-        LL_ADC_SetChannelSingleDiff(hadc->Instance, sConfig->Channel, sConfig->SingleDiff);
+        LL_ADC_SetChannelSingleDiff(hadc->Instance, pConfig->Channel, pConfig->SingleDiff);
 
         /* Configuration of differential mode */
-        if (sConfig->SingleDiff == ADC_DIFFERENTIAL_ENDED)
+        if (pConfig->SingleDiff == ADC_DIFFERENTIAL_ENDED)
         {
           /* Set sampling time of the selected ADC channel */
           /* Note: ADC channel number masked with value "0x1F" to ensure shift value within 32 bits range */
-          LL_ADC_SetChannelSamplingTime(hadc->Instance,
-                                        (uint32_t)(__LL_ADC_DECIMAL_NB_TO_CHANNEL((__LL_ADC_CHANNEL_TO_DECIMAL_NB((uint32_t)sConfig->Channel) + 1UL) & 0x1FUL)),
-                                        sConfig->SamplingTime);
+          tmp_channel = __LL_ADC_DECIMAL_NB_TO_CHANNEL((__LL_ADC_CHANNEL_TO_DECIMAL_NB(pConfig->Channel) \
+                                                        + 1UL) & 0x1FUL);
+          LL_ADC_SetChannelSamplingTime(hadc->Instance, tmp_channel, pConfig->SamplingTime);
         }
         /* Management of internal measurement channels: Vbat/VrefInt/TempSensor.  */
         /* If internal channel selected, enable dedicated internal buffers and    */
@@ -3114,7 +3028,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
         /* Note: these internal measurement paths can be disabled using           */
         /* HAL_ADC_DeInit().                                                      */
 
-        if (__LL_ADC_IS_CHANNEL_INTERNAL(sConfig->Channel))
+        if (__LL_ADC_IS_CHANNEL_INTERNAL(pConfig->Channel))
         {
           /* Configuration of common ADC parameters                                 */
 
@@ -3126,7 +3040,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
           {
             /* If the requested internal measurement path has already been enabled, */
             /* bypass the configuration processing.                                 */
-            if ((sConfig->Channel == ADC_CHANNEL_TEMPSENSOR)
+            if ((pConfig->Channel == ADC_CHANNEL_TEMPSENSOR)
                 && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_TEMPSENSOR) == 0UL))
             {
               if (ADC_TEMPERATURE_SENSOR_INSTANCE(hadc))
@@ -3139,14 +3053,15 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
                 /* Note: Variable divided by 2 to compensate partially              */
                 /*       CPU processing cycles, scaling in us split to not          */
                 /*       exceed 32 bits register capacity and handle low frequency. */
-                wait_loop_index = ((LL_ADC_DELAY_TEMPSENSOR_STAB_US / 10UL) * (SystemCoreClock / (100000UL * 2UL)));
+                wait_loop_index = ((LL_ADC_DELAY_INTERNAL_REGUL_STAB_US / 10UL)                                       \
+                                   * ((SystemCoreClock / (100000UL * 2UL)) + 1UL));
                 while (wait_loop_index != 0UL)
                 {
                   wait_loop_index--;
                 }
               }
             }
-            else if ((sConfig->Channel == ADC_CHANNEL_VBAT) && ((tmp_config_internal_channel                          \
+            else if ((pConfig->Channel == ADC_CHANNEL_VBAT) && ((tmp_config_internal_channel                          \
                                                                  & LL_ADC_PATH_INTERNAL_VBAT) == 0UL))
             {
               if (ADC_BATTERY_VOLTAGE_INSTANCE(hadc))
@@ -3155,7 +3070,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
                                                LL_ADC_PATH_INTERNAL_VBAT | tmp_config_internal_channel);
               }
             }
-            else if ((sConfig->Channel == ADC_CHANNEL_VREFINT)
+            else if ((pConfig->Channel == ADC_CHANNEL_VREFINT)
                      && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_VREFINT) == 0UL))
             {
               if (ADC_VREFINT_INSTANCE(hadc))
@@ -3184,31 +3099,35 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
     }
     else
     {
-       /* Remap Internal Channels for Cut1 vs Cut2 */
-       tmp_channel = sConfig->Channel;
-       if (HAL_GetREVID() == REV_ID_A) /* STM32U5 silicon Rev.A */
-       {
-         if (sConfig->Channel == ADC4_CHANNEL_TEMPSENSOR)
-         {
-           tmp_channel = (LL_ADC_CHANNEL_22 | ADC_CHANNEL_ID_INTERNAL_CH);
-         }
-         else if(sConfig->Channel == ADC4_CHANNEL_VBAT)
-         {
-           tmp_channel = (LL_ADC_CHANNEL_23 | ADC_CHANNEL_ID_INTERNAL_CH);
-         }
-         else if(sConfig->Channel == ADC_CHANNEL_VCORE)
-         {
-           tmp_channel = (LL_ADC_CHANNEL_VREFINT | LL_ADC_CHANNEL_DIFFERENCIATION_VREFINT_VCORE);
-         }
-         else if(sConfig->Channel == ADC_CHANNEL_DAC1CH1_ADC4)
-         {
-           tmp_channel = (LL_ADC_CHANNEL_20 | ADC_CHANNEL_ID_INTERNAL_CH);
-         }
-         else if(sConfig->Channel == ADC_CHANNEL_DAC1CH2_ADC4)
-         {
-           tmp_channel = (LL_ADC_CHANNEL_21 | ADC_CHANNEL_ID_INTERNAL_CH);
-         }
-       }
+      /* Remap Internal Channels for Cut1 vs Cut2 */
+      tmp_channel = pConfig->Channel;
+      if (HAL_GetREVID() == REV_ID_A) /* STM32U5 silicon Rev.A */
+      {
+        if (pConfig->Channel == ADC4_CHANNEL_TEMPSENSOR)
+        {
+          tmp_channel = (LL_ADC_CHANNEL_22 | ADC_CHANNEL_ID_INTERNAL_CH);
+        }
+        else if (pConfig->Channel == ADC4_CHANNEL_VBAT)
+        {
+          tmp_channel = (LL_ADC_CHANNEL_23 | ADC_CHANNEL_ID_INTERNAL_CH);
+        }
+        else if (pConfig->Channel == ADC_CHANNEL_VCORE)
+        {
+          tmp_channel = (LL_ADC_CHANNEL_VREFINT | LL_ADC_CHANNEL_DIFFERENCIATION_VREFINT_VCORE);
+        }
+        else if (pConfig->Channel == ADC_CHANNEL_DAC1CH1_ADC4)
+        {
+          tmp_channel = (LL_ADC_CHANNEL_20 | ADC_CHANNEL_ID_INTERNAL_CH);
+        }
+        else if (pConfig->Channel == ADC_CHANNEL_DAC1CH2_ADC4)
+        {
+          tmp_channel = (LL_ADC_CHANNEL_21 | ADC_CHANNEL_ID_INTERNAL_CH);
+        }
+        else
+        {
+          tmp_channel = pConfig->Channel;
+        }
+      }
 
       /* Configure channel: depending on rank setting, add it or remove it from */
       /* ADC sequencer.                                                         */
@@ -3217,7 +3136,7 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
       /* Otherwise (sequencer set to fully configurable or to to not fully      */
       /* configurable with channel rank to be set), configure the selected      */
       /* channel.                                                               */
-      if (sConfig->Rank != ADC4_RANK_NONE)
+      if (pConfig->Rank != ADC4_RANK_NONE)
       {
         /* Regular sequence configuration */
         /* Note: ADC channel configuration requires few ADC clock cycles        */
@@ -3239,14 +3158,14 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
 
           /* Memorize the channel set into variable in HAL ADC handle */
           MODIFY_REG(hadc->ADCGroupRegularSequencerRanks,
-                     ADC_CHSELR_SQ1 << (sConfig->Rank & 0x1FUL),
-                     __LL_ADC_CHANNEL_TO_DECIMAL_NB(tmp_channel) << (sConfig->Rank & 0x1FUL));
+                     ADC_CHSELR_SQ1 << (pConfig->Rank & 0x1FUL),
+                     __LL_ADC_CHANNEL_TO_DECIMAL_NB(tmp_channel) << (pConfig->Rank & 0x1FUL));
 
           /* If the selected rank is below ADC group regular sequencer length,  */
           /* apply the configuration in ADC register.                           */
           /* Note: Otherwise, configuration is not applied.                     */
           /*       To apply it, parameter'NbrOfConversion' must be increased.   */
-          if (((sConfig->Rank >> 2UL) + 1UL) <= hadc->Init.NbrOfConversion)
+          if (((pConfig->Rank >> 2UL) + 1UL) <= hadc->Init.NbrOfConversion)
           {
             if (HAL_GetREVID() <= REV_ID_A) /* STM32U5 silicon Rev.A */
             {
@@ -3255,12 +3174,12 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
                 tmp_channel = (1UL << (__LL_ADC_CHANNEL_TO_DECIMAL_NB(tmp_channel) - 9UL));
               }
             }
-            LL_ADC_REG_SetSequencerRanks(hadc->Instance, sConfig->Rank, tmp_channel);
+            LL_ADC_REG_SetSequencerRanks(hadc->Instance, pConfig->Rank, tmp_channel);
           }
         }
 
         /* Set sampling time of the selected ADC channel */
-        LL_ADC_SetChannelSamplingTime(hadc->Instance, tmp_channel, sConfig->SamplingTime);
+        LL_ADC_SetChannelSamplingTime(hadc->Instance, tmp_channel, pConfig->SamplingTime);
 
 
         /* Management of internal measurement channels: VrefInt/TempSensor/Vbat */
@@ -3269,13 +3188,13 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
         /* Note: these internal measurement paths can be disabled using         */
         /*       HAL_ADC_DeInit() or removing the channel from sequencer with   */
         /*       channel configuration parameter "Rank".                        */
-        if (__LL_ADC_IS_CHANNEL_INTERNAL(sConfig->Channel))
+        if (__LL_ADC_IS_CHANNEL_INTERNAL(pConfig->Channel))
         {
           tmp_config_internal_channel = LL_ADC_GetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(hadc->Instance));
 
           /* If the requested internal measurement path has already been enabled,   */
           /* bypass the configuration processing.                                   */
-          if ((sConfig->Channel == ADC4_CHANNEL_TEMPSENSOR)                                                           \
+          if ((pConfig->Channel == ADC4_CHANNEL_TEMPSENSOR)                                                           \
               && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_TEMPSENSOR) == 0UL))
           {
             LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(hadc->Instance),
@@ -3292,19 +3211,19 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
               wait_loop_index--;
             }
           }
-          else if ((sConfig->Channel == ADC4_CHANNEL_VBAT) && ((tmp_config_internal_channel                           \
+          else if ((pConfig->Channel == ADC4_CHANNEL_VBAT) && ((tmp_config_internal_channel                           \
                                                                 & LL_ADC_PATH_INTERNAL_VBAT) == 0UL))
           {
             LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(hadc->Instance),
                                            LL_ADC_PATH_INTERNAL_VBAT | tmp_config_internal_channel);
           }
-          else if ((sConfig->Channel == ADC_CHANNEL_VREFINT)                                                          \
+          else if ((pConfig->Channel == ADC_CHANNEL_VREFINT)                                                          \
                    && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_VREFINT) == 0UL))
           {
             LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(hadc->Instance),
                                            LL_ADC_PATH_INTERNAL_VREFINT | tmp_config_internal_channel);
           }
-          else if ((sConfig->Channel == ADC_CHANNEL_VCORE)                                                            \
+          else if ((pConfig->Channel == ADC_CHANNEL_VCORE)                                                            \
                    && ((tmp_config_internal_channel  & LL_ADC_PATH_INTERNAL_VREFINT) == 0UL))
           {
             if (ADC_VCORE_INSTANCE(hadc))
@@ -3321,12 +3240,12 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
           {
             /* nothing to do */
           }
-          /* If STM32U5 silicon Rev.B, ADC_CHANNEL_DAC1CH1 and ADC_CHANNEL_DAC1CH2 are both on Channel 21 
+          /* If STM32U5 silicon Rev.B, ADC_CHANNEL_DAC1CH1 and ADC_CHANNEL_DAC1CH2 are both on Channel 21
              and selection is done via ADC_OR[0] register */
           if (HAL_GetREVID() == REV_ID_B) /* STM32U5 silicon Rev.B */
           {
-            if ((sConfig->Channel == ADC_CHANNEL_DAC1CH2_ADC4)                                                        \
-                   && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_VREFINT) == 0UL))
+            if ((pConfig->Channel == ADC_CHANNEL_DAC1CH2_ADC4)                                                        \
+                && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_VREFINT) == 0UL))
             {
               SET_BIT((hadc->Instance->OR), ADC_OR_CHN0SEL);
             }
@@ -3351,26 +3270,26 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
         /* Management of internal measurement channels: Vbat/VrefInt/TempSensor.  */
         /* If internal channel selected, enable dedicated internal buffers and    */
         /* paths.                                                                 */
-        if (__LL_ADC_IS_CHANNEL_INTERNAL(sConfig->Channel))
+        if (__LL_ADC_IS_CHANNEL_INTERNAL(pConfig->Channel))
         {
           tmp_config_internal_channel = LL_ADC_GetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(hadc->Instance));
 
-          if (sConfig->Channel == ADC_CHANNEL_TEMPSENSOR)
+          if (pConfig->Channel == ADC_CHANNEL_TEMPSENSOR)
           {
             LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(hadc->Instance),
                                            ~LL_ADC_PATH_INTERNAL_TEMPSENSOR & tmp_config_internal_channel);
           }
-          else if (sConfig->Channel == ADC_CHANNEL_VBAT)
+          else if (pConfig->Channel == ADC_CHANNEL_VBAT)
           {
             LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(hadc->Instance),
                                            ~LL_ADC_PATH_INTERNAL_VBAT & tmp_config_internal_channel);
           }
-          else if (sConfig->Channel == ADC_CHANNEL_VREFINT)
+          else if (pConfig->Channel == ADC_CHANNEL_VREFINT)
           {
             LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(hadc->Instance),
                                            ~LL_ADC_PATH_INTERNAL_VREFINT & tmp_config_internal_channel);
           }
-          else if (sConfig->Channel == ADC_CHANNEL_VCORE)
+          else if (pConfig->Channel == ADC_CHANNEL_VCORE)
           {
             LL_ADC_SetCommonPathInternalCh(__LL_ADC_COMMON_INSTANCE(hadc->Instance),
                                            ~LL_ADC_PATH_INTERNAL_VREFINT & tmp_config_internal_channel);
@@ -3383,12 +3302,12 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
           {
             /* nothing to do */
           }
-          /* If STM32U5 silicon Rev.B, ADC_CHANNEL_DAC1CH1 and ADC_CHANNEL_DAC1CH2 are both on Channel 21 
+          /* If STM32U5 silicon Rev.B, ADC_CHANNEL_DAC1CH1 and ADC_CHANNEL_DAC1CH2 are both on Channel 21
              and selection is done via ADC_OR[0] register */
           if (HAL_GetREVID() == REV_ID_B) /* STM32U5 silicon Rev.B */
           {
-            if ((sConfig->Channel == ADC_CHANNEL_DAC1CH2_ADC4)                                                        \
-                   && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_VREFINT) == 0UL))
+            if ((pConfig->Channel == ADC_CHANNEL_DAC1CH2_ADC4)                                                        \
+                && ((tmp_config_internal_channel & LL_ADC_PATH_INTERNAL_VREFINT) == 0UL))
             {
               SET_BIT((hadc->Instance->OR), ADC_OR_CHN0SEL);
             }
@@ -3405,14 +3324,11 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
   {
     /* Update ADC state machine to error */
     SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_CONFIG);
-
     tmp_hal_status = HAL_ERROR;
   }
 
-  /* Process unlocked */
   __HAL_UNLOCK(hadc);
 
-  /* Return function status */
   return tmp_hal_status;
 }
 
@@ -3427,28 +3343,28 @@ HAL_StatusTypeDef HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConf
   *         For parameters constraints, see comments of structure
   *         "ADC_AnalogWDGConfTypeDef".
   * @param hadc ADC handle
-  * @param AnalogWDGConfig Structure of ADC analog watchdog configuration
+  * @param pAnalogWDGConfig Structure of ADC analog watchdog configuration
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDGConfTypeDef *AnalogWDGConfig)
+HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDGConfTypeDef *pAnalogWDGConfig)
 {
   HAL_StatusTypeDef tmp_hal_status = HAL_OK;
-  uint32_t tmpAWDHighThresholdShifted;
-  uint32_t tmpAWDLowThresholdShifted;
+  uint32_t tmp_awd_high_threshold_shifted;
+  uint32_t tmp_awd_low_threshold_shifted;
   uint32_t tmp_adc_is_conversion_on_going_regular;
   uint32_t tmp_adc_is_conversion_on_going_injected;
 
   /* Check the parameters */
   assert_param(IS_ADC_ALL_INSTANCE(hadc->Instance));
-  assert_param(IS_ADC_ANALOG_WATCHDOG_NUMBER(AnalogWDGConfig->WatchdogNumber));
-  assert_param(IS_ADC_ANALOG_WATCHDOG_MODE(AnalogWDGConfig->WatchdogMode));
-  assert_param(IS_FUNCTIONAL_STATE(AnalogWDGConfig->ITMode));
+  assert_param(IS_ADC_ANALOG_WATCHDOG_NUMBER(pAnalogWDGConfig->WatchdogNumber));
+  assert_param(IS_ADC_ANALOG_WATCHDOG_MODE(pAnalogWDGConfig->WatchdogMode));
+  assert_param(IS_FUNCTIONAL_STATE(pAnalogWDGConfig->ITMode));
 
-  if ((AnalogWDGConfig->WatchdogMode == ADC_ANALOGWATCHDOG_SINGLE_REG)     ||
-      (AnalogWDGConfig->WatchdogMode == ADC_ANALOGWATCHDOG_SINGLE_INJEC)   ||
-      (AnalogWDGConfig->WatchdogMode == ADC_ANALOGWATCHDOG_SINGLE_REGINJEC))
+  if ((pAnalogWDGConfig->WatchdogMode == ADC_ANALOGWATCHDOG_SINGLE_REG)     ||
+      (pAnalogWDGConfig->WatchdogMode == ADC_ANALOGWATCHDOG_SINGLE_INJEC)   ||
+      (pAnalogWDGConfig->WatchdogMode == ADC_ANALOGWATCHDOG_SINGLE_REGINJEC))
   {
-    assert_param(IS_ADC_CHANNEL(AnalogWDGConfig->Channel));
+    assert_param(IS_ADC_CHANNEL(pAnalogWDGConfig->Channel));
   }
 
   /* Verify thresholds range */
@@ -3457,18 +3373,17 @@ HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDG
     /* Case of oversampling enabled: thresholds are compared to oversampling
        intermediate computation (after ratio, before shift application) */
     assert_param(IS_ADC_RANGE(hadc->Instance, ADC_GET_RESOLUTION(hadc),
-                              AnalogWDGConfig->HighThreshold / (hadc->Init.Oversampling.Ratio + 1UL)));
+                              pAnalogWDGConfig->HighThreshold / (hadc->Init.Oversampling.Ratio + 1UL)));
     assert_param(IS_ADC_RANGE(hadc->Instance, ADC_GET_RESOLUTION(hadc),
-                              AnalogWDGConfig->LowThreshold / (hadc->Init.Oversampling.Ratio + 1UL)));
+                              pAnalogWDGConfig->LowThreshold / (hadc->Init.Oversampling.Ratio + 1UL)));
   }
   else
   {
     /* Verify if thresholds are within the selected ADC resolution */
-    assert_param(IS_ADC_RANGE(hadc->Instance, ADC_GET_RESOLUTION(hadc), AnalogWDGConfig->HighThreshold));
-    assert_param(IS_ADC_RANGE(hadc->Instance, ADC_GET_RESOLUTION(hadc), AnalogWDGConfig->LowThreshold));
+    assert_param(IS_ADC_RANGE(hadc->Instance, ADC_GET_RESOLUTION(hadc), pAnalogWDGConfig->HighThreshold));
+    assert_param(IS_ADC_RANGE(hadc->Instance, ADC_GET_RESOLUTION(hadc), pAnalogWDGConfig->LowThreshold));
   }
 
-  /* Process locked */
   __HAL_LOCK(hadc);
 
   /* Parameters update conditioned to ADC state:                              */
@@ -3492,28 +3407,28 @@ HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDG
      )
   {
     /* Analog watchdog configuration */
-    if (AnalogWDGConfig->WatchdogNumber == ADC_ANALOGWATCHDOG_1)
+    if (pAnalogWDGConfig->WatchdogNumber == ADC_ANALOGWATCHDOG_1)
     {
       /* Configuration of analog watchdog:                                    */
       /*  - Set the analog watchdog enable mode: one or overall group of      */
       /*    channels, on groups regular and-or injected.                      */
-      switch (AnalogWDGConfig->WatchdogMode)
+      switch (pAnalogWDGConfig->WatchdogMode)
       {
         case ADC_ANALOGWATCHDOG_SINGLE_REG:
           LL_ADC_SetAnalogWDMonitChannels(hadc->Instance, LL_ADC_AWD1,
-                                          __LL_ADC_ANALOGWD_CHANNEL_GROUP(AnalogWDGConfig->Channel,
+                                          __LL_ADC_ANALOGWD_CHANNEL_GROUP(pAnalogWDGConfig->Channel,
                                                                           LL_ADC_GROUP_REGULAR));
           break;
 
         case ADC_ANALOGWATCHDOG_SINGLE_INJEC:
           LL_ADC_SetAnalogWDMonitChannels(hadc->Instance, LL_ADC_AWD1,
-                                          __LL_ADC_ANALOGWD_CHANNEL_GROUP(AnalogWDGConfig->Channel,
+                                          __LL_ADC_ANALOGWD_CHANNEL_GROUP(pAnalogWDGConfig->Channel,
                                                                           LL_ADC_GROUP_INJECTED));
           break;
 
         case ADC_ANALOGWATCHDOG_SINGLE_REGINJEC:
           LL_ADC_SetAnalogWDMonitChannels(hadc->Instance, LL_ADC_AWD1,
-                                          __LL_ADC_ANALOGWD_CHANNEL_GROUP(AnalogWDGConfig->Channel,
+                                          __LL_ADC_ANALOGWD_CHANNEL_GROUP(pAnalogWDGConfig->Channel,
                                                                           LL_ADC_GROUP_REGULAR_INJECTED));
           break;
 
@@ -3537,19 +3452,19 @@ HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDG
       if (hadc->Instance != ADC4)  /* ADC1 or ADC2 */
       {
         /* Set the filtering configuration */
-        assert_param(IS_ADC_ANALOG_WATCHDOG_FILTERING_MODE(AnalogWDGConfig->FilteringConfig));
-        LL_ADC_SetAWDFilteringConfiguration(hadc->Instance, hadc->Instance->HTR1, AnalogWDGConfig->FilteringConfig);
+        assert_param(IS_ADC_ANALOG_WATCHDOG_FILTERING_MODE(pAnalogWDGConfig->FilteringConfig));
+        LL_ADC_SetAWDFilteringConfiguration(hadc->Instance, hadc->Instance->HTR1, pAnalogWDGConfig->FilteringConfig);
       }
 
       /* Shift the offset in function of the selected ADC resolution:         */
       /* Thresholds have to be left-aligned on bit 11, the LSB (right bits)   */
       /* are set to 0                                                         */
-      tmpAWDHighThresholdShifted = ADC_AWD1THRESHOLD_SHIFT_RESOLUTION(hadc, AnalogWDGConfig->HighThreshold);
-      tmpAWDLowThresholdShifted  = ADC_AWD1THRESHOLD_SHIFT_RESOLUTION(hadc, AnalogWDGConfig->LowThreshold);
+      tmp_awd_high_threshold_shifted = ADC_AWD1THRESHOLD_SHIFT_RESOLUTION(hadc, pAnalogWDGConfig->HighThreshold);
+      tmp_awd_low_threshold_shifted  = ADC_AWD1THRESHOLD_SHIFT_RESOLUTION(hadc, pAnalogWDGConfig->LowThreshold);
 
       /* Set ADC analog watchdog thresholds value of both thresholds high and low */
-      LL_ADC_ConfigAnalogWDThresholds(hadc->Instance, AnalogWDGConfig->WatchdogNumber, tmpAWDHighThresholdShifted,
-                                      tmpAWDLowThresholdShifted);
+      LL_ADC_ConfigAnalogWDThresholds(hadc->Instance, pAnalogWDGConfig->WatchdogNumber, tmp_awd_high_threshold_shifted,
+                                      tmp_awd_low_threshold_shifted);
 
       /* Update state, clear previous result related to AWD1 */
       CLEAR_BIT(hadc->State, HAL_ADC_STATE_AWD1);
@@ -3561,7 +3476,7 @@ HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDG
       LL_ADC_ClearFlag_AWD1(hadc->Instance);
 
       /* Configure ADC analog watchdog interrupt */
-      if (AnalogWDGConfig->ITMode == ENABLE)
+      if (pAnalogWDGConfig->ITMode == ENABLE)
       {
         LL_ADC_EnableIT_AWD1(hadc->Instance);
       }
@@ -3573,22 +3488,22 @@ HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDG
     /* Case of ADC_ANALOGWATCHDOG_2 or ADC_ANALOGWATCHDOG_3 */
     else
     {
-      switch (AnalogWDGConfig->WatchdogMode)
+      switch (pAnalogWDGConfig->WatchdogMode)
       {
         case ADC_ANALOGWATCHDOG_SINGLE_REG:
         case ADC_ANALOGWATCHDOG_SINGLE_INJEC:
         case ADC_ANALOGWATCHDOG_SINGLE_REGINJEC:
           /* Update AWD by bitfield to keep the possibility to monitor        */
           /* several channels by successive calls of this function.           */
-          if (AnalogWDGConfig->WatchdogNumber == ADC_ANALOGWATCHDOG_2)
+          if (pAnalogWDGConfig->WatchdogNumber == ADC_ANALOGWATCHDOG_2)
           {
             SET_BIT(hadc->Instance->AWD2CR, (1UL                                                       \
-                                             << (__LL_ADC_CHANNEL_TO_DECIMAL_NB(AnalogWDGConfig->Channel) & 0x1FUL)));
+                                             << (__LL_ADC_CHANNEL_TO_DECIMAL_NB(pAnalogWDGConfig->Channel) & 0x1FUL)));
           }
           else
           {
             SET_BIT(hadc->Instance->AWD3CR, (1UL                                                      \
-                                             << (__LL_ADC_CHANNEL_TO_DECIMAL_NB(AnalogWDGConfig->Channel) & 0x1FUL)));
+                                             << (__LL_ADC_CHANNEL_TO_DECIMAL_NB(pAnalogWDGConfig->Channel) & 0x1FUL)));
           }
           break;
 
@@ -3597,51 +3512,52 @@ HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDG
         case ADC_ANALOGWATCHDOG_ALL_REGINJEC:
           /* Update AWD by bitfield to keep the possibility to monitor        */
           /* several channels by successive calls of this function.           */
-          if (AnalogWDGConfig->WatchdogNumber == ADC_ANALOGWATCHDOG_2)
+          if (pAnalogWDGConfig->WatchdogNumber == ADC_ANALOGWATCHDOG_2)
           {
             SET_BIT(hadc->Instance->AWD2CR, (1UL                                                           \
-                                             << (__LL_ADC_CHANNEL_TO_DECIMAL_NB(AnalogWDGConfig->Channel) & 0x1FUL)));
+                                             << (__LL_ADC_CHANNEL_TO_DECIMAL_NB(pAnalogWDGConfig->Channel) & 0x1FUL)));
           }
           else
           {
             SET_BIT(hadc->Instance->AWD3CR, (1UL                                                        \
-                                             << (__LL_ADC_CHANNEL_TO_DECIMAL_NB(AnalogWDGConfig->Channel) & 0x1FUL)));
+                                             << (__LL_ADC_CHANNEL_TO_DECIMAL_NB(pAnalogWDGConfig->Channel) & 0x1FUL)));
           }
           break;
 
         default: /* ADC_ANALOGWATCHDOG_NONE */
-          LL_ADC_SetAnalogWDMonitChannels(hadc->Instance, AnalogWDGConfig->WatchdogNumber, LL_ADC_AWD_DISABLE);
+          LL_ADC_SetAnalogWDMonitChannels(hadc->Instance, pAnalogWDGConfig->WatchdogNumber, LL_ADC_AWD_DISABLE);
           break;
       }
 
       /* Shift the thresholds in function of the selected ADC resolution      */
       /* have to be left-aligned on bit 15, the LSB (right bits) are set to 0 */
-      tmpAWDHighThresholdShifted = ADC_AWD23THRESHOLD_SHIFT_RESOLUTION(hadc, AnalogWDGConfig->HighThreshold);
-      tmpAWDLowThresholdShifted  = ADC_AWD23THRESHOLD_SHIFT_RESOLUTION(hadc, AnalogWDGConfig->LowThreshold);
+      tmp_awd_high_threshold_shifted = ADC_AWD23THRESHOLD_SHIFT_RESOLUTION(hadc, pAnalogWDGConfig->HighThreshold);
+      tmp_awd_low_threshold_shifted  = ADC_AWD23THRESHOLD_SHIFT_RESOLUTION(hadc, pAnalogWDGConfig->LowThreshold);
 
       if (hadc->Instance == ADC4)
       {
         /* Set ADC analog watchdog thresholds value of both thresholds high and low */
-        LL_ADC_ConfigAnalogWDThresholds(hadc->Instance, AnalogWDGConfig->WatchdogNumber, tmpAWDHighThresholdShifted,
-                                        tmpAWDLowThresholdShifted);
+        LL_ADC_ConfigAnalogWDThresholds(hadc->Instance, pAnalogWDGConfig->WatchdogNumber,
+                                        tmp_awd_high_threshold_shifted,
+                                        tmp_awd_low_threshold_shifted);
       }
       else /* ADC1 or ADC2 */
       {
-        if (AnalogWDGConfig->WatchdogNumber == ADC_ANALOGWATCHDOG_2)
+        if (pAnalogWDGConfig->WatchdogNumber == ADC_ANALOGWATCHDOG_2)
         {
           /* Set ADC analog watchdog thresholds value of both thresholds high and low */
-          MODIFY_REG(hadc->Instance->LTR2,  ADC_LTR_LT, tmpAWDLowThresholdShifted);
-          MODIFY_REG(hadc->Instance->HTR2,  ADC_HTR_HT, tmpAWDHighThresholdShifted);
+          MODIFY_REG(hadc->Instance->LTR2,  ADC_LTR_LT, tmp_awd_low_threshold_shifted);
+          MODIFY_REG(hadc->Instance->HTR2,  ADC_HTR_HT, tmp_awd_high_threshold_shifted);
         }
         else
         {
           /* Set ADC analog watchdog thresholds value of both thresholds high and low */
-          MODIFY_REG(hadc->Instance->LTR3,  ADC_LTR_LT, tmpAWDLowThresholdShifted);
-          MODIFY_REG(hadc->Instance->HTR3,  ADC_HTR_HT, tmpAWDHighThresholdShifted);
+          MODIFY_REG(hadc->Instance->LTR3,  ADC_LTR_LT, tmp_awd_low_threshold_shifted);
+          MODIFY_REG(hadc->Instance->HTR3,  ADC_HTR_HT, tmp_awd_high_threshold_shifted);
         }
       }
 
-      if (AnalogWDGConfig->WatchdogNumber == ADC_ANALOGWATCHDOG_2)
+      if (pAnalogWDGConfig->WatchdogNumber == ADC_ANALOGWATCHDOG_2)
       {
         /* Update state, clear previous result related to AWD2 */
         CLEAR_BIT(hadc->State, HAL_ADC_STATE_AWD2);
@@ -3653,7 +3569,7 @@ HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDG
         LL_ADC_ClearFlag_AWD2(hadc->Instance);
 
         /* Configure ADC analog watchdog interrupt */
-        if (AnalogWDGConfig->ITMode == ENABLE)
+        if (pAnalogWDGConfig->ITMode == ENABLE)
         {
           LL_ADC_EnableIT_AWD2(hadc->Instance);
         }
@@ -3675,7 +3591,7 @@ HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDG
         LL_ADC_ClearFlag_AWD3(hadc->Instance);
 
         /* Configure ADC analog watchdog interrupt */
-        if (AnalogWDGConfig->ITMode == ENABLE)
+        if (pAnalogWDGConfig->ITMode == ENABLE)
         {
           LL_ADC_EnableIT_AWD3(hadc->Instance);
         }
@@ -3696,10 +3612,8 @@ HAL_StatusTypeDef HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDG
 
     tmp_hal_status = HAL_ERROR;
   }
-  /* Process unlocked */
   __HAL_UNLOCK(hadc);
 
-  /* Return function status */
   return tmp_hal_status;
 }
 
@@ -3782,9 +3696,9 @@ uint32_t HAL_ADC_GetError(ADC_HandleTypeDef *hadc)
 HAL_StatusTypeDef ADC_ConversionStop(ADC_HandleTypeDef *hadc, uint32_t ConversionGroup)
 {
   uint32_t tickstart;
-  uint32_t Conversion_Timeout_CPU_cycles = 0UL;
+  uint32_t conversion_timeout_cpu_cycles = 0UL;
   uint32_t conversion_group_reassigned = ConversionGroup;
-  uint32_t tmp_ADC_CR_ADSTART_JADSTART;
+  uint32_t tmp_adc_cr_adstart_jadstart;
   uint32_t tmp_adc_is_conversion_on_going_regular;
   uint32_t tmp_adc_is_conversion_on_going_injected;
 
@@ -3796,9 +3710,7 @@ HAL_StatusTypeDef ADC_ConversionStop(ADC_HandleTypeDef *hadc, uint32_t Conversio
   /* groups) to bypass this function if not needed.                           */
   tmp_adc_is_conversion_on_going_regular = LL_ADC_REG_IsConversionOngoing(hadc->Instance);
   tmp_adc_is_conversion_on_going_injected = LL_ADC_INJ_IsConversionOngoing(hadc->Instance);
-  if ((tmp_adc_is_conversion_on_going_regular != 0UL)
-      || (tmp_adc_is_conversion_on_going_injected != 0UL)
-     )
+  if ((tmp_adc_is_conversion_on_going_regular != 0UL) || (tmp_adc_is_conversion_on_going_injected != 0UL))
   {
     /* Particular case of continuous auto-injection mode combined with        */
     /* auto-delay mode.                                                       */
@@ -3817,7 +3729,7 @@ HAL_StatusTypeDef ADC_ConversionStop(ADC_HandleTypeDef *hadc, uint32_t Conversio
       /* Wait until JEOS=1 (maximum Timeout: 4 injected conversions) */
       while (__HAL_ADC_GET_FLAG(hadc, ADC_FLAG_JEOS) == 0UL)
       {
-        if (Conversion_Timeout_CPU_cycles >= (ADC_CONVERSION_TIME_MAX_CPU_CYCLES * 4UL))
+        if (conversion_timeout_cpu_cycles >= (ADC_CONVERSION_TIME_MAX_CPU_CYCLES * 4UL))
         {
           /* Update ADC state machine to error */
           SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL);
@@ -3827,7 +3739,7 @@ HAL_StatusTypeDef ADC_ConversionStop(ADC_HandleTypeDef *hadc, uint32_t Conversio
 
           return HAL_ERROR;
         }
-        Conversion_Timeout_CPU_cycles ++;
+        conversion_timeout_cpu_cycles++;
       }
 
       /* Clear JEOS */
@@ -3866,41 +3778,41 @@ HAL_StatusTypeDef ADC_ConversionStop(ADC_HandleTypeDef *hadc, uint32_t Conversio
     switch (conversion_group_reassigned)
     {
       case ADC_REGULAR_INJECTED_GROUP:
-        tmp_ADC_CR_ADSTART_JADSTART = (ADC_CR_ADSTART | ADC_CR_JADSTART);
+        tmp_adc_cr_adstart_jadstart = (ADC_CR_ADSTART | ADC_CR_JADSTART);
         break;
       case ADC_INJECTED_GROUP:
-        tmp_ADC_CR_ADSTART_JADSTART = ADC_CR_JADSTART;
+        tmp_adc_cr_adstart_jadstart = ADC_CR_JADSTART;
         break;
       /* Case ADC_REGULAR_GROUP only*/
       default:
-        tmp_ADC_CR_ADSTART_JADSTART = ADC_CR_ADSTART;
+        tmp_adc_cr_adstart_jadstart = ADC_CR_ADSTART;
         break;
     }
 
     /* Wait for conversion effectively stopped */
     tickstart = HAL_GetTick();
 
-    while ((hadc->Instance->CR & tmp_ADC_CR_ADSTART_JADSTART) != 0UL)
+    while ((hadc->Instance->CR & tmp_adc_cr_adstart_jadstart) != 0UL)
     {
       if ((HAL_GetTick() - tickstart) > ADC_STOP_CONVERSION_TIMEOUT)
       {
-        /* Update ADC state machine to error */
-        SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL);
+        /* New check to avoid false timeout detection in case of preemption */
+        if ((hadc->Instance->CR & tmp_adc_cr_adstart_jadstart) != 0UL)
+        {
+          /* Update ADC state machine to error */
+          SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL);
 
-        /* Set ADC error code to ADC peripheral internal error */
-        SET_BIT(hadc->ErrorCode, HAL_ADC_ERROR_INTERNAL);
+          /* Set ADC error code to ADC peripheral internal error */
+          SET_BIT(hadc->ErrorCode, HAL_ADC_ERROR_INTERNAL);
 
-        return HAL_ERROR;
+          return HAL_ERROR;
+        }
       }
     }
-
   }
 
-  /* Return HAL status */
   return HAL_OK;
 }
-
-
 
 /**
   * @brief  Enable the selected ADC.
@@ -3932,12 +3844,11 @@ HAL_StatusTypeDef ADC_Enable(ADC_HandleTypeDef *hadc)
       return HAL_ERROR;
     }
 
-    /* Enable the ADC peripheral */
     LL_ADC_Enable(hadc->Instance);
 
     /* If low power mode AutoPowerOff is enabled, power-on/off phases are     */
     /* performed automatically by hardware and flag ADC ready is not set.     */
-    if (hadc->Init.LowPowerAutoPowerOff != ENABLE)
+    if (hadc->Init.LowPowerAutoPowerOff == ADC_LOW_POWER_NONE)
     {
       /* Wait for ADC effectively enabled */
       tickstart = HAL_GetTick();
@@ -3960,19 +3871,22 @@ HAL_StatusTypeDef ADC_Enable(ADC_HandleTypeDef *hadc)
 
         if ((HAL_GetTick() - tickstart) > ADC_ENABLE_TIMEOUT)
         {
-          /* Update ADC state machine to error */
-          SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL);
+          /* New check to avoid false timeout detection in case of preemption */
+          if (__HAL_ADC_GET_FLAG(hadc, ADC_FLAG_RDY) == 0UL)
+          {
+            /* Update ADC state machine to error */
+            SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL);
 
-          /* Set ADC error code to ADC peripheral internal error */
-          SET_BIT(hadc->ErrorCode, HAL_ADC_ERROR_INTERNAL);
+            /* Set ADC error code to ADC peripheral internal error */
+            SET_BIT(hadc->ErrorCode, HAL_ADC_ERROR_INTERNAL);
 
-          return HAL_ERROR;
+            return HAL_ERROR;
+          }
         }
       }
     }
   }
 
-  /* Return HAL status */
   return HAL_OK;
 }
 
@@ -4021,18 +3935,21 @@ HAL_StatusTypeDef ADC_Disable(ADC_HandleTypeDef *hadc)
     {
       if ((HAL_GetTick() - tickstart) > ADC_DISABLE_TIMEOUT)
       {
-        /* Update ADC state machine to error */
-        SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL);
+        /* New check to avoid false timeout detection in case of preemption */
+        if ((hadc->Instance->CR & ADC_CR_ADEN) != 0UL)
+        {
+          /* Update ADC state machine to error */
+          SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL);
 
-        /* Set ADC error code to ADC peripheral internal error */
-        SET_BIT(hadc->ErrorCode, HAL_ADC_ERROR_INTERNAL);
+          /* Set ADC error code to ADC peripheral internal error */
+          SET_BIT(hadc->ErrorCode, HAL_ADC_ERROR_INTERNAL);
 
-        return HAL_ERROR;
+          return HAL_ERROR;
+        }
       }
     }
   }
 
-  /* Return HAL status */
   return HAL_OK;
 }
 

@@ -83,10 +83,12 @@ typedef struct
   void (* ConvHalfCpltCallbackCh1)(struct __DAC_HandleTypeDef *hdac);
   void (* ErrorCallbackCh1)(struct __DAC_HandleTypeDef *hdac);
   void (* DMAUnderrunCallbackCh1)(struct __DAC_HandleTypeDef *hdac);
+
   void (* ConvCpltCallbackCh2)(struct __DAC_HandleTypeDef *hdac);
   void (* ConvHalfCpltCallbackCh2)(struct __DAC_HandleTypeDef *hdac);
   void (* ErrorCallbackCh2)(struct __DAC_HandleTypeDef *hdac);
   void (* DMAUnderrunCallbackCh2)(struct __DAC_HandleTypeDef *hdac);
+
 
   void (* MspInitCallback)(struct __DAC_HandleTypeDef *hdac);
   void (* MspDeInitCallback)(struct __DAC_HandleTypeDef *hdac);
@@ -117,11 +119,11 @@ typedef struct
   */
 typedef struct
 {
-  FunctionalState DAC_AutonomousMode;    /*!< Specifies the autonomous mode should be enabled or not for the selected channel.
-                                              This parameter can be ENABLE or DISABLE */
-
   uint32_t DAC_HighFrequency;            /*!< Specifies the frequency interface mode
                                               This parameter can be a value of @ref DAC_HighFrequency */
+
+  uint32_t DAC_AutonomousMode;           /*!< Specifies whether the autonomous mode state
+                                              This parameter can be a value of @ref DACx_Autonomous_mode */
 
   FunctionalState DAC_DMADoubleDataMode; /*!< Specifies if DMA double data mode should be enabled or not for the selected channel.
                                               This parameter can be ENABLE or DISABLE */
@@ -148,9 +150,7 @@ typedef struct
   uint32_t DAC_TrimmingValue;             /*!< Specifies the offset trimming value
                                                i.e. when DAC_SampleAndHold is DAC_TRIMMING_USER.
                                                This parameter must be a number between Min_Data = 1 and Max_Data = 31 */
-
   DAC_SampleAndHoldConfTypeDef  DAC_SampleAndHoldConfig;  /*!< Sample and Hold settings */
-
 } DAC_ChannelConfTypeDef;
 
 #if (USE_HAL_DAC_REGISTER_CALLBACKS == 1)
@@ -163,10 +163,12 @@ typedef enum
   HAL_DAC_CH1_HALF_COMPLETE_CB_ID            = 0x01U,  /*!< DAC CH1 half Complete Callback ID */
   HAL_DAC_CH1_ERROR_ID                       = 0x02U,  /*!< DAC CH1 error Callback ID         */
   HAL_DAC_CH1_UNDERRUN_CB_ID                 = 0x03U,  /*!< DAC CH1 underrun Callback ID      */
+
   HAL_DAC_CH2_COMPLETE_CB_ID                 = 0x04U,  /*!< DAC CH2 Complete Callback ID      */
   HAL_DAC_CH2_HALF_COMPLETE_CB_ID            = 0x05U,  /*!< DAC CH2 half Complete Callback ID */
   HAL_DAC_CH2_ERROR_ID                       = 0x06U,  /*!< DAC CH2 error Callback ID         */
   HAL_DAC_CH2_UNDERRUN_CB_ID                 = 0x07U,  /*!< DAC CH2 underrun Callback ID      */
+
   HAL_DAC_MSPINIT_CB_ID                      = 0x08U,  /*!< DAC MspInit Callback ID           */
   HAL_DAC_MSPDEINIT_CB_ID                    = 0x09U,  /*!< DAC MspDeInit Callback ID         */
   HAL_DAC_ALL_CB_ID                          = 0x0AU   /*!< DAC All ID                        */
@@ -239,7 +241,9 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
   * @{
   */
 #define DAC_CHANNEL_1                      0x00000000U
+
 #define DAC_CHANNEL_2                      0x00000010U
+
 /**
   * @}
   */
@@ -259,9 +263,13 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
   * @{
   */
 #define DAC_FLAG_DMAUDR1                   (DAC_SR_DMAUDR1)
+
 #define DAC_FLAG_DMAUDR2                   (DAC_SR_DMAUDR2)
+
 #define DAC_FLAG_DAC1RDY                   (DAC_SR_DAC1RDY)
+
 #define DAC_FLAG_DAC2RDY                   (DAC_SR_DAC2RDY)
+
 
 /**
   * @}
@@ -271,7 +279,9 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
   * @{
   */
 #define DAC_IT_DMAUDR1                   (DAC_SR_DMAUDR1)
+
 #define DAC_IT_DMAUDR2                   (DAC_SR_DMAUDR2)
+
 
 /**
   * @}
@@ -364,11 +374,13 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
   */
 #define DAC_DHR12R1_ALIGNMENT(__ALIGNMENT__) (0x00000008UL + (__ALIGNMENT__))
 
+
 /** @brief  Set DHR12R2 alignment.
   * @param  __ALIGNMENT__ specifies the DAC alignment
   * @retval None
   */
 #define DAC_DHR12R2_ALIGNMENT(__ALIGNMENT__) (0x00000014UL + (__ALIGNMENT__))
+
 
 /** @brief  Set DHR12RD alignment.
   * @param  __ALIGNMENT__ specifies the DAC alignment
@@ -556,7 +568,6 @@ void DAC_DMAHalfConvCpltCh1(DMA_HandleTypeDef *hdma);
 #endif
 
 
-#endif /*STM32U5xx_HAL_DAC_H */
+#endif /* STM32U5xx_HAL_DAC_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

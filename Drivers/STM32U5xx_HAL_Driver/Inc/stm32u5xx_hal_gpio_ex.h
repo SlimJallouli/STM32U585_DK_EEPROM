@@ -22,7 +22,7 @@
 #define STM32U5xx_HAL_GPIO_EX_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -38,20 +38,19 @@
   */
 
 /* Exported types ------------------------------------------------------------*/
-/** @defgroup LPGPIO_MapTypedef GPIO/Ex Exported Types
+/** @defgroup LPGPIO_MapTypeDef GPIO/Ex Exported Types
   * @{
   */
 typedef struct
 {
-  GPIO_TypeDef * GPIO_PORT;
+  GPIO_TypeDef *GPIO_PORT;
   uint32_t Pin_Pos;
-}LPGPIO_MapTypedef;
+} LPGPIO_MapTypeDef;
 /**
   * @}
   */
 
 /* Exported constants --------------------------------------------------------*/
-/* Private defines -----------------------------------------------------------*/
 
 /** @defgroup GPIOEx_Exported_Constants GPIOEx Exported Constants
   * @{
@@ -62,7 +61,7 @@ typedef struct
   */
 
 #if (defined(STM32U575xx) || defined(STM32U585xx))
-/*--------------STM32U5xxxx---*/
+/*--------------STM32U575xx/STM32U585xx---------------------------*/
 /**
   * @brief   AF 0 selection
   */
@@ -129,6 +128,7 @@ typedef struct
   */
 #define GPIO_AF5_DFSDM1        ((uint8_t)0x05)  /* DFSDM1 Alternate Function mapping   */
 #define GPIO_AF5_I2C4          ((uint8_t)0x05)  /* I2C4 Alternate Function mapping   */
+#define GPIO_AF5_PSSI          ((uint8_t)0x05)  /* PSSI Alternate Function mapping   */
 #define GPIO_AF5_OCTOSPI1      ((uint8_t)0x05)  /* OCTOSPI1 Alternate Function mapping  */
 #define GPIO_AF5_OCTOSPI2      ((uint8_t)0x05)  /* OCTOSPI2 Alternate Function mapping  */
 #define GPIO_AF5_SPI1          ((uint8_t)0x05)  /* SPI1 Alternate Function mapping   */
@@ -242,10 +242,10 @@ typedef struct
   * @{
   */
 
-/** @defgroup GPIOEx_Get_Port_Index GPIOEx_Get Port Index
+/** @defgroup GPIOEx_Get_Port_Index GPIOEx Get Port Index
   * @{
   */
-#if (defined(STM32U585xx) || defined(STM32U585xxQ) || defined(STM32U575xx) || defined(STM32U575xxQ))
+#if (defined(STM32U575xx) || defined(STM32U585xx))
 
 #define GPIO_GET_INDEX(__GPIOx__)           (((uint32_t )(__GPIOx__) & (~GPIOA_BASE)) >> 10)
 

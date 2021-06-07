@@ -127,9 +127,6 @@
   * @{
   */
 
-/**
-  @cond 0
-  */
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -138,9 +135,6 @@
 static void SRAM_DMACplt(DMA_HandleTypeDef *hdma);
 static void SRAM_DMACpltProt(DMA_HandleTypeDef *hdma);
 static void SRAM_DMAError(DMA_HandleTypeDef *hdma);
-/**
-  @endcond
-  */
 
 /* Exported functions --------------------------------------------------------*/
 
@@ -197,7 +191,7 @@ HAL_StatusTypeDef HAL_SRAM_Init(SRAM_HandleTypeDef *hsram, FMC_NORSRAM_TimingTyp
 #else
     /* Initialize the low level hardware (MSP) */
     HAL_SRAM_MspInit(hsram);
-#endif
+#endif /* USE_HAL_SRAM_REGISTER_CALLBACKS */
   }
 
   /* Initialize SRAM control Interface */
@@ -241,7 +235,7 @@ HAL_StatusTypeDef HAL_SRAM_DeInit(SRAM_HandleTypeDef *hsram)
 #else
   /* De-Initialize the low level hardware (MSP) */
   HAL_SRAM_MspDeInit(hsram);
-#endif
+#endif /* USE_HAL_SRAM_REGISTER_CALLBACKS */
 
   /* Configure the SRAM registers with their reset values */
   (void)FMC_NORSRAM_DeInit(hsram->Instance, hsram->Extended, hsram->Init.NSBank);
@@ -703,9 +697,12 @@ HAL_StatusTypeDef HAL_SRAM_Read_DMA(SRAM_HandleTypeDef *hsram, uint32_t *pAddres
           size = (BufferSize);
         }
         /* Set Source , destination , buffer size */
-        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = size;                  /* Set DMA data size           */
-        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = (uint32_t)pAddress;    /* Set DMA source address      */
-        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = (uint32_t)pDstBuffer;  /* Set DMA destination address */
+        /* Set DMA data size */
+        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = size;
+        /* Set DMA source address */
+        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = (uint32_t)pAddress;
+        /* Set DMA destination address */
+        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = (uint32_t)pDstBuffer;
 
         /* Enable the DMA Stream */
         status = HAL_DMAEx_List_Start_IT(hsram->hdma);
@@ -802,10 +799,12 @@ HAL_StatusTypeDef HAL_SRAM_Write_DMA(SRAM_HandleTypeDef *hsram, uint32_t *pAddre
           size = (BufferSize);
         }
         /* Set Source , destination , buffer size */
-        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = size;                    /* Set DMA data size           */
-        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = (uint32_t)pSrcBuffer;    /* Set DMA source address      */
-        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = (uint32_t)pAddress;      /* Set DMA destination address */
-
+        /* Set DMA data size */
+        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = size;
+        /* Set DMA source address */
+        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = (uint32_t)pSrcBuffer;
+        /* Set DMA destination address */
+        hsram->hdma->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = (uint32_t)pAddress;
         /* Enable the DMA Stream */
         status = HAL_DMAEx_List_Start_IT(hsram->hdma);
       }
@@ -1028,7 +1027,7 @@ HAL_StatusTypeDef HAL_SRAM_RegisterDmaCallback(SRAM_HandleTypeDef *hsram, HAL_SR
   __HAL_UNLOCK(hsram);
   return status;
 }
-#endif
+#endif /* USE_HAL_SRAM_REGISTER_CALLBACKS */
 
 /**
   * @}
@@ -1156,9 +1155,6 @@ HAL_SRAM_StateTypeDef HAL_SRAM_GetState(SRAM_HandleTypeDef *hsram)
   */
 
 /**
-  @cond 0
-  */
-/**
   * @brief  DMA SRAM process complete callback.
   * @param  hdma : DMA handle
   * @retval None
@@ -1177,7 +1173,7 @@ static void SRAM_DMACplt(DMA_HandleTypeDef *hdma)
   hsram->DmaXferCpltCallback(hdma);
 #else
   HAL_SRAM_DMA_XferCpltCallback(hdma);
-#endif
+#endif /* USE_HAL_SRAM_REGISTER_CALLBACKS */
 }
 
 /**
@@ -1199,7 +1195,7 @@ static void SRAM_DMACpltProt(DMA_HandleTypeDef *hdma)
   hsram->DmaXferCpltCallback(hdma);
 #else
   HAL_SRAM_DMA_XferCpltCallback(hdma);
-#endif
+#endif /* USE_HAL_SRAM_REGISTER_CALLBACKS */
 }
 
 /**
@@ -1221,11 +1217,8 @@ static void SRAM_DMAError(DMA_HandleTypeDef *hdma)
   hsram->DmaXferErrorCallback(hdma);
 #else
   HAL_SRAM_DMA_XferErrorCallback(hdma);
-#endif
+#endif /* USE_HAL_SRAM_REGISTER_CALLBACKS */
 }
-/**
-  @endcond
-  */
 
 /**
   * @}

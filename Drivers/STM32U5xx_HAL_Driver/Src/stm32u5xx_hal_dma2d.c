@@ -290,7 +290,9 @@ HAL_StatusTypeDef HAL_DMA2D_Init(DMA2D_HandleTypeDef *hdma2d)
   /* DMA2D OOR register configuration ------------------------------------------*/
   MODIFY_REG(hdma2d->Instance->OOR, DMA2D_OOR_LO, hdma2d->Init.OutputOffset);
   /* DMA2D OPFCCR AI and RBS fields setting (Output Alpha Inversion)*/
-  MODIFY_REG(hdma2d->Instance->OPFCCR, (DMA2D_OPFCCR_AI | DMA2D_OPFCCR_RBS), ((hdma2d->Init.AlphaInverted << DMA2D_OPFCCR_AI_Pos) | (hdma2d->Init.RedBlueSwap << DMA2D_OPFCCR_RBS_Pos)));
+  MODIFY_REG(hdma2d->Instance->OPFCCR, (DMA2D_OPFCCR_AI | DMA2D_OPFCCR_RBS),
+             ((hdma2d->Init.AlphaInverted << DMA2D_OPFCCR_AI_Pos) | \
+              (hdma2d->Init.RedBlueSwap << DMA2D_OPFCCR_RBS_Pos)));
 
 
   /* Update error code */
@@ -667,7 +669,8 @@ HAL_StatusTypeDef HAL_DMA2D_UnRegisterCallback(DMA2D_HandleTypeDef *hdma2d, HAL_
   *                     conversion mode is selected, or configure
   *                     the color value if Register-to-Memory mode is selected.
   * @param  DstAddress The destination memory Buffer address.
-  * @param  Width      The width of data to be transferred from source to destination (expressed in number of pixels per line).
+  * @param  Width      The width of data to be transferred from source
+  *                    to destination (expressed in number of pixels per line).
   * @param  Height     The height of data to be transferred from source to destination (expressed in number of lines).
   * @retval HAL status
   */
@@ -702,7 +705,8 @@ HAL_StatusTypeDef HAL_DMA2D_Start(DMA2D_HandleTypeDef *hdma2d, uint32_t pdata, u
   *                     conversion mode is selected, or configure
   *                     the color value if Register-to-Memory mode is selected.
   * @param  DstAddress The destination memory Buffer address.
-  * @param  Width      The width of data to be transferred from source to destination (expressed in number of pixels per line).
+  * @param  Width      The width of data to be transferred from source
+  *                    to destination (expressed in number of pixels per line).
   * @param  Height     The height of data to be transferred from source to destination (expressed in number of lines).
   * @retval HAL status
   */
@@ -738,7 +742,8 @@ HAL_StatusTypeDef HAL_DMA2D_Start_IT(DMA2D_HandleTypeDef *hdma2d, uint32_t pdata
   * @param  SrcAddress1 The source memory Buffer address for the foreground layer.
   * @param  SrcAddress2 The source memory Buffer address for the background layer.
   * @param  DstAddress  The destination memory Buffer address.
-  * @param  Width       The width of data to be transferred from source to destination (expressed in number of pixels per line).
+  * @param  Width       The width of data to be transferred from source
+  *                     to destination (expressed in number of pixels per line).
   * @param  Height      The height of data to be transferred from source to destination (expressed in number of lines).
   * @retval HAL status
   */
@@ -791,7 +796,8 @@ HAL_StatusTypeDef HAL_DMA2D_BlendingStart(DMA2D_HandleTypeDef *hdma2d, uint32_t 
   * @param  SrcAddress1 The source memory Buffer address for the foreground layer.
   * @param  SrcAddress2 The source memory Buffer address for the background layer.
   * @param  DstAddress  The destination memory Buffer address.
-  * @param  Width       The width of data to be transferred from source to destination (expressed in number of pixels per line).
+  * @param  Width       The width of data to be transferred from source
+  *                     to destination (expressed in number of pixels per line).
   * @param  Height      The height of data to be transferred from source to destination (expressed in number of lines).
   * @retval HAL status
   */
@@ -1316,8 +1322,10 @@ HAL_StatusTypeDef HAL_DMA2D_CLUTLoading_Suspend(DMA2D_HandleTypeDef *hdma2d, uin
   tickstart = HAL_GetTick();
 
   /* Check if the CLUT loading is suspended */
-  loadsuspended = ((hdma2d->Instance->CR & DMA2D_CR_SUSP) == DMA2D_CR_SUSP) ? 1UL : 0UL; /*1st condition: Suspend Check*/
-  loadsuspended |= ((*reg & DMA2D_BGPFCCR_START) != DMA2D_BGPFCCR_START) ? 1UL : 0UL; /*2nd condition: Not Start Check */
+  /* 1st condition: Suspend Check */
+  loadsuspended = ((hdma2d->Instance->CR & DMA2D_CR_SUSP) == DMA2D_CR_SUSP) ? 1UL : 0UL;
+  /* 2nd condition: Not Start Check */
+  loadsuspended |= ((*reg & DMA2D_BGPFCCR_START) != DMA2D_BGPFCCR_START) ? 1UL : 0UL;
   while (loadsuspended == 0UL)
   {
     if ((HAL_GetTick() - tickstart) > DMA2D_TIMEOUT_SUSPEND)
@@ -1330,8 +1338,10 @@ HAL_StatusTypeDef HAL_DMA2D_CLUTLoading_Suspend(DMA2D_HandleTypeDef *hdma2d, uin
 
       return HAL_TIMEOUT;
     }
-    loadsuspended = ((hdma2d->Instance->CR & DMA2D_CR_SUSP) == DMA2D_CR_SUSP) ? 1UL : 0UL; /*1st condition: Suspend Check*/
-    loadsuspended |= ((*reg & DMA2D_BGPFCCR_START) != DMA2D_BGPFCCR_START) ? 1UL : 0UL; /*2nd condition: Not Start Check */
+    /* 1st condition: Suspend Check */
+    loadsuspended = ((hdma2d->Instance->CR & DMA2D_CR_SUSP) == DMA2D_CR_SUSP) ? 1UL : 0UL;
+    /* 2nd condition: Not Start Check */
+    loadsuspended |= ((*reg & DMA2D_BGPFCCR_START) != DMA2D_BGPFCCR_START) ? 1UL : 0UL;
   }
 
   /* Check whether or not a transfer is actually suspended and change the DMA2D state accordingly */
@@ -1761,7 +1771,8 @@ __weak void HAL_DMA2D_CLUTLoadingCpltCallback(DMA2D_HandleTypeDef *hdma2d)
 HAL_StatusTypeDef HAL_DMA2D_ConfigLayer(DMA2D_HandleTypeDef *hdma2d, uint32_t LayerIdx)
 {
   DMA2D_LayerCfgTypeDef *pLayerCfg;
-  uint32_t regMask, regValue;
+  uint32_t regMask;
+  uint32_t regValue;
 
   /* Check the parameters */
   assert_param(IS_DMA2D_LAYER(LayerIdx));
@@ -1812,7 +1823,8 @@ HAL_StatusTypeDef HAL_DMA2D_ConfigLayer(DMA2D_HandleTypeDef *hdma2d, uint32_t La
     /* DMA2D BGCOLR register configuration -------------------------------------*/
     if ((pLayerCfg->InputColorMode == DMA2D_INPUT_A4) || (pLayerCfg->InputColorMode == DMA2D_INPUT_A8))
     {
-      WRITE_REG(hdma2d->Instance->BGCOLR, pLayerCfg->InputAlpha & (DMA2D_BGCOLR_BLUE | DMA2D_BGCOLR_GREEN | DMA2D_BGCOLR_RED));
+      WRITE_REG(hdma2d->Instance->BGCOLR, pLayerCfg->InputAlpha & (DMA2D_BGCOLR_BLUE | DMA2D_BGCOLR_GREEN | \
+                                                                   DMA2D_BGCOLR_RED));
     }
   }
   /* Configure the foreground DMA2D layer */
@@ -1829,7 +1841,8 @@ HAL_StatusTypeDef HAL_DMA2D_ConfigLayer(DMA2D_HandleTypeDef *hdma2d, uint32_t La
     /* DMA2D FGCOLR register configuration -------------------------------------*/
     if ((pLayerCfg->InputColorMode == DMA2D_INPUT_A4) || (pLayerCfg->InputColorMode == DMA2D_INPUT_A8))
     {
-      WRITE_REG(hdma2d->Instance->FGCOLR, pLayerCfg->InputAlpha & (DMA2D_FGCOLR_BLUE | DMA2D_FGCOLR_GREEN | DMA2D_FGCOLR_RED));
+      WRITE_REG(hdma2d->Instance->FGCOLR, pLayerCfg->InputAlpha & (DMA2D_FGCOLR_BLUE | DMA2D_FGCOLR_GREEN | \
+                                                                   DMA2D_FGCOLR_RED));
     }
   }
   /* Initialize the DMA2D state*/

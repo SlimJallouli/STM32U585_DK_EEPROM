@@ -54,8 +54,8 @@ typedef struct
   uint32_t Page;        /*!< Initial Flash page to erase when page erase is disabled
                              This parameter must be a value between 0 and (max number of pages in the bank - 1)
                              (eg : 127 for 2MB dual bank) */
-  uint32_t NbPages;     /*!< Number of pages to be erased.
-                             This parameter must be a value between 1 and (max number of pages in the bank - value of initial page)*/
+  uint32_t NbPages;     /*!< Number of pages to be erased. This parameter must be a value between 1 and
+                             (max number of pages in the bank - value of initial page)*/
 } FLASH_EraseInitTypeDef;
 
 /**
@@ -71,7 +71,8 @@ typedef struct
   uint32_t WRPStartOffset; /*!< Write protection start offset (used for OPTIONBYTE_WRP).
                                 This parameter must be a value between 0 and (max number of pages in the bank - 1) */
   uint32_t WRPEndOffset;   /*!< Write protection end offset (used for OPTIONBYTE_WRP).
-                                This parameter must be a value between WRPStartOffset and (max number of pages in the bank - 1) */
+                                This parameter must be a value between WRPStartOffset
+                                and (max number of pages in the bank - 1) */
   FunctionalState WRPLock; /*!< Write protection lock (used for OPTIONBYTE_WRP).
                                 This parameter can be set to ENABLE or DISABLE */
   uint32_t RDPLevel;       /*!< Set the read protection level (used for OPTIONBYTE_RDP).
@@ -95,8 +96,8 @@ typedef struct
                                   This parameter must be a value of @ref FLASH_OB_WMSEC */
   uint32_t WMSecStartPage;   /*!< Start page of secure area (used for OPTIONBYTE_WMSEC).
                                   This parameter must be a value between 0 and (max number of pages in the bank - 1) */
-  uint32_t WMSecEndPage;     /*!< End page of secure area (used for OPTIONBYTE_WMSEC).
-                                  This parameter must be a value between WMSecStartPage and (max number of pages in the bank - 1) */
+  uint32_t WMSecEndPage;     /*!< End page of secure area (used for OPTIONBYTE_WMSEC). This parameter must be a value
+                                  between WMSecStartPage and (max number of pages in the bank - 1) */
   uint32_t WMHDPEndPage;     /*!< End page of the secure hide protection (used for OPTIONBYTE_WMSEC).
                                   This parameter must be a value between WMSecStartPage and WMSecEndPage */
   uint32_t BootLock;         /*!< Configuration of the boot lock (used for OPTIONBYTE_BOOT_LOCK).
@@ -119,10 +120,14 @@ typedef struct
 {
   HAL_LockTypeDef        Lock;              /* FLASH locking object */
   uint32_t               ErrorCode;         /* FLASH error code */
-  uint32_t               ProcedureOnGoing;  /* Internal variable to indicate which procedure is ongoing or not in IT context */
-  uint32_t               Address;           /* Internal variable to save address selected for program in IT context */
-  uint32_t               Bank;              /* Internal variable to save current bank selected during erase in IT context */
-  uint32_t               Page;              /* Internal variable to define the current page which is being erased in IT context */
+  uint32_t               ProcedureOnGoing;  /* Internal variable to indicate which procedure is ongoing
+                                               or not in IT context */
+  uint32_t               Address;           /* Internal variable to save address selected for program
+                                               in IT context */
+  uint32_t               Bank;              /* Internal variable to save current bank selected during erase
+                                               in IT context */
+  uint32_t               Page;              /* Internal variable to define the current page which is being erased
+                                               in IT context */
   uint32_t               NbPagesToErase;    /* Internal variable to save the remaining pages to erase in IT context */
 } FLASH_ProcessTypeDef;
 
@@ -218,13 +223,17 @@ typedef struct
   * @{
   */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-#define FLASH_TYPEERASE_PAGES        FLASH_SECCR_PER                                              /*!< Secure pages erase activation */
-#define FLASH_TYPEERASE_PAGES_NS     (FLASH_NSCR_PER   | FLASH_NON_SECURE_MASK)                   /*!< Non-secure pages erase activation */
-#define FLASH_TYPEERASE_MASSERASE    (FLASH_SECCR_MER1 | FLASH_SECCR_MER2)                        /*!< Secure flash mass erase activation */
-#define FLASH_TYPEERASE_MASSERASE_NS (FLASH_NSCR_MER1  | FLASH_NSCR_MER2 | FLASH_NON_SECURE_MASK) /*!< Non-secure flash mass erase activation */
+#define FLASH_TYPEERASE_PAGES        FLASH_SECCR_PER                                 /*!< Secure pages erase 
+                                                                                          activation */
+#define FLASH_TYPEERASE_PAGES_NS     (FLASH_NSCR_PER   | FLASH_NON_SECURE_MASK)      /*!< Non-secure pages erase
+                                                                                          activation */
+#define FLASH_TYPEERASE_MASSERASE    (FLASH_SECCR_MER1 | FLASH_SECCR_MER2)           /*!< Secure flash mass erase
+                                                                                          activation */
+#define FLASH_TYPEERASE_MASSERASE_NS (FLASH_NSCR_MER1  | FLASH_NSCR_MER2 | FLASH_NON_SECURE_MASK) /*!< Non-secure flash
+                                                                                          mass erase activation */
 #else
-#define FLASH_TYPEERASE_PAGES        FLASH_NSCR_PER                                               /*!< Pages erase activation */
-#define FLASH_TYPEERASE_MASSERASE    (FLASH_NSCR_MER1 | FLASH_NSCR_MER2)                          /*!< Flash mass erase activation */
+#define FLASH_TYPEERASE_PAGES        FLASH_NSCR_PER                                  /*!< Pages erase activation */
+#define FLASH_TYPEERASE_MASSERASE    (FLASH_NSCR_MER1 | FLASH_NSCR_MER2)             /*!< Flash mass erase activation */
 #endif /* __ARM_FEATURE_CMSE */
 /**
   * @}
@@ -244,13 +253,19 @@ typedef struct
   * @{
   */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-#define FLASH_TYPEPROGRAM_QUADWORD    FLASH_SECCR_PG                          /*!< Program a quad-word (128-bit) at a specified secure address */
-#define FLASH_TYPEPROGRAM_QUADWORD_NS (FLASH_NSCR_PG | FLASH_NON_SECURE_MASK) /*!< Program a quad-word (128-bit) at a specified non-secure address */
-#define FLASH_TYPEPROGRAM_BURST       (FLASH_SECCR_PG | FLASH_SECCR_BWR)      /*!< Program a burst (8xquad-word) at a specified secure address */
-#define FLASH_TYPEPROGRAM_BURST_NS    (FLASH_NSCR_PG | FLASH_NSCR_BWR | FLASH_NON_SECURE_MASK) /*!< Program a burst (8xquad-word) at a specified non-secure address */
+#define FLASH_TYPEPROGRAM_QUADWORD    FLASH_SECCR_PG                          /*!< Program a quad-word (128-bit)
+                                                                                   at a specified secure address */
+#define FLASH_TYPEPROGRAM_QUADWORD_NS (FLASH_NSCR_PG | FLASH_NON_SECURE_MASK) /*!< Program a quad-word (128-bit)
+                                                                                   at a specified non-secure address */
+#define FLASH_TYPEPROGRAM_BURST       (FLASH_SECCR_PG | FLASH_SECCR_BWR)      /*!< Program a burst (8xquad-word)
+                                                                                   at a specified secure address */
+#define FLASH_TYPEPROGRAM_BURST_NS    (FLASH_NSCR_PG | FLASH_NSCR_BWR | FLASH_NON_SECURE_MASK) /*!< Program a burst
+(8xquad-word) at a specified non-secure address */
 #else
-#define FLASH_TYPEPROGRAM_QUADWORD   FLASH_NSCR_PG                    /*!<Program a quad-word (128-bit) at a specified address */
-#define FLASH_TYPEPROGRAM_BURST      (FLASH_NSCR_PG | FLASH_NSCR_BWR) /*!<Program a burst (8xquad-word) at a specified address */
+#define FLASH_TYPEPROGRAM_QUADWORD   FLASH_NSCR_PG                    /*!<Program a quad-word (128-bit)
+                                                                          at a specified address */
+#define FLASH_TYPEPROGRAM_BURST      (FLASH_NSCR_PG | FLASH_NSCR_BWR) /*!<Program a burst (8xquad-word)
+                                                                          at a specified address */
 #endif /* __ARM_FEATURE_CMSE */
 /**
   * @}
@@ -266,7 +281,7 @@ typedef struct
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 #define OPTIONBYTE_WMSEC          0x00000010U   /*!< Watermark-based secure area option byte configuration */
 #define OPTIONBYTE_BOOT_LOCK      0x00000020U   /*!< Boot lock option byte configuration */
-#endif
+#endif /* __ARM_FEATURE_CMSE */
 #define OPTIONBYTE_RDPKEY         0x00000040U   /*!< RDP Key option byte configuration */
 /**
   * @}
@@ -307,9 +322,9 @@ typedef struct
   * @{
   */
 #define OB_USER_BOR_LEV           0x00000001U     /*!< BOR reset Level */
-#define OB_USER_nRST_STOP         0x00000002U     /*!< Reset generated when entering the stop mode */
-#define OB_USER_nRST_STDBY        0x00000004U     /*!< Reset generated when entering the standby mode */
-#define OB_USER_nRST_SHDW         0x00000008U     /*!< Reset generated when entering the shutdown mode */
+#define OB_USER_NRST_STOP         0x00000002U     /*!< Reset generated when entering the stop mode */
+#define OB_USER_NRST_STDBY        0x00000004U     /*!< Reset generated when entering the standby mode */
+#define OB_USER_NRST_SHDW         0x00000008U     /*!< Reset generated when entering the shutdown mode */
 #define OB_USER_SRAM134_RST       0x00000010U     /*!< SRAM1, SRAM3 and SRAM4 erase upon system reset */
 #define OB_USER_IWDG_SW           0x00000020U     /*!< Independent watchdog selection */
 #define OB_USER_IWDG_STOP         0x00000040U     /*!< Independent watchdog counter freeze in stop mode */
@@ -321,8 +336,8 @@ typedef struct
 #define OB_USER_SRAM3_ECC         0x00001000U     /*!< SRAM3 ECC detection and correction enable */
 #define OB_USER_SRAM2_ECC         0x00002000U     /*!< SRAM2 ECC detection and correction enable */
 #define OB_USER_SRAM2_RST         0x00004000U     /*!< SRAM2 Erase when system reset */
-#define OB_USER_nSWBOOT0          0x00008000U     /*!< Software BOOT0 */
-#define OB_USER_nBOOT0            0x00010000U     /*!< nBOOT0 option bit */
+#define OB_USER_NSWBOOT0          0x00008000U     /*!< Software BOOT0 */
+#define OB_USER_NBOOT0            0x00010000U     /*!< nBOOT0 option bit */
 #define OB_USER_PA15_PUPEN        0x00020000U     /*!< PA15 pull-up enable option bit */
 #define OB_USER_IO_VDD_HSLV       0x00040000U     /*!< High speed IO at low voltage configuration bit */
 #define OB_USER_IO_VDDIO2_HSLV    0x00080000U     /*!< High speed IO at low VDDIO2 voltage configuration bit */
@@ -334,11 +349,16 @@ typedef struct
 /** @defgroup FLASH_OB_USER_BOR_LEVEL FLASH Option Bytes User BOR Level
   * @{
   */
-#define OB_BOR_LEVEL_0            0x00000000U                                   /*!< Reset level threshold is around 1.7V */
-#define OB_BOR_LEVEL_1            FLASH_OPTR_BOR_LEV_0                          /*!< Reset level threshold is around 2.0V */
-#define OB_BOR_LEVEL_2            FLASH_OPTR_BOR_LEV_1                          /*!< Reset level threshold is around 2.2V */
-#define OB_BOR_LEVEL_3            (FLASH_OPTR_BOR_LEV_1 | FLASH_OPTR_BOR_LEV_0) /*!< Reset level threshold is around 2.5V */
-#define OB_BOR_LEVEL_4            FLASH_OPTR_BOR_LEV_2                          /*!< Reset level threshold is around 2.8V */
+#define OB_BOR_LEVEL_0            0x00000000U                                   /*!< Reset level threshold
+                                                                                     is around 1.7V */
+#define OB_BOR_LEVEL_1            FLASH_OPTR_BOR_LEV_0                          /*!< Reset level threshold
+                                                                                     is around 2.0V */
+#define OB_BOR_LEVEL_2            FLASH_OPTR_BOR_LEV_1                          /*!< Reset level threshold
+                                                                                     is around 2.2V */
+#define OB_BOR_LEVEL_3            (FLASH_OPTR_BOR_LEV_1 | FLASH_OPTR_BOR_LEV_0) /*!< Reset level threshold
+                                                                                     is around 2.5V */
+#define OB_BOR_LEVEL_4            FLASH_OPTR_BOR_LEV_2                          /*!< Reset level threshold
+                                                                                     is around 2.8V */
 /**
   * @}
   */
@@ -373,8 +393,10 @@ typedef struct
 /** @defgroup FLASH_OB_USER_SRAM134_RST FLASH Option Bytes User SRAM134 Erase On Reset Type
   * @{
   */
-#define OB_SRAM134_RST_ERASE      0x00000000U            /*!< SRAM1, SRAM3 and SRAM4 erased when a system reset occurs */
-#define OB_SRAM134_RST_NOT_ERASE  FLASH_OPTR_SRAM134_RST /*!< SRAM1, SRAM3 and SRAM4 are not erased when a system reset occurs */
+#define OB_SRAM134_RST_ERASE      0x00000000U            /*!< SRAM1, SRAM3 and SRAM4 erased
+                                                              when a system reset occurs */
+#define OB_SRAM134_RST_NOT_ERASE  FLASH_OPTR_SRAM134_RST /*!< SRAM1, SRAM3 and SRAM4 are not erased
+                                                              when a system reset occurs */
 /**
   * @}
   */
@@ -391,8 +413,8 @@ typedef struct
 /** @defgroup FLASH_OB_USER_IWDG_STOP FLASH Option Bytes User IWDG Mode On Stop
   * @{
   */
-#define OB_IWDG_STOP_FREEZE       0x00000000U              /*!< Independent watchdog counter is frozen in Stop mode */
-#define OB_IWDG_STOP_RUN          FLASH_OPTR_IWDG_STOP     /*!< Independent watchdog counter is running in Stop mode */
+#define OB_IWDG_STOP_FREEZE       0x00000000U            /*!< Independent watchdog counter is frozen in Stop mode */
+#define OB_IWDG_STOP_RUN          FLASH_OPTR_IWDG_STOP   /*!< Independent watchdog counter is running in Stop mode */
 /**
   * @}
   */
@@ -400,8 +422,8 @@ typedef struct
 /** @defgroup FLASH_OB_USER_IWDG_STANDBY FLASH Option Bytes User IWDG Mode On Standby
   * @{
   */
-#define OB_IWDG_STDBY_FREEZE      0x00000000U              /*!< Independent watchdog counter is frozen in Standby mode */
-#define OB_IWDG_STDBY_RUN         FLASH_OPTR_IWDG_STDBY    /*!< Independent watchdog counter is running in Standby mode */
+#define OB_IWDG_STDBY_FREEZE      0x00000000U            /*!< Independent watchdog counter is frozen in Standby mode */
+#define OB_IWDG_STDBY_RUN         FLASH_OPTR_IWDG_STDBY  /*!< Independent watchdog counter is running in Standby mode */
 /**
   * @}
   */
@@ -409,8 +431,8 @@ typedef struct
 /** @defgroup FLASH_OB_USER_WWDG_SW FLASH Option Bytes User WWDG Type
   * @{
   */
-#define OB_WWDG_HW                0x00000000U              /*!< Hardware window watchdog */
-#define OB_WWDG_SW                FLASH_OPTR_WWDG_SW       /*!< Software window watchdog */
+#define OB_WWDG_HW                0x00000000U            /*!< Hardware window watchdog */
+#define OB_WWDG_SW                FLASH_OPTR_WWDG_SW     /*!< Software window watchdog */
 /**
   * @}
   */
@@ -418,8 +440,10 @@ typedef struct
 /** @defgroup FLASH_OB_USER_SWAP_BANK FLASH Option Bytes User Swap banks
   * @{
   */
-#define OB_SWAP_BANK_DISABLE      0x00000000U          /*!< Bank 1 is located at address offset 0x0, Bank 2 is located at 0x100000 */
-#define OB_SWAP_BANK_ENABLE       FLASH_OPTR_SWAP_BANK /*!< Bank 1 is located at address offset 0x100000, Bank 2 is located at 0x0 */
+#define OB_SWAP_BANK_DISABLE      0x00000000U          /*!< Bank 1 is located at address offset 0x0,
+                                                            Bank 2 is located at 0x100000 */
+#define OB_SWAP_BANK_ENABLE       FLASH_OPTR_SWAP_BANK /*!< Bank 1 is located at address offset 0x100000,
+                                                            Bank 2 is located at 0x0 */
 /**
   * @}
   */
@@ -481,8 +505,8 @@ typedef struct
 /** @defgroup FLASH_OB_USER_nBOOT0 FLASH Option Bytes User nBOOT0 option bit
   * @{
   */
-#define OB_nBOOT0_RESET           0x00000000U              /*!< nBOOT0 = 0 */
-#define OB_nBOOT0_SET             FLASH_OPTR_nBOOT0        /*!< nBOOT0 = 1 */
+#define OB_NBOOT0_RESET           0x00000000U              /*!< nBOOT0 = 0 */
+#define OB_NBOOT0_SET             FLASH_OPTR_nBOOT0        /*!< nBOOT0 = 1 */
 /**
   * @}
   */
@@ -490,8 +514,10 @@ typedef struct
 /** @defgroup FLASH_OB_USER_PA15_PUPEN FLASH Option Bytes User PA15 pull-up enable option bit
   * @{
   */
-#define OB_PA15_PUP_DISABLE       0x00000000U           /*!< USB power delivery dead-battery enabled / TDI pull-up deactivated */
-#define OB_PA15_PUP_ENABLE        FLASH_OPTR_PA15_PUPEN /*!< USB power delivery dead-battery disabled / TDI pull-up activated */
+#define OB_PA15_PUP_DISABLE       0x00000000U           /*!< USB power delivery dead-battery
+                                                             enabled / TDI pull-up deactivated */
+#define OB_PA15_PUP_ENABLE        FLASH_OPTR_PA15_PUPEN /*!< USB power delivery dead-battery
+                                                             disabled / TDI pull-up activated */
 /**
   * @}
   */
@@ -499,8 +525,10 @@ typedef struct
 /** @defgroup FLASH_OB_USER_IO_VDD_HSLV FLASH Option Bytes User High speed IO at low voltage configuration bit
   * @{
   */
-#define OB_IO_VDD_HSLV_DISABLE    0x00000000U            /*!< High-speed IO at low VDD voltage feature disabled (VDD can exceed 2.5 V) */
-#define OB_IO_VDD_HSLV_ENABLE     FLASH_OPTR_IO_VDD_HSLV /*!< High-speed IO at low VDD voltage feature enabled (VDD remains below 2.5 V) */
+#define OB_IO_VDD_HSLV_DISABLE    0x00000000U            /*!< High-speed IO at low VDD voltage feature disabled
+                                                              (VDD can exceed 2.5 V) */
+#define OB_IO_VDD_HSLV_ENABLE     FLASH_OPTR_IO_VDD_HSLV /*!< High-speed IO at low VDD voltage feature enabled
+                                                              (VDD remains below 2.5 V) */
 /**
   * @}
   */
@@ -508,8 +536,10 @@ typedef struct
 /** @defgroup FLASH_OB_USER_IO_VDDIO2_HSLV FLASH Option Bytes User High speed IO at low VDDIO2 voltage configuration bit
   * @{
   */
-#define OB_IO_VDDIO2_HSLV_DISABLE 0x00000000U               /*!< High-speed IO at low VDDIO2 voltage feature disabled (VDDIO2 can exceed 2.5 V) */
-#define OB_IO_VDDIO2_HSLV_ENABLE  FLASH_OPTR_IO_VDDIO2_HSLV /*!< High-speed IO at low VDDIO2 voltage feature enabled (VDDIO2 remains below 2.5 V) */
+#define OB_IO_VDDIO2_HSLV_DISABLE 0x00000000U               /*!< High-speed IO at low VDDIO2 voltage feature disabled
+                                                                 (VDDIO2 can exceed 2.5 V) */
+#define OB_IO_VDDIO2_HSLV_ENABLE  FLASH_OPTR_IO_VDDIO2_HSLV /*!< High-speed IO at low VDDIO2 voltage feature enabled
+                                                                 (VDDIO2 remains below 2.5 V) */
 /**
   * @}
   */
@@ -546,7 +576,7 @@ typedef struct
 /**
   * @}
   */
-#endif
+#endif /* __ARM_FEATURE_CMSE */
 
 /** @defgroup FLASH_OB_BOOTADDR FLASH Option Bytes Boot address
   * @{
@@ -555,7 +585,7 @@ typedef struct
 #define OB_BOOTADDR_NS1      0x00000002U   /*!< Non-secure boot address 1 */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 #define OB_BOOTADDR_SEC0     0x00000004U   /*!< Secure boot address 0 */
-#endif
+#endif /* __ARM_FEATURE_CMSE */
 /**
   * @}
   */
@@ -706,17 +736,23 @@ typedef struct
   */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /* Enable secure FLASH interrupts from the secure world */
-#define __HAL_FLASH_ENABLE_IT(__INTERRUPT__)    do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) { SET_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); }\
-                                                     if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) { SET_BIT(FLASH->SECCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC))); }\
+#define __HAL_FLASH_ENABLE_IT(__INTERRUPT__)    do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) \
+                                                      { SET_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); } \
+                                                     if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) \
+                                                      { SET_BIT(FLASH->SECCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC))); }\
                                                    } while(0)
 /* Enable non-secure FLASH interrupts from the secure world */
-#define __HAL_FLASH_ENABLE_IT_NS(__INTERRUPT__) do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) { SET_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); }\
-                                                     if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) { SET_BIT(FLASH->NSCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC))); }\
+#define __HAL_FLASH_ENABLE_IT_NS(__INTERRUPT__) do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) \
+                                                      { SET_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); } \
+                                                     if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) \
+                                                      { SET_BIT(FLASH->NSCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC))); }\
                                                    } while(0)
 #else
 /* Enable non-secure FLASH interrupts from the non-secure world */
-#define __HAL_FLASH_ENABLE_IT(__INTERRUPT__)    do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) { SET_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); }\
-                                                     if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) { SET_BIT(FLASH->NSCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC))); }\
+#define __HAL_FLASH_ENABLE_IT(__INTERRUPT__)    do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) \
+                                                      { SET_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); } \
+                                                     if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) \
+                                                      { SET_BIT(FLASH->NSCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC))); }\
                                                    } while(0)
 #endif /* __ARM_FEATURE_CMSE */
 
@@ -731,17 +767,24 @@ typedef struct
   */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /* Disable secure FLASH interrupts from the secure world */
-#define __HAL_FLASH_DISABLE_IT(__INTERRUPT__)   do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) { CLEAR_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); }\
-                                                     if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) { CLEAR_BIT(FLASH->SECCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC))); }\
+#define __HAL_FLASH_DISABLE_IT(__INTERRUPT__)   do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) \
+                                                      { CLEAR_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); } \
+                                                     if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) \
+                                                      { CLEAR_BIT(FLASH->SECCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC)));}\
                                                    } while(0)
 /* Disable non-secure FLASH interrupts from the secure world */
-#define __HAL_FLASH_DISABLE_IT_NS(__INTERRUPT__) do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) { CLEAR_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); }\
-                                                      if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) { CLEAR_BIT(FLASH->NSCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC))); }\
+#define __HAL_FLASH_DISABLE_IT_NS(__INTERRUPT__) do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) \
+                                                       { CLEAR_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); } \
+                                                      if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) \
+                                                       { CLEAR_BIT(FLASH->NSCR, ((__INTERRUPT__) & \
+                                                                                 (~FLASH_IT_ECCC))); }\
                                                     } while(0)
 #else
 /* Disable non-secure FLASH interrupts from the non-secure world */
-#define __HAL_FLASH_DISABLE_IT(__INTERRUPT__)   do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) { CLEAR_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); }\
-                                                     if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) { CLEAR_BIT(FLASH->NSCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC))); }\
+#define __HAL_FLASH_DISABLE_IT(__INTERRUPT__)   do { if(((__INTERRUPT__) & FLASH_IT_ECCC) != 0U) \
+                                                     { CLEAR_BIT(FLASH->ECCR, FLASH_ECCR_ECCIE); }\
+                                                     if(((__INTERRUPT__) & (~FLASH_IT_ECCC)) != 0U) \
+                                                     { CLEAR_BIT(FLASH->NSCR, ((__INTERRUPT__) & (~FLASH_IT_ECCC))); }\
                                                    } while(0)
 #endif /* __ARM_FEATURE_CMSE */
 
@@ -800,18 +843,29 @@ typedef struct
   */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 /* Clear secure FLASH flags from the secure world */
-#define __HAL_FLASH_CLEAR_FLAG(__FLAG__)        do { if(((__FLAG__) & FLASH_FLAG_ECCR_ERRORS) != 0U) { SET_BIT(FLASH->ECCR, ((__FLAG__) & FLASH_FLAG_ECCR_ERRORS)); }\
-                                                     if(((__FLAG__) & FLASH_FLAG_OPTWERR) != 0U) { SET_BIT(FLASH->NSSR, ((__FLAG__) & (FLASH_FLAG_OPTWERR))); }\
-                                                     if(((__FLAG__) & ~(FLASH_FLAG_ECCR_ERRORS | FLASH_FLAG_OPTWERR)) != 0U) { WRITE_REG(FLASH->SECSR, ((__FLAG__) & ~(FLASH_FLAG_ECCR_ERRORS | FLASH_FLAG_OPTWERR))); } \
+#define __HAL_FLASH_CLEAR_FLAG(__FLAG__)        do { if(((__FLAG__) & FLASH_FLAG_ECCR_ERRORS) != 0U) \
+                                                      { SET_BIT(FLASH->ECCR, ((__FLAG__) & FLASH_FLAG_ECCR_ERRORS)); }\
+                                                     if(((__FLAG__) & FLASH_FLAG_OPTWERR) != 0U) \
+                                                      { SET_BIT(FLASH->NSSR, ((__FLAG__) & (FLASH_FLAG_OPTWERR))); }\
+                                                     if(((__FLAG__) & ~(FLASH_FLAG_ECCR_ERRORS | \
+                                                        FLASH_FLAG_OPTWERR)) != 0U) \
+                                                     { WRITE_REG(FLASH->SECSR, ((__FLAG__) & \
+                                                     ~(FLASH_FLAG_ECCR_ERRORS | FLASH_FLAG_OPTWERR))); }\
                                                    } while(0)
 /* Clear non-secure FLASH flags from the secure world */
-#define __HAL_FLASH_CLEAR_FLAG_NS(__FLAG__)     do { if(((__FLAG__) & FLASH_FLAG_ECCR_ERRORS) != 0U) { SET_BIT(FLASH->ECCR, ((__FLAG__) & FLASH_FLAG_ECCR_ERRORS)); }\
-                                                     if(((__FLAG__) & ~(FLASH_FLAG_ECCR_ERRORS)) != 0U) { WRITE_REG(FLASH->NSSR, ((__FLAG__) & ~(FLASH_FLAG_ECCR_ERRORS))); }\
+#define __HAL_FLASH_CLEAR_FLAG_NS(__FLAG__)     do { if(((__FLAG__) & FLASH_FLAG_ECCR_ERRORS) != 0U) \
+                                                      { SET_BIT(FLASH->ECCR, ((__FLAG__) & FLASH_FLAG_ECCR_ERRORS)); }\
+                                                     if(((__FLAG__) & ~(FLASH_FLAG_ECCR_ERRORS)) != 0U) \
+                                                       { WRITE_REG(FLASH->NSSR, ((__FLAG__) & \
+                                                                                ~(FLASH_FLAG_ECCR_ERRORS))); }\
                                                    } while(0)
 #else
 /* Clear non-secure FLASH flags from the non-secure world */
-#define __HAL_FLASH_CLEAR_FLAG(__FLAG__)        do { if(((__FLAG__) & FLASH_FLAG_ECCR_ERRORS) != 0U) { SET_BIT(FLASH->ECCR, ((__FLAG__) & FLASH_FLAG_ECCR_ERRORS)); }\
-                                                     if(((__FLAG__) & ~(FLASH_FLAG_ECCR_ERRORS)) != 0U) { WRITE_REG(FLASH->NSSR, ((__FLAG__) & ~(FLASH_FLAG_ECCR_ERRORS))); }\
+#define __HAL_FLASH_CLEAR_FLAG(__FLAG__)        do { if(((__FLAG__) & FLASH_FLAG_ECCR_ERRORS) != 0U) \
+                                                    { SET_BIT(FLASH->ECCR, ((__FLAG__) & FLASH_FLAG_ECCR_ERRORS)); }\
+                                                     if(((__FLAG__) & ~(FLASH_FLAG_ECCR_ERRORS)) != 0U) \
+                                                       { WRITE_REG(FLASH->NSSR, ((__FLAG__) & \
+                                                                                ~(FLASH_FLAG_ECCR_ERRORS))); }\
                                                    } while(0)
 #endif /* __ARM_FEATURE_CMSE */
 /**
@@ -882,21 +936,12 @@ extern FLASH_ProcessTypeDef pFlash;
 /** @defgroup FLASH_Private_Constants FLASH Private Constants
   * @{
   */
-#define FLASH_SIZE_DATA_REGISTER        0x0BFA07A0U
-
-#define FLASH_SIZE                      ((((*((uint16_t *)FLASH_SIZE_DATA_REGISTER)) == 0xFFFFU)) ? 0x200000U : \
-                                        ((((*((uint16_t *)FLASH_SIZE_DATA_REGISTER)) == 0x0000U)) ? 0x200000U : \
-                                        (((uint32_t)(*((uint16_t *)FLASH_SIZE_DATA_REGISTER)) & (0x0FFFU)) << 10U)))
-
-#define FLASH_BANK_SIZE                 (FLASH_SIZE >> 1U)
-
-#define FLASH_PAGE_NB                   128U
-
-#define FLASH_PAGE_SIZE                 0x2000U  /* 8 KB */
 
 #define FLASH_TIMEOUT_VALUE             1000U   /* 1 s */
 
 #define FLASH_NON_SECURE_MASK           0x80000000U
+
+#define FLASH_NB_WORDS_IN_BURST         32
 
 /**
   * @}
@@ -948,16 +993,16 @@ extern FLASH_ProcessTypeDef pFlash;
 #define IS_FLASH_PAGE(PAGE)                ((PAGE) < FLASH_PAGE_NB)
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-#define IS_OPTIONBYTE(VALUE)               (((VALUE) <= (OPTIONBYTE_WRP   | OPTIONBYTE_RDP       | OPTIONBYTE_USER     | \
-                                                         OPTIONBYTE_WMSEC | OPTIONBYTE_BOOT_LOCK | OPTIONBYTE_BOOTADDR | \
-                                                         OPTIONBYTE_RDPKEY)))
+#define IS_OPTIONBYTE(VALUE)            (((VALUE) <= (OPTIONBYTE_WRP   | OPTIONBYTE_RDP       | OPTIONBYTE_USER     | \
+                                                      OPTIONBYTE_WMSEC | OPTIONBYTE_BOOT_LOCK | OPTIONBYTE_BOOTADDR | \
+                                                      OPTIONBYTE_RDPKEY)))
 #else
 #define IS_OPTIONBYTE(VALUE)               (((VALUE) <= (OPTIONBYTE_WRP   | OPTIONBYTE_RDP   | OPTIONBYTE_USER | \
                                                          OPTIONBYTE_BOOTADDR | OPTIONBYTE_RDPKEY)))
 #endif /* __ARM_FEATURE_CMSE */
 
-#define IS_OB_WRPAREA(VALUE)               (((VALUE) == OB_WRPAREA_BANK1_AREAA) || ((VALUE) == OB_WRPAREA_BANK1_AREAB) || \
-                                            ((VALUE) == OB_WRPAREA_BANK2_AREAA) || ((VALUE) == OB_WRPAREA_BANK2_AREAB))
+#define IS_OB_WRPAREA(VALUE)           (((VALUE) == OB_WRPAREA_BANK1_AREAA) || ((VALUE) == OB_WRPAREA_BANK1_AREAB) || \
+                                        ((VALUE) == OB_WRPAREA_BANK2_AREAA) || ((VALUE) == OB_WRPAREA_BANK2_AREAB))
 
 #define IS_OB_RDP_LEVEL(LEVEL)             (((LEVEL) == OB_RDP_LEVEL_0)   ||\
                                             ((LEVEL) == OB_RDP_LEVEL_0_5) ||\
@@ -990,17 +1035,17 @@ extern FLASH_ProcessTypeDef pFlash;
 
 #define IS_OB_USER_DUALBANK(VALUE)         (((VALUE) == OB_DUALBANK_SINGLE) || ((VALUE) == OB_DUALBANK_DUAL))
 
-#define IS_OB_USER_BKPRAM_ECC(VALUE)      (((VALUE) == OB_BKPRAM_ECC_ENABLE) || ((VALUE) == OB_BKPRAM_ECC_DISABLE))
+#define IS_OB_USER_BKPRAM_ECC(VALUE)       (((VALUE) == OB_BKPRAM_ECC_ENABLE) || ((VALUE) == OB_BKPRAM_ECC_DISABLE))
 
-#define IS_OB_USER_SRAM3_ECC(VALUE)       (((VALUE) == OB_SRAM3_ECC_ENABLE) || ((VALUE) == OB_SRAM3_ECC_DISABLE))
+#define IS_OB_USER_SRAM3_ECC(VALUE)        (((VALUE) == OB_SRAM3_ECC_ENABLE) || ((VALUE) == OB_SRAM3_ECC_DISABLE))
 
-#define IS_OB_USER_SRAM2_ECC(VALUE)       (((VALUE) == OB_SRAM2_ECC_ENABLE) || ((VALUE) == OB_SRAM2_ECC_DISABLE))
+#define IS_OB_USER_SRAM2_ECC(VALUE)        (((VALUE) == OB_SRAM2_ECC_ENABLE) || ((VALUE) == OB_SRAM2_ECC_DISABLE))
 
 #define IS_OB_USER_SRAM2_RST(VALUE)        (((VALUE) == OB_SRAM2_RST_ERASE) || ((VALUE) == OB_SRAM2_RST_NOT_ERASE))
 
 #define IS_OB_USER_SWBOOT0(VALUE)          (((VALUE) == OB_BOOT0_FROM_OB) || ((VALUE) == OB_BOOT0_FROM_PIN))
 
-#define IS_OB_USER_BOOT0(VALUE)            (((VALUE) == OB_nBOOT0_RESET) || ((VALUE) == OB_nBOOT0_SET))
+#define IS_OB_USER_BOOT0(VALUE)            (((VALUE) == OB_NBOOT0_RESET) || ((VALUE) == OB_NBOOT0_SET))
 
 #define IS_OB_USER_PA15_PUPEN(VALUE)       (((VALUE) == OB_PA15_PUP_DISABLE) || ((VALUE) == OB_PA15_PUP_ENABLE))
 
@@ -1017,9 +1062,11 @@ extern FLASH_ProcessTypeDef pFlash;
 #define IS_OB_WMSEC_CONFIG(CFG)            ((((CFG) & 0x7F3U) != 0U) && \
                                             (((CFG) & 0x3U) != 0U) && (((CFG) & 0xFFFFF80CU) == 0U))
 
-#define IS_OB_WMSEC_AREA_EXCLUSIVE(WMSEC)  (((((WMSEC) & OB_WMSEC_AREA1) != 0U) && (((WMSEC) & OB_WMSEC_AREA2) == 0U)) || \
-                                            ((((WMSEC) & OB_WMSEC_AREA2) != 0U) && (((WMSEC) & OB_WMSEC_AREA1) == 0U)))
-#endif
+#define IS_OB_WMSEC_AREA_EXCLUSIVE(WMSEC)  (((((WMSEC) & OB_WMSEC_AREA1) != 0U) &&  \
+                                             (((WMSEC) & OB_WMSEC_AREA2) == 0U)) || \
+                                            ((((WMSEC) & OB_WMSEC_AREA2) != 0U) &&  \
+                                             (((WMSEC) & OB_WMSEC_AREA1) == 0U)))
+#endif /* __ARM_FEATURE_CMSE */
 
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 #define IS_OB_BOOTADDR_CONFIG(CFG)         (((CFG) == OB_BOOTADDR_NS0) || ((CFG) == OB_BOOTADDR_NS1) || \

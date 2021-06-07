@@ -1129,11 +1129,11 @@ HAL_StatusTypeDef HAL_IRDA_Transmit_DMA(IRDA_HandleTypeDef *hirda, uint8_t *pDat
 
         /* Set DMA source address */
         hirda->hdmatx->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-        (uint32_t)hirda->pTxBuffPtr;
+          (uint32_t)hirda->pTxBuffPtr;
 
         /* Set DMA destination address */
         hirda->hdmatx->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] =
-        (uint32_t)&hirda->Instance->TDR;
+          (uint32_t)&hirda->Instance->TDR;
 
         /* Enable the IRDA transmit DMA channel */
         status = HAL_DMAEx_List_Start_IT(hirda->hdmatx);
@@ -1248,7 +1248,7 @@ HAL_StatusTypeDef HAL_IRDA_Receive_DMA(IRDA_HandleTypeDef *hirda, uint8_t *pData
 
         /* Set DMA source address */
         hirda->hdmarx->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] =
-        (uint32_t)&hirda->Instance->RDR;
+          (uint32_t)&hirda->Instance->RDR;
 
         /* Set DMA destination address */
         hirda->hdmarx->LinkedListQueue->Head->LinkRegisters[NODE_CDAR_DEFAULT_OFFSET] = (uint32_t)hirda->pRxBuffPtr;
@@ -2323,7 +2323,7 @@ static HAL_StatusTypeDef IRDA_SetConfig(IRDA_HandleTypeDef *hirda)
   uint32_t tmpreg;
   IRDA_ClockSourceTypeDef clocksource;
   HAL_StatusTypeDef ret = HAL_OK;
-  const uint16_t IRDAPrescTable[12] = {1U, 2U, 4U, 6U, 8U, 10U, 12U, 16U, 32U, 64U, 128U, 256U};
+  static const uint16_t IRDAPrescTable[12] = {1U, 2U, 4U, 6U, 8U, 10U, 12U, 16U, 32U, 64U, 128U, 256U};
   uint32_t pclk;
 
   /* Check the communication parameters */

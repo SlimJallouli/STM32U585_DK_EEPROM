@@ -865,7 +865,7 @@ HAL_StatusTypeDef HAL_PKA_ModExpFastMode_IT(PKA_HandleTypeDef *hpka, PKA_ModExpF
   * @retval HAL status
   */
 HAL_StatusTypeDef HAL_PKA_ModExpProtectMode(PKA_HandleTypeDef *hpka, PKA_ModExpProtectModeInTypeDef *in,
-                                             uint32_t Timeout)
+                                            uint32_t Timeout)
 {
   /* Set input parameter in PKA RAM */
   PKA_ModExpProtectMode_Set(hpka, in);
@@ -2301,8 +2301,8 @@ void PKA_ModExpFastMode_Set(PKA_HandleTypeDef *hpka, PKA_ModExpFastModeInTypeDef
 
   /* Move the Montgomery parameter to PKA RAM */
   PKA_Memcpy_u32_to_u32(&hpka->Instance->RAM[PKA_MODULAR_EXP_IN_MONTGOMERY_PARAM], in->pMontgomeryParam,
-                        in->expSize / 4UL);
-  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_IN_MONTGOMERY_PARAM + (in->expSize / 4UL));
+                        in->OpSize / 4UL);
+  __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_MODULAR_EXP_IN_MONTGOMERY_PARAM + (in->OpSize / 4UL));
 }
 
 /**
@@ -2517,7 +2517,7 @@ void PKA_PointCheck_Set(PKA_HandleTypeDef *hpka, PKA_PointCheckInTypeDef *in)
 
   /* Move the input parameters montgomery param R2 modulus N to PKA RAM */
   PKA_Memcpy_u32_to_u32(&hpka->Instance->RAM[PKA_POINT_CHECK_IN_MONTGOMERY_PARAM], in->pMontgomeryParam,
-                        in->modulusSize);
+                        (in->modulusSize / 4UL));
   __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_POINT_CHECK_IN_MONTGOMERY_PARAM + ((in->modulusSize + 3UL) / 4UL));
 }
 
@@ -2528,8 +2528,8 @@ void PKA_PointCheck_Set(PKA_HandleTypeDef *hpka, PKA_PointCheckInTypeDef *in)
   */
 void PKA_ECCMul_Set(PKA_HandleTypeDef *hpka, PKA_ECCMulInTypeDef *in)
 {
-  /* Get the scalar multiplier k length */
-  hpka->Instance->RAM[PKA_ECC_SCALAR_MUL_IN_EXP_NB_BITS] = PKA_GetOptBitSize_u8(in->scalarMulSize, *(in->scalarMul));
+  /* Get the prime order n length */
+  hpka->Instance->RAM[PKA_ECC_SCALAR_MUL_IN_EXP_NB_BITS] = PKA_GetOptBitSize_u8(in->scalarMulSize, *(in->primeOrder));
 
   /* Get the modulus length */
   hpka->Instance->RAM[PKA_ECC_SCALAR_MUL_IN_OP_NB_BITS] = PKA_GetOptBitSize_u8(in->modulusSize, *(in->modulus));
@@ -2616,10 +2616,22 @@ void PKA_ModRed_Set(PKA_HandleTypeDef *hpka, PKA_ModRedInTypeDef *in)
   */
 void PKA_MontgomeryParam_Set(PKA_HandleTypeDef *hpka, const uint32_t size, const uint8_t *pOp1)
 {
+  uint32_t bytetoskip = 0UL;
+  uint32_t newSize;
+
   if (pOp1 != NULL)
   {
+    /* Count the number of zero bytes */
+    while ((bytetoskip < size) && (pOp1[bytetoskip] == 0UL))
+    {
+      bytetoskip++;
+    }
+
+    /* Get new size after skipping zero bytes */
+    newSize = size - bytetoskip;
+
     /* Get the number of bit per operand */
-    hpka->Instance->RAM[PKA_MONTGOMERY_PARAM_IN_MOD_NB_BITS] = PKA_GetOptBitSize_u8(size, *pOp1);
+    hpka->Instance->RAM[PKA_MONTGOMERY_PARAM_IN_MOD_NB_BITS] = PKA_GetOptBitSize_u8(newSize, pOp1[bytetoskip]);
 
     /* Move the input parameters pOp1 to PKA RAM */
     PKA_Memcpy_u8_to_u32(&hpka->Instance->RAM[PKA_MONTGOMERY_PARAM_IN_MODULUS], pOp1, size);
@@ -2731,7 +2743,7 @@ void PKA_ECCProjective2Affine_Set(PKA_HandleTypeDef *hpka, PKA_ECCProjective2Aff
 
   /* Move the input parameters montgomery parameter R2 modulus n to PKA RAM */
   PKA_Memcpy_u32_to_u32(&hpka->Instance->RAM[PKA_ECC_PROJECTIVE_AFF_IN_MONTGOMERY_PARAM_R2], in->pMontgomeryParam,
-                        in->modulusSize);
+                        (in->modulusSize / 4UL));
   __PKA_RAM_PARAM_END(hpka->Instance->RAM, PKA_ECC_PROJECTIVE_AFF_IN_MONTGOMERY_PARAM_R2 + (in->modulusSize / 4UL));
 }
 

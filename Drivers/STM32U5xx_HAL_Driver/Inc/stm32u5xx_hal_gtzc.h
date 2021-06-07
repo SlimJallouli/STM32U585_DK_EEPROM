@@ -46,14 +46,17 @@ extern "C" {
 #define GTZC_MCPBB_NB_LCK_VCTR_REG_MAX  (1U)
 typedef struct
 {
-  uint32_t MPCBB_SecConfig_array[GTZC_MCPBB_NB_VCTR_REG_MAX];  /*!< Each element specifies secure access mode for a super-block.
-                                                                    Each bit corresponds to a block inside the super-block.
-                                                                    0 means non-secure, 1 means secure */
-  uint32_t MPCBB_PrivConfig_array[GTZC_MCPBB_NB_VCTR_REG_MAX]; /*!< Each element specifies privilege access mode for a super-block.
-                                                                    Each bit corresponds to a block inside the super-block.
-                                                                    0 means non-privilege, 1 means privilege */
-  uint32_t MPCBB_LockConfig_array[GTZC_MCPBB_NB_LCK_VCTR_REG_MAX]; /*!< Each bit specifies the lock configuration of a super-block (32 blocks).
-                                                                        0 means unlocked, 1 means locked */
+  uint32_t MPCBB_SecConfig_array[GTZC_MCPBB_NB_VCTR_REG_MAX];  /*!< Each element specifies secure access mode for
+                                                                    a super-block. Each bit corresponds to a block
+                                                                    inside the super-block. 0 means non-secure,
+                                                                    1 means secure */
+  uint32_t MPCBB_PrivConfig_array[GTZC_MCPBB_NB_VCTR_REG_MAX]; /*!< Each element specifies privilege access mode for
+                                                                    a super-block. Each bit corresponds to a block
+                                                                    inside the super-block. 0 means non-privilege,
+                                                                    1 means privilege */
+  uint32_t MPCBB_LockConfig_array[GTZC_MCPBB_NB_LCK_VCTR_REG_MAX]; /*!< Each bit specifies the lock configuration of
+                                                                        a super-block (32 blocks). 0 means unlocked,
+                                                                        1 means locked */
 } MPCBB_Attribute_ConfigTypeDef;
 
 typedef struct
@@ -439,7 +442,8 @@ typedef struct
   */
 #define HAL_GTZC_TZSC_GET_ARRAY_INDEX(periph_id) \
   (uint32_t)((HAL_GTZC_TZSC_GET_INSTANCE(periph_id) == GTZC_TZSC1)? \
-             ((GTZC_GET_REG_INDEX(periph_id) * 32U) + GTZC_GET_PERIPH_POS(periph_id)) : (((GTZC_GET_REG_INDEX(periph_id) - 1U) * 32U) + GTZC_GET_PERIPH_POS(periph_id) ))
+             ((GTZC_GET_REG_INDEX(periph_id) * 32U) + GTZC_GET_PERIPH_POS(periph_id)) : \
+             (((GTZC_GET_REG_INDEX(periph_id) - 1U) * 32U) + GTZC_GET_PERIPH_POS(periph_id) ))
 
 #define HAL_GTZC_TZIC_GET_ARRAY_INDEX(periph_id) \
   ( (GTZC_GET_REG_INDEX((periph_id)) * 32U) + GTZC_GET_PERIPH_POS((periph_id)) )

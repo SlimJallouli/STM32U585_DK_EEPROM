@@ -24,7 +24,7 @@
 #include "stm32_assert.h"
 #else
 #define assert_param(expr) ((void)0U)
-#endif
+#endif /* USE_FULL_ASSERT */
 /** @addtogroup STM32U5xx_LL_Driver
   * @{
   */
@@ -43,29 +43,29 @@
   * @{
   */
 #define IS_LL_RCC_USART_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_USART1_CLKSOURCE) \
-                                            || ((__VALUE__) == LL_RCC_USART2_CLKSOURCE) \
-                                            || ((__VALUE__) == LL_RCC_USART3_CLKSOURCE))
+                                               || ((__VALUE__) == LL_RCC_USART2_CLKSOURCE) \
+                                               || ((__VALUE__) == LL_RCC_USART3_CLKSOURCE))
 
 #define IS_LL_RCC_UART_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_UART4_CLKSOURCE) \
-                                             || ((__VALUE__) == LL_RCC_UART5_CLKSOURCE))
+                                                || ((__VALUE__) == LL_RCC_UART5_CLKSOURCE))
 
 #define IS_LL_RCC_LPUART_CLKSOURCE(__VALUE__) (((__VALUE__) == LL_RCC_LPUART1_CLKSOURCE))
 
 #define IS_LL_RCC_I2C_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_I2C1_CLKSOURCE) \
-                                            || ((__VALUE__) == LL_RCC_I2C2_CLKSOURCE) \
-                                            || ((__VALUE__) == LL_RCC_I2C3_CLKSOURCE) \
-                                            || ((__VALUE__) == LL_RCC_I2C4_CLKSOURCE))
+                                               || ((__VALUE__) == LL_RCC_I2C2_CLKSOURCE) \
+                                               || ((__VALUE__) == LL_RCC_I2C3_CLKSOURCE) \
+                                               || ((__VALUE__) == LL_RCC_I2C4_CLKSOURCE))
 
 #define IS_LL_RCC_SPI_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_SPI1_CLKSOURCE) \
-                                            || ((__VALUE__) == LL_RCC_SPI2_CLKSOURCE) \
-                                            || ((__VALUE__) == LL_RCC_SPI3_CLKSOURCE))
+                                               || ((__VALUE__) == LL_RCC_SPI2_CLKSOURCE) \
+                                               || ((__VALUE__) == LL_RCC_SPI3_CLKSOURCE))
 
 #define IS_LL_RCC_LPTIM_CLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_LPTIM1_CLKSOURCE) \
-                                            || ((__VALUE__) == LL_RCC_LPTIM2_CLKSOURCE) \
-                                            || ((__VALUE__) == LL_RCC_LPTIM34_CLKSOURCE))
+                                               || ((__VALUE__) == LL_RCC_LPTIM2_CLKSOURCE) \
+                                               || ((__VALUE__) == LL_RCC_LPTIM34_CLKSOURCE))
 
 #define IS_LL_RCC_SAI_CLKSOURCE(__VALUE__)    (((__VALUE__) == LL_RCC_SAI1_CLKSOURCE) \
-                                            || ((__VALUE__) == LL_RCC_SAI2_CLKSOURCE))
+                                               || ((__VALUE__) == LL_RCC_SAI2_CLKSOURCE))
 
 #define IS_LL_RCC_SDMMC_KERNELCLKSOURCE(__VALUE__)  (((__VALUE__) == LL_RCC_SDMMC_KERNELCLKSOURCE))
 
@@ -97,19 +97,19 @@
 /** @defgroup RCC_LL_Private_Functions RCC Private functions
   * @{
   */
-uint32_t RCC_GetSystemClockFreq(void);
-uint32_t RCC_GetHCLKClockFreq(uint32_t SYSCLK_Frequency);
-uint32_t RCC_GetPCLK1ClockFreq(uint32_t HCLK_Frequency);
-uint32_t RCC_GetPCLK2ClockFreq(uint32_t HCLK_Frequency);
-uint32_t RCC_GetPCLK3ClockFreq(uint32_t HCLK_Frequency);
-uint32_t RCC_PLL1_GetFreqDomain_SYS(void);
-uint32_t RCC_PLL1_GetFreqDomain_SAI(void);
-uint32_t RCC_PLL1_GetFreqDomain_48M(void);
-uint32_t RCC_PLL2_GetFreqDomain_SAI(void);
-uint32_t RCC_PLL2_GetFreqDomain_48M(void);
-uint32_t RCC_PLL2_GetFreqDomain_ADC(void);
-uint32_t RCC_PLL3_GetFreqDomain_SAI(void);
-uint32_t RCC_PLL3_GetFreqDomain_48M(void);
+static uint32_t RCC_GetSystemClockFreq(void);
+static uint32_t RCC_GetHCLKClockFreq(uint32_t SYSCLK_Frequency);
+static uint32_t RCC_GetPCLK1ClockFreq(uint32_t HCLK_Frequency);
+static uint32_t RCC_GetPCLK2ClockFreq(uint32_t HCLK_Frequency);
+static uint32_t RCC_GetPCLK3ClockFreq(uint32_t HCLK_Frequency);
+static uint32_t RCC_PLL1_GetFreqDomain_SYS(void);
+static uint32_t RCC_PLL1_GetFreqDomain_SAI(void);
+static uint32_t RCC_PLL1_GetFreqDomain_48M(void);
+static uint32_t RCC_PLL2_GetFreqDomain_SAI(void);
+static uint32_t RCC_PLL2_GetFreqDomain_48M(void);
+static uint32_t RCC_PLL2_GetFreqDomain_ADC(void);
+static uint32_t RCC_PLL3_GetFreqDomain_SAI(void);
+static uint32_t RCC_PLL3_GetFreqDomain_48M(void);
 /**
   * @}
   */
@@ -164,7 +164,7 @@ ErrorStatus LL_RCC_DeInit(void)
   LL_RCC_WriteReg(CFGR2, 0x00000000U);
   LL_RCC_WriteReg(CFGR3, 0x00000000U);
 
-    /* Read CR register */
+  /* Read CR register */
   vl_mask = LL_RCC_ReadReg(CR);
 
   /* Reset HSION, HSIKERON, HSEON, PLL1ON, PLL2ON and PLL3ON bits */
@@ -195,8 +195,9 @@ ErrorStatus LL_RCC_DeInit(void)
   LL_RCC_WriteReg(CIER, 0x00000000U);
 
   /* Clear all interrupt flags */
-  vl_mask = RCC_CICR_LSIRDYC | RCC_CICR_LSERDYC | RCC_CICR_MSISRDYC | RCC_CICR_HSIRDYC | RCC_CICR_HSERDYC | RCC_CICR_PLL1RDYC | \
-            RCC_CICR_PLL2RDYC | RCC_CICR_PLL3RDYC | RCC_CICR_HSI48RDYC | RCC_CICR_CSSC | RCC_CICR_MSIKRDYC;
+  vl_mask = RCC_CICR_LSIRDYC | RCC_CICR_LSERDYC | RCC_CICR_MSISRDYC | RCC_CICR_HSIRDYC | RCC_CICR_HSERDYC | \
+            RCC_CICR_PLL1RDYC | RCC_CICR_PLL2RDYC | RCC_CICR_PLL3RDYC | RCC_CICR_HSI48RDYC | RCC_CICR_CSSC | \
+            RCC_CICR_MSIKRDYC;
   LL_RCC_WriteReg(CICR, vl_mask);
 
   /* Clear reset flags */
@@ -1034,11 +1035,11 @@ uint32_t LL_RCC_GetSDMMCKernelClockFreq(uint32_t SDMMCxSource)
   /* SDMMC12CLK kernel clock frequency */
   switch (LL_RCC_GetSDMMCKernelClockSource(SDMMCxSource))
   {
-    case LL_RCC_SDMMC12_KERNELCLKSOURCE_48CLK:      /* 48MHz clock from internal multiplexor used as SDMMC1/2 clock source */
+    case LL_RCC_SDMMC12_KERNELCLKSOURCE_48CLK: /* 48MHz clock from internal multiplexor used as SDMMC1/2 clock source */
       sdmmc_frequency = LL_RCC_GetSDMMCClockFreq(LL_RCC_SDMMC_CLKSOURCE);
       break;
 
-    case LL_RCC_SDMMC12_KERNELCLKSOURCE_PLL1:       /* PLL1 "P" output (PLL1CLK) clock used as SDMMC1/2 clock source */
+    case LL_RCC_SDMMC12_KERNELCLKSOURCE_PLL1:   /* PLL1 "P" output (PLL1CLK) clock used as SDMMC1/2 clock source */
       if (LL_RCC_PLL1_IsReady() == 1U)
       {
         sdmmc_frequency = RCC_PLL1_GetFreqDomain_SAI();
@@ -1436,18 +1437,18 @@ uint32_t LL_RCC_GetOCTOSPIClockFreq(uint32_t OCTOSPIxSource)
       }
       break;
 
-  case LL_RCC_OCTOSPI_CLKSOURCE_PLL1:      /* PLL1 clock used as OCTOSPI source */
-    if (LL_RCC_PLL1_IsReady() == 1U)
-    {
-      octospi_frequency = RCC_PLL1_GetFreqDomain_48M();
-    }
-    break;
-  case LL_RCC_OCTOSPI_CLKSOURCE_PLL2:      /* PLL2 clock used as OCTOSPI source */
-    if (LL_RCC_PLL2_IsReady() == 1U)
-    {
-      octospi_frequency = RCC_PLL2_GetFreqDomain_48M();
-    }
-    break;
+    case LL_RCC_OCTOSPI_CLKSOURCE_PLL1:      /* PLL1 clock used as OCTOSPI source */
+      if (LL_RCC_PLL1_IsReady() == 1U)
+      {
+        octospi_frequency = RCC_PLL1_GetFreqDomain_48M();
+      }
+      break;
+    case LL_RCC_OCTOSPI_CLKSOURCE_PLL2:      /* PLL2 clock used as OCTOSPI source */
+      if (LL_RCC_PLL2_IsReady() == 1U)
+      {
+        octospi_frequency = RCC_PLL2_GetFreqDomain_48M();
+      }
+      break;
 
     default:
       /* unreachable code */
@@ -1559,7 +1560,7 @@ uint32_t LL_RCC_GetFDCANClockFreq(uint32_t FDCANxSource)
   * @brief  Return SYSTEM clock frequency
   * @retval SYSTEM clock frequency (in Hz)
   */
-uint32_t RCC_GetSystemClockFreq(void)
+static uint32_t RCC_GetSystemClockFreq(void)
 {
   uint32_t frequency;
 
@@ -1568,9 +1569,9 @@ uint32_t RCC_GetSystemClockFreq(void)
   {
     case LL_RCC_SYS_CLKSOURCE_STATUS_MSIS:   /* MSIS used as system clock source */
       frequency = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                         ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                          LL_RCC_MSIS_GetRange() :
-                                          LL_RCC_MSIS_GetRangeAfterStandby()));
+                                          ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                           LL_RCC_MSIS_GetRange() :
+                                           LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
 
     case LL_RCC_SYS_CLKSOURCE_STATUS_HSI:   /* HSI used as system clock  source */
@@ -1587,9 +1588,9 @@ uint32_t RCC_GetSystemClockFreq(void)
 
     default:
       frequency = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                         ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                          LL_RCC_MSIS_GetRange() :
-                                          LL_RCC_MSIS_GetRangeAfterStandby()));
+                                          ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                           LL_RCC_MSIS_GetRange() :
+                                           LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
   }
 
@@ -1601,7 +1602,7 @@ uint32_t RCC_GetSystemClockFreq(void)
   * @param  SYSCLK_Frequency SYSCLK clock frequency
   * @retval HCLK clock frequency (in Hz)
   */
-uint32_t RCC_GetHCLKClockFreq(uint32_t SYSCLK_Frequency)
+static uint32_t RCC_GetHCLKClockFreq(uint32_t SYSCLK_Frequency)
 {
   /* HCLK clock frequency */
   return __LL_RCC_CALC_HCLK_FREQ(SYSCLK_Frequency, LL_RCC_GetAHBPrescaler());
@@ -1612,7 +1613,7 @@ uint32_t RCC_GetHCLKClockFreq(uint32_t SYSCLK_Frequency)
   * @param  HCLK_Frequency HCLK clock frequency
   * @retval PCLK1 clock frequency (in Hz)
   */
-uint32_t RCC_GetPCLK1ClockFreq(uint32_t HCLK_Frequency)
+static uint32_t RCC_GetPCLK1ClockFreq(uint32_t HCLK_Frequency)
 {
   /* PCLK1 clock frequency */
   return __LL_RCC_CALC_PCLK1_FREQ(HCLK_Frequency, LL_RCC_GetAPB1Prescaler());
@@ -1623,7 +1624,7 @@ uint32_t RCC_GetPCLK1ClockFreq(uint32_t HCLK_Frequency)
   * @param  HCLK_Frequency HCLK clock frequency
   * @retval PCLK2 clock frequency (in Hz)
   */
-uint32_t RCC_GetPCLK2ClockFreq(uint32_t HCLK_Frequency)
+static uint32_t RCC_GetPCLK2ClockFreq(uint32_t HCLK_Frequency)
 {
   /* PCLK2 clock frequency */
   return __LL_RCC_CALC_PCLK2_FREQ(HCLK_Frequency, LL_RCC_GetAPB2Prescaler());
@@ -1635,7 +1636,7 @@ uint32_t RCC_GetPCLK2ClockFreq(uint32_t HCLK_Frequency)
   * @param  HCLK_Frequency HCLK clock frequency
   * @retval PCLK3 clock frequency (in Hz)
   */
-uint32_t RCC_GetPCLK3ClockFreq(uint32_t HCLK_Frequency)
+static uint32_t RCC_GetPCLK3ClockFreq(uint32_t HCLK_Frequency)
 {
   /* PCLK2 clock frequency */
   return __LL_RCC_CALC_PCLK3_FREQ(HCLK_Frequency, LL_RCC_GetAPB3Prescaler());
@@ -1645,9 +1646,10 @@ uint32_t RCC_GetPCLK3ClockFreq(uint32_t HCLK_Frequency)
   * @brief  Return PLL1 clock frequency used for system domain
   * @retval PLL1 clock frequency (in Hz)
   */
-uint32_t RCC_PLL1_GetFreqDomain_SYS(void)
+static uint32_t RCC_PLL1_GetFreqDomain_SYS(void)
 {
-  uint32_t pllinputfreq, pllsource;
+  uint32_t pllinputfreq;
+  uint32_t pllsource;
 
   /* PLL_VCO = (HSE_VALUE or HSI_VALUE or MSI_VALUE/ PLLM) * PLLN
      SYSCLK = PLL_VCO / PLLR
@@ -1658,9 +1660,9 @@ uint32_t RCC_PLL1_GetFreqDomain_SYS(void)
   {
     case LL_RCC_PLL1SOURCE_MSIS:  /* MSIS used as PLL1 clock source */
       pllinputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                            ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                             LL_RCC_MSIS_GetRange() :
-                                             LL_RCC_MSIS_GetRangeAfterStandby()));
+                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                              LL_RCC_MSIS_GetRange() :
+                                              LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
 
     case LL_RCC_PLL1SOURCE_HSI:  /* HSI used as PLL1 clock source */
@@ -1673,9 +1675,9 @@ uint32_t RCC_PLL1_GetFreqDomain_SYS(void)
 
     default:
       pllinputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                            ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                             LL_RCC_MSIS_GetRange() :
-                                             LL_RCC_MSIS_GetRangeAfterStandby()));
+                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                              LL_RCC_MSIS_GetRange() :
+                                              LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
   }
   return __LL_RCC_CALC_PLL1CLK_FREQ(pllinputfreq, LL_RCC_PLL1_GetDivider(),
@@ -1685,10 +1687,13 @@ uint32_t RCC_PLL1_GetFreqDomain_SYS(void)
   * @brief  Return PLL1 clock frequency used for SAI domain
   * @retval PLL1 clock frequency (in Hz)
   */
-uint32_t RCC_PLL1_GetFreqDomain_SAI(void)
+static uint32_t RCC_PLL1_GetFreqDomain_SAI(void)
 {
-  uint32_t pll1inputfreq, pll1outputfreq, pll1source;
-  uint32_t pll1n, pll1pdiv;
+  uint32_t pll1inputfreq;
+  uint32_t pll1outputfreq;
+  uint32_t pll1source;
+  uint32_t pll1n;
+  uint32_t pll1pdiv;
 
   /* PLL_VCO = (HSE_VALUE or HSI_VALUE or MSI_VALUE / PLLM) * PLLN
      SAI Domain clock = PLL_VCO / PLL1P
@@ -1699,9 +1704,9 @@ uint32_t RCC_PLL1_GetFreqDomain_SAI(void)
   {
     case LL_RCC_PLL1SOURCE_MSIS:  /* MSI used as PLL1 clock source */
       pll1inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
 
     case LL_RCC_PLL1SOURCE_HSI:  /* HSI used as PLL1 clock source */
@@ -1714,9 +1719,9 @@ uint32_t RCC_PLL1_GetFreqDomain_SAI(void)
 
     default:
       pll1inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
   }
 
@@ -1738,9 +1743,10 @@ uint32_t RCC_PLL1_GetFreqDomain_SAI(void)
   * @brief  Return PLL clock frequency used for 48 MHz domain
   * @retval PLL clock frequency (in Hz)
   */
-uint32_t RCC_PLL1_GetFreqDomain_48M(void)
+static uint32_t RCC_PLL1_GetFreqDomain_48M(void)
 {
-  uint32_t pll1inputfreq, pll1source;
+  uint32_t pll1inputfreq;
+  uint32_t pll1source;
 
   /* PLL1_VCO = (HSE_VALUE or HSI_VALUE or MSI_VALUE/ PLL1M) * PLL1N
      48M Domain clock = PLL1_VCO / PLL1Q
@@ -1751,9 +1757,9 @@ uint32_t RCC_PLL1_GetFreqDomain_48M(void)
   {
     case LL_RCC_PLL1SOURCE_MSIS:  /* MSI used as PLL1 clock source */
       pll1inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
 
     case LL_RCC_PLL1SOURCE_HSI:  /* HSI used as PLL1 clock source */
@@ -1766,9 +1772,9 @@ uint32_t RCC_PLL1_GetFreqDomain_48M(void)
 
     default:
       pll1inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
   }
   return __LL_RCC_CALC_PLL1CLK_48M_FREQ(pll1inputfreq, LL_RCC_PLL1_GetDivider(),
@@ -1779,10 +1785,13 @@ uint32_t RCC_PLL1_GetFreqDomain_48M(void)
   * @brief  Return PLL2 clock frequency used for SAI domain
   * @retval PLL2 clock frequency (in Hz)
   */
-uint32_t RCC_PLL2_GetFreqDomain_SAI(void)
+static uint32_t RCC_PLL2_GetFreqDomain_SAI(void)
 {
-  uint32_t pll2inputfreq, pll2outputfreq, pll2source;
-  uint32_t pll2n, pll2pdiv;
+  uint32_t pll2inputfreq;
+  uint32_t pll2outputfreq;
+  uint32_t pll2source;
+  uint32_t pll2n;
+  uint32_t pll2pdiv;
 
   /* PLL2_VCO = (HSE_VALUE or HSI_VALUE or MSI_VALUE/ PLL2M) * PLL2N */
   /* SAI Domain clock  = PLL2_VCO / PLL2P */
@@ -1792,9 +1801,9 @@ uint32_t RCC_PLL2_GetFreqDomain_SAI(void)
   {
     case LL_RCC_PLL2SOURCE_MSIS:  /* MSI used as PLLSAI1 clock source */
       pll2inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
 
     case LL_RCC_PLL2SOURCE_HSI:  /* HSI used as PLL2 clock source */
@@ -1807,9 +1816,9 @@ uint32_t RCC_PLL2_GetFreqDomain_SAI(void)
 
     default:
       pll2inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
   }
 
@@ -1831,9 +1840,10 @@ uint32_t RCC_PLL2_GetFreqDomain_SAI(void)
   * @brief  Return PLL2 clock frequency used for 48Mhz domain
   * @retval PLL2 clock frequency (in Hz)
   */
-uint32_t RCC_PLL2_GetFreqDomain_48M(void)
+static uint32_t RCC_PLL2_GetFreqDomain_48M(void)
 {
-  uint32_t pll2inputfreq, pll2source;
+  uint32_t pll2inputfreq;
+  uint32_t pll2source;
 
   /* PLLSAI1_VCO = (HSE_VALUE or HSI_VALUE or MSI_VALUE/ PLL2M) * PLL2N */
   /* 48M Domain clock  = PLL2_VCO / PLL2Q */
@@ -1843,9 +1853,9 @@ uint32_t RCC_PLL2_GetFreqDomain_48M(void)
   {
     case LL_RCC_PLL2SOURCE_MSIS:  /* MSI used as PLL2 clock source */
       pll2inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
 
     case LL_RCC_PLL2SOURCE_HSI:  /* HSI used as PLL2 clock source */
@@ -1858,9 +1868,9 @@ uint32_t RCC_PLL2_GetFreqDomain_48M(void)
 
     default:
       pll2inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
   }
   return __LL_RCC_CALC_PLL2CLK_48M_FREQ(pll2inputfreq, LL_RCC_PLL2_GetDivider(),
@@ -1871,9 +1881,10 @@ uint32_t RCC_PLL2_GetFreqDomain_48M(void)
   * @brief  Return PLL2 clock frequency used for ADC domain
   * @retval PLL2 clock frequency (in Hz)
   */
-uint32_t RCC_PLL2_GetFreqDomain_ADC(void)
+static uint32_t RCC_PLL2_GetFreqDomain_ADC(void)
 {
-  uint32_t pll2inputfreq, pll2source;
+  uint32_t pll2inputfreq;
+  uint32_t pll2source;
 
   /* PLL2_VCO = (HSE_VALUE or HSI_VALUE or MSI_VALUE/ PLL2M) * PLL2N */
   /* 48M Domain clock  = PLL2_VCO / PLL2R */
@@ -1883,9 +1894,9 @@ uint32_t RCC_PLL2_GetFreqDomain_ADC(void)
   {
     case LL_RCC_PLL2SOURCE_MSIS:  /* MSI used as PLL2 clock source */
       pll2inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
 
     case LL_RCC_PLL2SOURCE_HSI:  /* HSI used as PLL2 clock source */
@@ -1898,9 +1909,9 @@ uint32_t RCC_PLL2_GetFreqDomain_ADC(void)
 
     default:
       pll2inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
   }
   return __LL_RCC_CALC_PLL2CLK_ADC_FREQ(pll2inputfreq, LL_RCC_PLL2_GetDivider(),
@@ -1911,10 +1922,13 @@ uint32_t RCC_PLL2_GetFreqDomain_ADC(void)
   * @brief  Return PLL3 clock frequency used for SAI domain
   * @retval PLL3 clock frequency (in Hz)
   */
-uint32_t RCC_PLL3_GetFreqDomain_SAI(void)
+static uint32_t RCC_PLL3_GetFreqDomain_SAI(void)
 {
-  uint32_t pll3inputfreq, pll3outputfreq, pll3source;
-  uint32_t pll3n, pll3pdiv;
+  uint32_t pll3inputfreq;
+  uint32_t pll3outputfreq;
+  uint32_t pll3source;
+  uint32_t pll3n;
+  uint32_t pll3pdiv;
 
   /* PLL3_VCO = (HSE_VALUE or HSI_VALUE or MSI_VALUE/ PLL3M) * PLL3N */
   /* SAI Domain clock  = PLL3_VCO / PLL3P */
@@ -1924,9 +1938,9 @@ uint32_t RCC_PLL3_GetFreqDomain_SAI(void)
   {
     case LL_RCC_PLL3SOURCE_MSIS:  /* MSI used as PLL3 clock source */
       pll3inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
 
     case LL_RCC_PLL3SOURCE_HSI:  /* HSI used as PLL3 clock source */
@@ -1939,9 +1953,9 @@ uint32_t RCC_PLL3_GetFreqDomain_SAI(void)
 
     default:
       pll3inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
   }
 
@@ -1967,9 +1981,10 @@ uint32_t RCC_PLL3_GetFreqDomain_SAI(void)
   * @brief  Return PLL3clock frequency used for 48Mhz domain
   * @retval PLL3 clock frequency (in Hz)
   */
-uint32_t RCC_PLL3_GetFreqDomain_48M(void)
+static uint32_t RCC_PLL3_GetFreqDomain_48M(void)
 {
-  uint32_t PLL3inputfreq, PLL3source;
+  uint32_t PLL3inputfreq;
+  uint32_t PLL3source;
 
   /* PLLSAI1_VCO = (HSE_VALUE or HSI_VALUE or MSI_VALUE/ PLL3M) * PLL3N */
   /* 48M Domain clock  = PLL3_VCO / PLL3Q */
@@ -1979,9 +1994,9 @@ uint32_t RCC_PLL3_GetFreqDomain_48M(void)
   {
     case LL_RCC_PLL3SOURCE_MSIS:  /* MSI used as PLL3 clock source */
       PLL3inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
 
     case LL_RCC_PLL3SOURCE_HSI:  /* HSI used as PLL3 clock source */
@@ -1994,9 +2009,9 @@ uint32_t RCC_PLL3_GetFreqDomain_48M(void)
 
     default:
       PLL3inputfreq = __LL_RCC_CALC_MSIS_FREQ(LL_RCC_MSI_IsEnabledRangeSelect(),
-                                             ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
-                                              LL_RCC_MSIS_GetRange() :
-                                              LL_RCC_MSIS_GetRangeAfterStandby()));
+                                              ((LL_RCC_MSI_IsEnabledRangeSelect() == 1U) ?
+                                               LL_RCC_MSIS_GetRange() :
+                                               LL_RCC_MSIS_GetRangeAfterStandby()));
       break;
   }
   return __LL_RCC_CALC_PLL3CLK_48M_FREQ(PLL3inputfreq, LL_RCC_PLL3_GetDivider(),

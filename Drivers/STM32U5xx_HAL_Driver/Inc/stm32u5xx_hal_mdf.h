@@ -89,7 +89,7 @@ typedef struct
   uint32_t               ProcClockDivider;   /*!< Processing clock divider.
                                                   This parameter must be a number between Min_Data = 1
                                                   and Max_Data = 128 */
-  MDF_OutputClockTypeDef OutputClock;        /*!< Ouput clock parameters */
+  MDF_OutputClockTypeDef OutputClock;        /*!< Output clock parameters */
 } MDF_CommonParamTypeDef;
 
 /**
@@ -113,7 +113,7 @@ typedef struct
 {
   MDF_CommonParamTypeDef      CommonParam;      /*!< MDF common parameters */
   MDF_SerialInterfaceTypeDef  SerialInterface;  /*!< MDF serial interface parameters */
-  uint32_t                    FilterBistream;   /*!< MDF filter bistream selection.
+  uint32_t                    FilterBistream;   /*!< MDF filter bitstream selection.
                                                      This parameter can be a value of @ref MDF_FilterBitstream */
 } MDF_InitTypeDef;
 
@@ -238,6 +238,9 @@ typedef struct
                                                      to MDF_SAD_SOUND_DETECTOR */
   uint32_t         SignalNoiseThreshold;  /*!< Signal to noise threshold.
                                                This parameter can be a value of @ref MDF_SadSignalNoiseThreshold */
+  FunctionalState  SoundLevelInterrupt;    /*!< Sound level interrupt enable/disable.
+                                               @note This interrupt is mainly used for debug purpose*/
+
 } MDF_SoundActivityTypeDef;
 
 /**
@@ -457,7 +460,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup MDF_FilterBitstream MDF filter bistream
+/** @defgroup MDF_FilterBitstream MDF filter bitstream
   * @{
   */
 #define MDF_BITSTREAM0_RISING   0x00000000U
@@ -751,7 +754,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup MDF_OldEventConfig MDF out-off limit dectector event configuration
+/** @defgroup MDF_OldEventConfig MDF out-off limit detector event configuration
   * @{
   */
 #define MDF_OLD_SIGNAL_OUTSIDE_THRESHOLDS  0x00000000U      /*!< Out-off limit detector event is generated
@@ -762,7 +765,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup MDF_OldThresholdInfo MDF out-off limit dectector threshold information
+/** @defgroup MDF_OldThresholdInfo MDF out-off limit detector threshold information
   * @{
   */
 #define MDF_OLD_IN_THRESHOLDS   0x00000000U  /*!< The signal was in thresholds when out-off limit detection occurs */
@@ -969,6 +972,9 @@ uint32_t             HAL_MDF_GetError(MDF_HandleTypeDef *hmdf);
                                                    ((PARAM) == MDF_CLOCK_TRIG_EXTI15)     || \
                                                    ((PARAM) == MDF_CLOCK_TRIG_LPTIM1_OUT) || \
                                                    ((PARAM) == MDF_CLOCK_TRIG_SAD_TRGO))
+
+#define IS_ADF_OUTPUT_CLOCK_TRIGGER_SOURCE(PARAM) (((PARAM) == MDF_CLOCK_TRIG_TRGO)       || \
+                                                   ((PARAM) == MDF_CLOCK_TRIG_EXTI15))
 
 #define IS_MDF_OUTPUT_CLOCK_TRIGGER_EDGE(PARAM) (((PARAM) == MDF_CLOCK_TRIG_RISING_EDGE) || \
                                                  ((PARAM) == MDF_CLOCK_TRIG_FALLING_EDGE))

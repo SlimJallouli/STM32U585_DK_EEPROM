@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -111,26 +111,6 @@ typedef struct
 #define EXTI_LINE_20                        (EXTI_DIRECT   | EXTI_REG1 | 0x14U)
 #define EXTI_LINE_21                        (EXTI_CONFIG   | EXTI_REG1 | 0x15U)
 #define EXTI_LINE_22                        (EXTI_CONFIG   | EXTI_REG1 | 0x16U)
-#define EXTI_LINE_23                        (EXTI_DIRECT   | EXTI_REG1 | 0x17U)
-#define EXTI_LINE_24                        (EXTI_DIRECT   | EXTI_REG1 | 0x18U)
-#define EXTI_LINE_25                        (EXTI_DIRECT   | EXTI_REG1 | 0x19U)
-#define EXTI_LINE_26                        (EXTI_DIRECT   | EXTI_REG1 | 0x1AU)
-#define EXTI_LINE_27                        (EXTI_DIRECT   | EXTI_REG1 | 0x1BU)
-#define EXTI_LINE_28                        (EXTI_DIRECT   | EXTI_REG1 | 0x1CU)
-#define EXTI_LINE_29                        (EXTI_DIRECT   | EXTI_REG1 | 0x1DU)
-#define EXTI_LINE_30                        (EXTI_DIRECT   | EXTI_REG1 | 0x1EU)
-#define EXTI_LINE_31                        (EXTI_DIRECT   | EXTI_REG1 | 0x1FU)
-#define EXTI_LINE_32                        (EXTI_DIRECT   | EXTI_REG2 | 0x00U)
-#define EXTI_LINE_33                        (EXTI_DIRECT   | EXTI_REG2 | 0x01U)
-#define EXTI_LINE_34                        (EXTI_DIRECT   | EXTI_REG2 | 0x02U)
-#define EXTI_LINE_35                        (EXTI_CONFIG   | EXTI_REG2 | 0x03U)
-#define EXTI_LINE_36                        (EXTI_CONFIG   | EXTI_REG2 | 0x04U)
-#define EXTI_LINE_37                        (EXTI_CONFIG   | EXTI_REG2 | 0x05U)
-#define EXTI_LINE_38                        (EXTI_CONFIG   | EXTI_REG2 | 0x06U)
-#define EXTI_LINE_39                        (EXTI_RESERVED | EXTI_REG2 | 0x07U)
-#define EXTI_LINE_40                        (EXTI_DIRECT   | EXTI_REG2 | 0x08U)
-#define EXTI_LINE_41                        (EXTI_DIRECT   | EXTI_REG2 | 0x09U)
-#define EXTI_LINE_42                        (EXTI_DIRECT   | EXTI_REG2 | 0x0AU)
 /**
   * @}
   */
@@ -180,11 +160,15 @@ typedef struct
   * @{
   */
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
-#define  EXTI_LINE_SEC                      (EXTI_LINE_ATTR_SEC_MASK | 0x00000001U)   /*!< Secure line attribute          */
-#define  EXTI_LINE_NSEC                     (EXTI_LINE_ATTR_SEC_MASK | 0x00000000U)   /*!< Non-secure line attribute      */
+/*!< Secure line attribute          */
+#define  EXTI_LINE_SEC                      (EXTI_LINE_ATTR_SEC_MASK | 0x00000001U)
+/*!< Non-secure line attribute      */
+#define  EXTI_LINE_NSEC                     (EXTI_LINE_ATTR_SEC_MASK | 0x00000000U)
 #endif /* __ARM_FEATURE_CMSE */
-#define  EXTI_LINE_PRIV                     (EXTI_LINE_ATTR_PRIV_MASK | 0x00000002U)   /*!< Privileged line attribute      */
-#define  EXTI_LINE_NPRIV                    (EXTI_LINE_ATTR_PRIV_MASK | 0x00000000U)   /*!< Non-privileged line attribute  */
+/*!< Privileged line attribute      */
+#define  EXTI_LINE_PRIV                     (EXTI_LINE_ATTR_PRIV_MASK | 0x00000002U)
+/*!< Non-privileged line attribute  */
+#define  EXTI_LINE_NPRIV                    (EXTI_LINE_ATTR_PRIV_MASK | 0x00000000U)
 /**
   * @}
   */
@@ -194,14 +178,6 @@ typedef struct
   */
 
 /* Exported macro ------------------------------------------------------------*/
-/** @defgroup EXTI_Exported_Macros EXTI Exported Macros
-  * @{
-  */
-
-/**
-  * @}
-  */
-
 /* Private constants --------------------------------------------------------*/
 /** @defgroup EXTI_Private_Constants EXTI Private Constants
   * @{
@@ -238,7 +214,7 @@ typedef struct
 /**
   * @brief  EXTI Line number
   */
-#define EXTI_LINE_NB                        43U
+#define EXTI_LINE_NB                        23U
 
 /**
   * @brief  EXTI Mask for secure & privilege attributes
@@ -253,22 +229,23 @@ typedef struct
 /** @defgroup EXTI_Private_Macros EXTI Private Macros
   * @{
   */
-#define IS_EXTI_LINE(__LINE__)          ((((__LINE__) & ~(EXTI_PROPERTY_MASK | EXTI_REG_MASK | EXTI_PIN_MASK)) == 0x00U) && \
-                                        ((((__LINE__) & EXTI_PROPERTY_MASK) == EXTI_DIRECT)   || \
-                                         (((__LINE__) & EXTI_PROPERTY_MASK) == EXTI_CONFIG)   || \
-                                         (((__LINE__) & EXTI_PROPERTY_MASK) == EXTI_GPIO))    && \
-                                         (((__LINE__) & (EXTI_REG_MASK | EXTI_PIN_MASK))      < \
-                                         (((EXTI_LINE_NB / 32U) << EXTI_REG_SHIFT) | (EXTI_LINE_NB % 32U))))
+#define IS_EXTI_LINE(__EXTI_LINE__)   ((((__EXTI_LINE__) & ~(EXTI_PROPERTY_MASK | \
+                                                             EXTI_REG_MASK | EXTI_PIN_MASK)) == 0x00U)  \
+                                       &&((((__EXTI_LINE__) & EXTI_PROPERTY_MASK) == EXTI_DIRECT)  || \
+                                          (((__EXTI_LINE__) & EXTI_PROPERTY_MASK) == EXTI_CONFIG)   || \
+                                          (((__EXTI_LINE__) & EXTI_PROPERTY_MASK) == EXTI_GPIO))    && \
+                                       (((__EXTI_LINE__) & (EXTI_REG_MASK | EXTI_PIN_MASK))      < \
+                                        (((EXTI_LINE_NB / 32U) << EXTI_REG_SHIFT) | (EXTI_LINE_NB % 32U))))
 
-#define IS_EXTI_MODE(__LINE__)          ((((__LINE__) & EXTI_MODE_MASK) != 0x00U) && \
-                                         (((__LINE__) & ~EXTI_MODE_MASK) == 0x00U))
+#define IS_EXTI_MODE(__EXTI_LINE__)     ((((__EXTI_LINE__) & EXTI_MODE_MASK) != 0x00U) && \
+                                         (((__EXTI_LINE__) & ~EXTI_MODE_MASK) == 0x00U))
 
-#define IS_EXTI_TRIGGER(__LINE__)       (((__LINE__) & ~EXTI_TRIGGER_MASK) == 0x00U)
+#define IS_EXTI_TRIGGER(__EXTI_LINE__)       (((__EXTI_LINE__) & ~EXTI_TRIGGER_MASK) == 0x00U)
 
-#define IS_EXTI_PENDING_EDGE(__LINE__)  (((__LINE__) == EXTI_TRIGGER_RISING) || \
-                                         ((__LINE__) == EXTI_TRIGGER_FALLING))
+#define IS_EXTI_PENDING_EDGE(__EXTI_LINE__)  (((__EXTI_LINE__) == EXTI_TRIGGER_RISING) || \
+                                              ((__EXTI_LINE__) == EXTI_TRIGGER_FALLING))
 
-#define IS_EXTI_CONFIG_LINE(__LINE__)   (((__LINE__) & EXTI_CONFIG) != 0x00U)
+#define IS_EXTI_CONFIG_LINE(__EXTI_LINE__)   (((__EXTI_LINE__) & EXTI_CONFIG) != 0x00U)
 
 #define IS_EXTI_GPIO_PORT(__PORT__)     (((__PORT__) == EXTI_GPIOA) || \
                                          ((__PORT__) == EXTI_GPIOB) || \
@@ -286,15 +263,16 @@ typedef struct
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
 
 #define IS_EXTI_LINE_ATTRIBUTES(__ATTRIBUTES__) (((((__ATTRIBUTES__) & EXTI_LINE_SEC) == EXTI_LINE_SEC) || \
-                                                 (((__ATTRIBUTES__) & EXTI_LINE_NSEC) == EXTI_LINE_NSEC) || \
-                                                 (((__ATTRIBUTES__) & EXTI_LINE_PRIV) == EXTI_LINE_PRIV) || \
-                                                 (((__ATTRIBUTES__) & EXTI_LINE_NPRIV) == EXTI_LINE_NPRIV)) && \
-                                                 (((__ATTRIBUTES__) & ~(EXTI_LINE_SEC|EXTI_LINE_NSEC|EXTI_LINE_PRIV|EXTI_LINE_NPRIV)) == 0U))
+                                                  (((__ATTRIBUTES__) & EXTI_LINE_NSEC) == EXTI_LINE_NSEC) || \
+                                                  (((__ATTRIBUTES__) & EXTI_LINE_PRIV) == EXTI_LINE_PRIV) || \
+                                                  (((__ATTRIBUTES__) & EXTI_LINE_NPRIV) == EXTI_LINE_NPRIV)) && \
+                                                 (((__ATTRIBUTES__) & ~(EXTI_LINE_SEC|EXTI_LINE_NSEC|EXTI_LINE_PRIV| \
+                                                                        EXTI_LINE_NPRIV)) == 0U))
 
 #else
 
 #define IS_EXTI_LINE_ATTRIBUTES(__ATTRIBUTES__) (((((__ATTRIBUTES__) & EXTI_LINE_PRIV) == EXTI_LINE_PRIV) || \
-                                                 (((__ATTRIBUTES__) & EXTI_LINE_NPRIV) == EXTI_LINE_NPRIV)) && \
+                                                  (((__ATTRIBUTES__) & EXTI_LINE_NPRIV) == EXTI_LINE_NPRIV)) && \
                                                  (((__ATTRIBUTES__) & ~(EXTI_LINE_PRIV|EXTI_LINE_NPRIV)) == 0U))
 
 #endif /* __ARM_FEATURE_CMSE */
@@ -318,7 +296,8 @@ typedef struct
 HAL_StatusTypeDef HAL_EXTI_SetConfigLine(EXTI_HandleTypeDef *hexti, EXTI_ConfigTypeDef *pExtiConfig);
 HAL_StatusTypeDef HAL_EXTI_GetConfigLine(EXTI_HandleTypeDef *hexti, EXTI_ConfigTypeDef *pExtiConfig);
 HAL_StatusTypeDef HAL_EXTI_ClearConfigLine(EXTI_HandleTypeDef *hexti);
-HAL_StatusTypeDef HAL_EXTI_RegisterCallback(EXTI_HandleTypeDef *hexti, EXTI_CallbackIDTypeDef CallbackID, void (*pPendingCbfn)(void));
+HAL_StatusTypeDef HAL_EXTI_RegisterCallback(EXTI_HandleTypeDef *hexti, EXTI_CallbackIDTypeDef CallbackID,
+                                            void (*pPendingCbfn)(void));
 HAL_StatusTypeDef HAL_EXTI_GetHandle(EXTI_HandleTypeDef *hexti, uint32_t ExtiLine);
 /**
   * @}
@@ -339,8 +318,8 @@ void              HAL_EXTI_GenerateSWI(EXTI_HandleTypeDef *hexti);
   */
 
 /** @addtogroup EXTI_Exported_Functions_Group3 EXTI line attributes management functions
- * @{
- */
+  * @{
+  */
 
 /* EXTI line attributes management functions **********************************/
 void              HAL_EXTI_ConfigLineAttributes(uint32_t ExtiLine, uint32_t LineAttributes);

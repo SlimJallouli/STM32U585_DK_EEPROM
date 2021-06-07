@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -270,6 +270,70 @@ __STATIC_INLINE uint32_t LL_IWDG_GetWindow(IWDG_TypeDef *IWDGx)
   * @}
   */
 
+/** @defgroup IWDG_LL_EF_IT_Management IT_Management
+  * @{
+  */
+
+/**
+  * @brief  Specify comparator value that will be used to trig Early Wakeup interrupt
+  * @rmtoll EWCR         EWIT          LL_IWDG_SetEwiTime
+  * @param  IWDGx IWDG Instance
+  * @param  Time Value between Min_Data=0 and Max_Data=0x0FFF
+  * @retval None
+  */
+__STATIC_INLINE void LL_IWDG_SetEwiTime(IWDG_TypeDef *IWDGx, uint32_t Time)
+{
+  MODIFY_REG(IWDGx->EWCR, IWDG_EWCR_EWIT, Time);
+}
+
+/**
+  * @brief  Get the Early Wakeup interrupt comparator value
+  * @rmtoll EWCR         EWIT          LL_IWDG_GetEwiTime
+  * @param  IWDGx IWDG Instance
+  * @retval Value between Min_Data=0 and Max_Data=0x0FFF
+  */
+__STATIC_INLINE uint32_t LL_IWDG_GetEwiTime(IWDG_TypeDef *IWDGx)
+{
+  return (READ_BIT(IWDGx->EWCR, IWDG_EWCR_EWIT));
+}
+
+/**
+  * @brief  Enable Early wakeup interrupt
+  * @rmtoll EWCR         EWIE          LL_IWDG_EnableIT_EWI
+  * @param  IWDGx IWDG Instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_IWDG_EnableIT_EWI(IWDG_TypeDef *IWDGx)
+{
+  SET_BIT(IWDGx->EWCR, IWDG_EWCR_EWIE);
+}
+
+/**
+  * @brief  Disable Early wakeup interrupt
+  * @rmtoll EWCR         EWIE          LL_IWDG_DisableIT_EWI
+  * @param  IWDGx IWDG Instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_IWDG_DisableIT_EWI(IWDG_TypeDef *IWDGx)
+{
+  CLEAR_BIT(IWDGx->EWCR, IWDG_EWCR_EWIE);
+}
+
+/**
+  * @brief  Indicates whether Early wakeup interrupt is enable
+  * @rmtoll EWCR         EWIE          LL_IWDG_IsEnableIT_EWI
+  * @param  IWDGx IWDG Instance
+  * @retval None
+  */
+__STATIC_INLINE uint32_t LL_IWDG_IsEnableIT_EWI(IWDG_TypeDef *IWDGx)
+{
+  return ((READ_BIT(IWDGx->EWCR, IWDG_EWCR_EWIE) == (IWDG_EWCR_EWIE)) ? 1UL : 0UL);
+}
+
+/**
+  * @}
+  */
+
 /** @defgroup IWDG_LL_EF_FLAG_Management FLAG_Management
   * @{
   */
@@ -308,22 +372,55 @@ __STATIC_INLINE uint32_t LL_IWDG_IsActiveFlag_WVU(IWDG_TypeDef *IWDGx)
 }
 
 /**
-  * @brief  Check if all flags Prescaler, Reload & Window Value Update are reset or not
+  * @brief  Check if flag EWI Value Update is set or not
+  * @rmtoll SR           EVU           LL_IWDG_IsActiveFlag_EWU
+  * @param  IWDGx IWDG Instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_IWDG_IsActiveFlag_EWU(IWDG_TypeDef *IWDGx)
+{
+  return ((READ_BIT(IWDGx->SR, IWDG_SR_EWU) == (IWDG_SR_EWU)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Check if all flags Prescaler, Reload, Window & Early Interrupt Value Update are reset or not
   * @rmtoll SR           PVU           LL_IWDG_IsReady\n
+  *         SR           RVU           LL_IWDG_IsReady\n
   *         SR           WVU           LL_IWDG_IsReady\n
-  *         SR           RVU           LL_IWDG_IsReady
+  *         SR           EWU           LL_IWDG_IsReady
   * @param  IWDGx IWDG Instance
   * @retval State of bits (1 or 0).
   */
 __STATIC_INLINE uint32_t LL_IWDG_IsReady(IWDG_TypeDef *IWDGx)
 {
-  return ((READ_BIT(IWDGx->SR, IWDG_SR_PVU | IWDG_SR_RVU | IWDG_SR_WVU) == 0U) ? 1UL : 0UL);
+  return ((READ_BIT(IWDGx->SR, IWDG_SR_PVU | IWDG_SR_RVU | IWDG_SR_WVU | IWDG_SR_EWU) == 0U) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Check if Early Wakeup interrupt flag is set or not
+  * @rmtoll SR           EWIF          LL_IWDG_IsActiveFlag_EWIF
+  * @param  IWDGx IWDG Instance
+  * @retval State of bit (1 or 0).
+  */
+__STATIC_INLINE uint32_t LL_IWDG_IsActiveFlag_EWIF(IWDG_TypeDef *IWDGx)
+{
+  return ((READ_BIT(IWDGx->SR, IWDG_SR_EWIF) == (IWDG_SR_EWIF)) ? 1UL : 0UL);
+}
+
+/**
+  * @brief  Clear the Early Wakeup interrupt flag
+  * @rmtoll EWCR         EWIC          LL_IWDG_ClearFlag_EWIF
+  * @param  IWDGx IWDG Instance
+  * @retval None
+  */
+__STATIC_INLINE void LL_IWDG_ClearFlag_EWIF(IWDG_TypeDef *IWDGx)
+{
+  SET_BIT(IWDGx->EWCR, IWDG_EWCR_EWIC);
 }
 
 /**
   * @}
   */
-
 
 /**
   * @}

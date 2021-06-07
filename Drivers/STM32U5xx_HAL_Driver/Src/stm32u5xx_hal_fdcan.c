@@ -241,18 +241,18 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-static const uint8_t DLCtoBytes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};
-
-/* Private function prototypes -----------------------------------------------*/
-/** @addtogroup FDCAN_Private_Functions_Prototypes
+/** @addtogroup FDCAN_Private_Variables
   * @{
   */
-static void FDCAN_CalcultateRamBlockAddresses(FDCAN_HandleTypeDef *hfdcan);
-static void FDCAN_CopyMessageToRAM(FDCAN_HandleTypeDef *hfdcan, FDCAN_TxHeaderTypeDef *pTxHeader, uint8_t *pTxData,
-                                   uint32_t BufferIndex);
+static const uint8_t DLCtoBytes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 32, 48, 64};
 /**
   * @}
   */
+
+/* Private function prototypes -----------------------------------------------*/
+static void FDCAN_CalcultateRamBlockAddresses(FDCAN_HandleTypeDef *hfdcan);
+static void FDCAN_CopyMessageToRAM(FDCAN_HandleTypeDef *hfdcan, FDCAN_TxHeaderTypeDef *pTxHeader, uint8_t *pTxData,
+                                   uint32_t BufferIndex);
 
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup FDCAN_Exported_Functions FDCAN Exported Functions
@@ -3376,7 +3376,7 @@ uint32_t HAL_FDCAN_GetError(FDCAN_HandleTypeDef *hfdcan)
   * @}
   */
 
-/** @addtogroup FDCAN_Private_Functions
+/** @defgroup FDCAN_Private_Functions FDCAN Private Functions
   * @{
   */
 

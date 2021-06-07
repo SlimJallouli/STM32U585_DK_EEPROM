@@ -146,7 +146,7 @@ extern "C" {
   * @{
   */
 #define LL_CORDIC_NBREAD_1                 (0x00000000U)             /*!< One 32-bits read containing either only one
-                                                                          32-bit data ouput (Q1.31 format), or two
+                                                                          32-bit data output (Q1.31 format), or two
                                                                           16-bit data output (Q1.15 format) packed
                                                                           in one 32 bits Data */
 #define LL_CORDIC_NBREAD_2                 CORDIC_CSR_NRES           /*!< Two 32-bit Data containing two 32-bits data output

@@ -8,6 +8,18 @@
   *           + Initialization and Configuration functions
   *           + Peripheral Control functions
   *
+  ******************************************************************************
+  * @attention
+  *
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
+  *
+  * This software component is licensed by ST under BSD 3-Clause license,
+  * the "License"; You may not use this file except in compliance with the
+  * License. You may obtain a copy of the License at:
+  *                        opensource.org/licenses/BSD-3-Clause
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                         ##### How to use this driver #####
@@ -62,43 +74,45 @@
        (++) Reload Value is the parameter to be passed for HAL_SYSTICK_Config() function
        (++) Reload Value should not exceed 0xFFFFFF
 
+    [..]
+    *** How to configure MPU (secure and non secure) using CORTEX HAL driver ***
+    ===========================================================
+    [..]
+    This section provides functions allowing to Enable and configure the MPU secure and non-secure.
+
+    (#) Enable the MPU using HAL_MPU_Enable() function.
+    (#) Disable the MPU using HAL_MPU_Disable() function.
+    (#) Enable the MPU using HAL_MPU_Enable_NS() function to address the non secure MPU.
+    (#) Disable the MPU using HAL_MPU_Disable_NS() function to address the non secure MPU.
+    (#) Configure the MPU region using HAL_MPU_ConfigRegion()
+        and HAL_MPU_ConfigRegion_NS() to address the non secure MPU.
+    (#) Configure the MPU Memory attributes using HAL_MPU_ConfigMemoryAttributes()
+        and HAL_MPU_ConfigMemoryAttributes_NS() to address the non secure MPU.
+
   @endverbatim
   ******************************************************************************
 
   The table below gives the allowed values of the pre-emption priority and subpriority according
   to the Priority Grouping configuration performed by HAL_NVIC_SetPriorityGrouping() function.
 
-    ==========================================================================================================================
-      NVIC_PriorityGroup   | NVIC_IRQChannelPreemptionPriority | NVIC_IRQChannelSubPriority  |       Description
-    ==========================================================================================================================
-     NVIC_PRIORITYGROUP_0  |                0                  |            0-15             | 0 bit for pre-emption priority
-                           |                                   |                             | 4 bits for subpriority
-    --------------------------------------------------------------------------------------------------------------------------
-     NVIC_PRIORITYGROUP_1  |                0-1                |            0-7              | 1 bit for pre-emption priority
-                           |                                   |                             | 3 bits for subpriority
-    --------------------------------------------------------------------------------------------------------------------------
-     NVIC_PRIORITYGROUP_2  |                0-3                |            0-3              | 2 bits for pre-emption priority
-                           |                                   |                             | 2 bits for subpriority
-    --------------------------------------------------------------------------------------------------------------------------
-     NVIC_PRIORITYGROUP_3  |                0-7                |            0-1              | 3 bits for pre-emption priority
-                           |                                   |                             | 1 bit for subpriority
-    --------------------------------------------------------------------------------------------------------------------------
-     NVIC_PRIORITYGROUP_4  |                0-15               |            0                | 4 bits for pre-emption priority
-                           |                                   |                             | 0 bit for subpriority
-    ==========================================================================================================================
-
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
+========================================================================================================================
+  NVIC_PriorityGroup  | NVIC_IRQChannelPreemptionPriority | NVIC_IRQChannelSubPriority |       Description
+========================================================================================================================
+ NVIC_PRIORITYGROUP_0 |                0                  |            0-15            | 0 bit for pre-emption priority
+                      |                                   |                            | 4 bits for subpriority
+------------------------------------------------------------------------------------------------------------------------
+ NVIC_PRIORITYGROUP_1 |                0-1                |            0-7             | 1 bit for pre-emption priority
+                      |                                   |                            | 3 bits for subpriority
+------------------------------------------------------------------------------------------------------------------------
+ NVIC_PRIORITYGROUP_2 |                0-3                |            0-3             | 2 bits for pre-emption priority
+                      |                                   |                            | 2 bits for subpriority
+------------------------------------------------------------------------------------------------------------------------
+ NVIC_PRIORITYGROUP_3 |                0-7                |            0-1             | 3 bits for pre-emption priority
+                      |                                   |                            | 1 bit for subpriority
+------------------------------------------------------------------------------------------------------------------------
+ NVIC_PRIORITYGROUP_4 |                0-15               |            0               | 4 bits for pre-emption priority
+                      |                                   |                            | 0 bit for subpriority
+========================================================================================================================
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -119,6 +133,14 @@
 /* Private constants ---------------------------------------------------------*/
 /* Private macros ------------------------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
+/** @defgroup CORTEX_Private_Functions CORTEX Private Functions
+  * @{
+  */
+static void MPU_ConfigRegion(MPU_Type *MPUx, const MPU_Region_InitTypeDef *const pMPU_RegionInit);
+static void MPU_ConfigMemoryAttributes(MPU_Type *MPUx, const MPU_Attributes_InitTypeDef *const pMPU_AttributesInit);
+/**
+  * @}
+  */
 /* Exported functions --------------------------------------------------------*/
 
 /** @addtogroup CORTEX_Exported_Functions
@@ -174,7 +196,8 @@ void HAL_NVIC_SetPriorityGrouping(uint32_t PriorityGroup)
   * @brief  Set the priority of an interrupt.
   * @param  IRQn: External interrupt number.
   *         This parameter can be an enumerator of IRQn_Type enumeration
-  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32u5xxxx.h))
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate
+  *          CMSIS device file (stm32u5xxxx.h))
   * @param  PreemptPriority: The pre-emption priority for the IRQn channel.
   *         This parameter can be a value between 0 and 15
   *         A lower priority value indicates a higher priority
@@ -202,7 +225,8 @@ void HAL_NVIC_SetPriority(IRQn_Type IRQn, uint32_t PreemptPriority, uint32_t Sub
   *         function should be called before.
   * @param  IRQn External interrupt number.
   *         This parameter can be an enumerator of IRQn_Type enumeration
-  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32u5xxxx.h))
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate
+  *          CMSIS device file (stm32u5xxxx.h))
   * @retval None
   */
 void HAL_NVIC_EnableIRQ(IRQn_Type IRQn)
@@ -218,7 +242,8 @@ void HAL_NVIC_EnableIRQ(IRQn_Type IRQn)
   * @brief  Disable a device specific interrupt in the NVIC interrupt controller.
   * @param  IRQn External interrupt number.
   *         This parameter can be an enumerator of IRQn_Type enumeration
-  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32u5xxxx.h))
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate
+  *          CMSIS device file (stm32u5xxxx.h))
   * @retval None
   */
 void HAL_NVIC_DisableIRQ(IRQn_Type IRQn)
@@ -285,7 +310,8 @@ uint32_t HAL_NVIC_GetPriorityGrouping(void)
   * @brief  Get the priority of an interrupt.
   * @param  IRQn: External interrupt number.
   *         This parameter can be an enumerator of IRQn_Type enumeration
-  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32u5xxxx.h))
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate
+  *          CMSIS device file (stm32u5xxxx.h))
   * @param   PriorityGroup: the priority grouping bits length.
   *         This parameter can be one of the following values:
   *           @arg NVIC_PRIORITYGROUP_0: 0 bit for pre-emption priority,
@@ -302,7 +328,8 @@ uint32_t HAL_NVIC_GetPriorityGrouping(void)
   * @param  pSubPriority: Pointer on the Subpriority value (starting from 0).
   * @retval None
   */
-void HAL_NVIC_GetPriority(IRQn_Type IRQn, uint32_t PriorityGroup, uint32_t *pPreemptPriority, uint32_t *pSubPriority)
+void HAL_NVIC_GetPriority(IRQn_Type IRQn, uint32_t PriorityGroup, uint32_t *const pPreemptPriority,
+                          uint32_t *const pSubPriority)
 {
   /* Check the parameters */
   assert_param(IS_NVIC_PRIORITY_GROUP(PriorityGroup));
@@ -314,7 +341,8 @@ void HAL_NVIC_GetPriority(IRQn_Type IRQn, uint32_t PriorityGroup, uint32_t *pPre
   * @brief  Set Pending bit of an external interrupt.
   * @param  IRQn External interrupt number
   *         This parameter can be an enumerator of IRQn_Type enumeration
-  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32u5xxxx.h))
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate
+  *          CMSIS device file (stm32u5xxxx.h))
   * @retval None
   */
 void HAL_NVIC_SetPendingIRQ(IRQn_Type IRQn)
@@ -327,8 +355,9 @@ void HAL_NVIC_SetPendingIRQ(IRQn_Type IRQn)
   * @brief  Get Pending Interrupt (read the pending register in the NVIC
   *         and return the pending bit for the specified interrupt).
   * @param  IRQn External interrupt number.
-  *          This parameter can be an enumerator of IRQn_Type enumeration
-  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32u5xxxx.h))
+  *         This parameter can be an enumerator of IRQn_Type enumeration
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate
+  *          CMSIS device file (stm32u5xxxx.h))
   * @retval status: - 0  Interrupt status is not pending.
   *                 - 1  Interrupt status is pending.
   */
@@ -342,7 +371,8 @@ uint32_t HAL_NVIC_GetPendingIRQ(IRQn_Type IRQn)
   * @brief  Clear the pending bit of an external interrupt.
   * @param  IRQn External interrupt number.
   *         This parameter can be an enumerator of IRQn_Type enumeration
-  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32u5xxxx.h))
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate
+  *          CMSIS device file (stm32u5xxxx.h))
   * @retval None
   */
 void HAL_NVIC_ClearPendingIRQ(IRQn_Type IRQn)
@@ -355,7 +385,8 @@ void HAL_NVIC_ClearPendingIRQ(IRQn_Type IRQn)
   * @brief Get active interrupt (read the active register in NVIC and return the active bit).
   * @param IRQn External interrupt number
   *         This parameter can be an enumerator of IRQn_Type enumeration
-  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate CMSIS device file (stm32u5xxxx.h))
+  *         (For the complete STM32 Devices IRQ Channels list, please refer to the appropriate
+  *          CMSIS device file (stm32u5xxxx.h))
   * @retval status: - 0  Interrupt status is not pending.
   *                 - 1  Interrupt status is pending.
   */
@@ -426,11 +457,11 @@ __weak void HAL_SYSTICK_Callback(void)
    */
 }
 
-#if (__MPU_PRESENT == 1)
+
 /**
   * @brief  Enable the MPU.
   * @param  MPU_Control: Specifies the control mode of the MPU during hard fault,
-  *          NMI, FAULTMASK and privileged accessto the default memory
+  *          NMI, FAULTMASK and privileged access to the default memory
   *          This parameter can be one of the following values:
   *            @arg MPU_HFNMI_PRIVDEF_NONE
   *            @arg MPU_HARDFAULT_NMI
@@ -452,6 +483,33 @@ void HAL_MPU_Enable(uint32_t MPU_Control)
   __ISB(); /* Flush and refill pipeline with updated permissions */
 }
 
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+/**
+  * @brief  Enable the non-secure MPU.
+  * @param  MPU_Control: Specifies the control mode of the MPU during hard fault,
+  *          NMI, FAULTMASK and privileged access to the default memory
+  *          This parameter can be one of the following values:
+  *            @arg MPU_HFNMI_PRIVDEF_NONE
+  *            @arg MPU_HARDFAULT_NMI
+  *            @arg MPU_PRIVILEGED_DEFAULT
+  *            @arg MPU_HFNMI_PRIVDEF
+  * @retval None
+  */
+void HAL_MPU_Enable_NS(uint32_t MPU_Control)
+{
+  /* Enable the MPU */
+  MPU_NS->CTRL   = MPU_Control | MPU_CTRL_ENABLE_Msk;
+
+  /* Enable fault exceptions */
+  SCB_NS->SHCSR |= SCB_SHCSR_MEMFAULTENA_Msk;
+
+  /* Follow ARM recommendation with */
+  /* - Data Memory Barrier and Instruction Synchronization to insure MPU usage */
+  __DMB(); /* Force memory writes before continuing */
+  __ISB(); /* Flush and refill pipeline with updated permissions */
+}
+#endif /* __ARM_FEATURE_CMSE */
+
 /**
   * @brief  Disable the MPU.
   * @retval None
@@ -464,90 +522,150 @@ void HAL_MPU_Disable(void)
   MPU->CTRL  &= ~MPU_CTRL_ENABLE_Msk;
 }
 
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+/**
+  * @brief  Disable the non-secure MPU.
+  * @retval None
+  */
+void HAL_MPU_Disable_NS(void)
+{
+  __DMB(); /* Force any outstanding transfers to complete before disabling MPU */
+
+  /* Disable the MPU */
+  MPU_NS->CTRL  &= ~MPU_CTRL_ENABLE_Msk;
+}
+#endif /* __ARM_FEATURE_CMSE */
+
 /**
   * @brief  Initialize and configure the Region and the memory to be protected.
-  * @param  MPU_RegionInit: Pointer to a MPU_Region_InitTypeDef structure that contains
+  * @param  pMPU_RegionInit: Pointer to a MPU_Region_InitTypeDef structure that contains
   *                the initialization and configuration information.
   * @retval None
   */
-void HAL_MPU_ConfigRegion(MPU_Region_InitTypeDef *MPU_RegionInit)
+void HAL_MPU_ConfigRegion(const MPU_Region_InitTypeDef *const pMPU_RegionInit)
 {
-  /* Check the parameters */
-  assert_param(IS_MPU_REGION_NUMBER(MPU_RegionInit->Number));
-  assert_param(IS_MPU_REGION_ENABLE(MPU_RegionInit->Enable));
-
-  /* Follow ARM recommendation with Data Memory Barrier prior to MPU configuration */
-  __DMB();
-
-  /* Set the Region number */
-  MPU->RNR = MPU_RegionInit->Number;
-
-  if (MPU_RegionInit->Enable != MPU_REGION_DISABLE)
-  {
-    /* Check the parameters */
-    assert_param(IS_MPU_INSTRUCTION_ACCESS(MPU_RegionInit->DisableExec));
-    assert_param(IS_MPU_REGION_PERMISSION_ATTRIBUTE(MPU_RegionInit->AccessPermission));
-    assert_param(IS_MPU_ACCESS_SHAREABLE(MPU_RegionInit->IsShareable));
-
-    MPU->RBAR = (((uint32_t)MPU_RegionInit->BaseAddress            & 0xFFFFFFE0U)           |
-                 ((uint32_t)MPU_RegionInit->IsShareable           << MPU_RBAR_SH_Pos)       |
-                 ((uint32_t)MPU_RegionInit->AccessPermission      << MPU_RBAR_AP_Pos)       |
-                 ((uint32_t)MPU_RegionInit->DisableExec           << MPU_RBAR_XN_Pos));
-
-    MPU->RLAR = (((uint32_t)MPU_RegionInit->LimitAddress           & 0xFFFFFFE0U)           |
-                 ((uint32_t)MPU_RegionInit->AttributesIndex       << MPU_RLAR_AttrIndx_Pos) |
-                 ((uint32_t)MPU_RegionInit->Enable                << MPU_RLAR_EN_Pos));
-  }
-  else
-  {
-    MPU->RBAR = 0U;
-    MPU->RLAR = 0U;
-  }
+  MPU_ConfigRegion(MPU, pMPU_RegionInit);
 }
+
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+/**
+  * @brief  Initialize and configure the Region and the memory to be protected for non-secure MPU.
+  * @param  pMPU_RegionInit: Pointer to a MPU_Region_InitTypeDef structure that contains
+  *                the initialization and configuration information.
+  * @retval None
+  */
+void HAL_MPU_ConfigRegion_NS(const MPU_Region_InitTypeDef *const pMPU_RegionInit)
+{
+  MPU_ConfigRegion(MPU_NS, pMPU_RegionInit);
+}
+#endif /* __ARM_FEATURE_CMSE */
 
 /**
   * @brief  Initialize and configure the memory attributes.
-  * @param  MPU_AttributesInit: Pointer to a MPU_Attributes_InitTypeDef structure that contains
+  * @param  pMPU_AttributesInit: Pointer to a MPU_Attributes_InitTypeDef structure that contains
   *                the initialization and configuration information.
   * @retval None
   */
-void HAL_MPU_ConfigMemoryAttributes(MPU_Attributes_InitTypeDef *MPU_AttributesInit)
+void HAL_MPU_ConfigMemoryAttributes(const MPU_Attributes_InitTypeDef *const pMPU_AttributesInit)
 {
-  __IO uint32_t *mair;
-  uint32_t      attr_values;
-  uint32_t      attr_number;
-
-  /* Check the parameters */
-  assert_param(IS_MPU_ATTRIBUTES_NUMBER(MPU_AttributesInit->Number));
-  /* No need to check Attributes value as all 0x0..0xFF possible */
-
-  /* Follow ARM recommendation with Data Memory Barrier prior to MPU configuration */
-  __DMB();
-
-  if (MPU_AttributesInit->Number < MPU_ATTRIBUTES_NUMBER4)
-  {
-    /* Program MPU_MAIR0 */
-    mair = &(MPU->MAIR0);
-    attr_number = MPU_AttributesInit->Number;
-  }
-  else
-  {
-    /* Program MPU_MAIR1 */
-    mair = &(MPU->MAIR1);
-    attr_number = (uint32_t)MPU_AttributesInit->Number - 4U;
-  }
-
-  attr_values = *(mair);
-  attr_values &=  ~(0xFFU << (attr_number * 8U));
-  *(mair) = attr_values | ((uint32_t)MPU_AttributesInit->Attributes << (attr_number * 8U));
+  MPU_ConfigMemoryAttributes(MPU, pMPU_AttributesInit);
 }
 
-#endif /* __MPU_PRESENT */
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+/**
+  * @brief  Initialize and configure the memory attributes for non-secure MPU.
+  * @param  pMPU_AttributesInit: Pointer to a MPU_Attributes_InitTypeDef structure that contains
+  *                the initialization and configuration information.
+  * @retval None
+  */
+void HAL_MPU_ConfigMemoryAttributes_NS(const MPU_Attributes_InitTypeDef *const pMPU_AttributesInit)
+{
+  MPU_ConfigMemoryAttributes(MPU_NS, pMPU_AttributesInit);
+}
+#endif /* __ARM_FEATURE_CMSE */
 
 /**
   * @}
   */
 
+/**
+  * @}
+  */
+
+/** @addtogroup CORTEX_Private_Functions
+  * @{
+  */
+static void MPU_ConfigRegion(MPU_Type *MPUx, const MPU_Region_InitTypeDef *const pMPU_RegionInit)
+{
+  /* Check the parameters */
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+  assert_param(IS_MPU_INSTANCE(MPUx));
+#endif /* __ARM_FEATURE_CMSE */
+  assert_param(IS_MPU_REGION_NUMBER(pMPU_RegionInit->Number));
+  assert_param(IS_MPU_REGION_ENABLE(pMPU_RegionInit->Enable));
+
+  /* Follow ARM recommendation with Data Memory Barrier prior to MPU configuration */
+  __DMB();
+
+  /* Set the Region number */
+  MPUx->RNR = pMPU_RegionInit->Number;
+
+  if (pMPU_RegionInit->Enable != MPU_REGION_DISABLE)
+  {
+    /* Check the parameters */
+    assert_param(IS_MPU_INSTRUCTION_ACCESS(pMPU_RegionInit->DisableExec));
+    assert_param(IS_MPU_REGION_PERMISSION_ATTRIBUTE(pMPU_RegionInit->AccessPermission));
+    assert_param(IS_MPU_ACCESS_SHAREABLE(pMPU_RegionInit->IsShareable));
+
+    MPUx->RBAR = (((uint32_t)pMPU_RegionInit->BaseAddress               & 0xFFFFFFE0UL)  |
+                  ((uint32_t)pMPU_RegionInit->IsShareable           << MPU_RBAR_SH_Pos)  |
+                  ((uint32_t)pMPU_RegionInit->AccessPermission      << MPU_RBAR_AP_Pos)  |
+                  ((uint32_t)pMPU_RegionInit->DisableExec           << MPU_RBAR_XN_Pos));
+
+    MPUx->RLAR = (((uint32_t)pMPU_RegionInit->LimitAddress                    & 0xFFFFFFE0UL) |
+                  ((uint32_t)pMPU_RegionInit->AttributesIndex       << MPU_RLAR_AttrIndx_Pos) |
+                  ((uint32_t)pMPU_RegionInit->Enable                << MPU_RLAR_EN_Pos));
+  }
+  else
+  {
+    MPUx->RBAR = 0U;
+    MPUx->RLAR = 0U;
+  }
+}
+
+static void MPU_ConfigMemoryAttributes(MPU_Type *MPUx, const MPU_Attributes_InitTypeDef *const pMPU_AttributesInit)
+{
+  __IO uint32_t *p_mair;
+  uint32_t      attr_values;
+  uint32_t      attr_number;
+
+  /* Check the parameters */
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+  assert_param(IS_MPU_INSTANCE(MPUx));
+#endif /* __ARM_FEATURE_CMSE */
+  assert_param(IS_MPU_ATTRIBUTES_NUMBER(pMPU_AttributesInit->Number));
+  /* No need to check Attributes value as all 0x0..0xFF possible */
+
+  /* Follow ARM recommendation with Data Memory Barrier prior to MPUx configuration */
+  __DMB();
+
+  if (pMPU_AttributesInit->Number < MPU_ATTRIBUTES_NUMBER4)
+  {
+    /* Program MPU_MAIR0 */
+    p_mair = &(MPUx->MAIR0);
+    attr_number = pMPU_AttributesInit->Number;
+  }
+  else
+  {
+    /* Program MPU_MAIR1 */
+    p_mair = &(MPUx->MAIR1);
+    attr_number = (uint32_t)pMPU_AttributesInit->Number - 4U;
+  }
+
+  attr_values = *(p_mair);
+  attr_values &=  ~(0xFFUL << (attr_number * 8U));
+  *(p_mair) = attr_values | ((uint32_t)pMPU_AttributesInit->Attributes << (attr_number * 8U));
+}
 /**
   * @}
   */

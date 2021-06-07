@@ -38,7 +38,7 @@
         on DBG_IWDG_STOP configuration bit in DBG module, accessible through
         __HAL_DBGMCU_FREEZE_IWDG() and __HAL_DBGMCU_UNFREEZE_IWDG() macros.
 
-    [..] Min-max timeout value @32KHz (LSI): ~125us / ~32.7s
+    [..] Min-max timeout value @32KHz (LSI): ~125us / ~131.04s
          The IWDG timeout may vary due to LSI clock frequency dispersion.
          STM32U5xx devices provide the capability to measure the LSI clock
          frequency (LSI clock is internally connected to TIM16 CH1 input capture).
@@ -57,21 +57,32 @@
                      ##### How to use this driver #####
   ==============================================================================
   [..]
+    (#) Register callback to treat Iwdg interrupt and MspInit using HAL_IWDG_RegisterCallback().
+      (++) Provide exiting handle as first parameter.
+      (++) Provide which callback will be registered using one value from
+           HAL_IWDG_CallbackIDTypeDef.
+      (++) Provide callback function pointer.
+
     (#) Use IWDG using HAL_IWDG_Init() function to :
       (++) Enable instance by writing Start keyword in IWDG_KEY register. LSI
            clock is forced ON and IWDG counter starts counting down.
       (++) Enable write access to configuration registers:
-          IWDG_PR, IWDG_RLR, IWDG_EWCR and IWDG_WINR.
+          IWDG_PR, IWDG_RLR, IWDG_WINR and EWCR.
       (++) Configure the IWDG prescaler and counter reload value. This reload
            value will be loaded in the IWDG counter each time the watchdog is
            reloaded, then the IWDG will start counting down from this value.
-      (++) Wait for status flags to be reset.
       (++) Depending on window parameter:
         (+++) If Window Init parameter is same as Window register value,
              nothing more is done but reload counter value in order to exit
              function with exact time base.
         (+++) Else modify Window register. This will automatically reload
              watchdog counter.
+      (++) Depending on Early Wakeup Interrupt parameter:
+        (+++) If EWI is set to disable, comparator is set to 0, interrupt is
+             disable & flag is clear.
+        (+++) Else modify EWCR register, setting comparator value, enable
+             interrupt & clear flag.
+      (++) Wait for status flags to be reset.
 
     (#) Then the application program must refresh the IWDG counter at regular
         intervals during normal operation to prevent an MCU reset, using
@@ -89,7 +100,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -125,7 +136,8 @@
    the LSI_VALUE constant. The value of this constant can be changed by the user
    to take into account possible LSI clock period variations.
    The timeout value is multiplied by 1000 to be converted in milliseconds. */
-#define HAL_IWDG_DEFAULT_TIMEOUT ((6UL * 256UL * 1000UL) / LSI_VALUE)
+#define HAL_IWDG_DEFAULT_TIMEOUT        ((6UL * 256UL * 1000UL) / LSI_VALUE)
+#define IWDG_KERNEL_UPDATE_FLAGS        (IWDG_SR_EWU | IWDG_SR_WVU | IWDG_SR_RVU | IWDG_SR_PVU)
 /**
   * @}
   */
@@ -203,7 +215,7 @@ HAL_StatusTypeDef HAL_IWDG_Init(IWDG_HandleTypeDef *hiwdg)
   /* Enable IWDG. LSI is turned on automatically */
   __HAL_IWDG_START(hiwdg);
 
-  /* Enable write access to IWDG_PR, IWDG_RLR, IWDG_EWCR and IWDG_WINR registers by writing
+  /* Enable write access to IWDG_PR, IWDG_RLR, IWDG_WINR and EWCR registers by writing
   0x5555 in KR */
   IWDG_ENABLE_WRITE_ACCESS(hiwdg);
 
@@ -229,15 +241,19 @@ HAL_StatusTypeDef HAL_IWDG_Init(IWDG_HandleTypeDef *hiwdg)
      */
     hiwdg->Instance->EWCR = IWDG_EWCR_EWIE | IWDG_EWCR_EWIC | hiwdg->Init.EWI;
   }
+
   /* Check pending flag, if previous update not done, return timeout */
   tickstart = HAL_GetTick();
 
   /* Wait for register to be updated */
-  while (hiwdg->Instance->SR != 0x00u)
+  while ((hiwdg->Instance->SR & IWDG_KERNEL_UPDATE_FLAGS) != 0x00u)
   {
     if ((HAL_GetTick() - tickstart) > HAL_IWDG_DEFAULT_TIMEOUT)
     {
-      return HAL_TIMEOUT;
+      if ((hiwdg->Instance->SR & IWDG_KERNEL_UPDATE_FLAGS) != 0x00u)
+      {
+        return HAL_TIMEOUT;
+      }
     }
   }
 
@@ -259,6 +275,7 @@ HAL_StatusTypeDef HAL_IWDG_Init(IWDG_HandleTypeDef *hiwdg)
   /* Return function status */
   return HAL_OK;
 }
+
 
 /**
   * @brief  Initialize the IWDG MSP.
@@ -353,6 +370,8 @@ HAL_StatusTypeDef HAL_IWDG_UnRegisterCallback(IWDG_HandleTypeDef *hiwdg, HAL_IWD
   return status;
 }
 #endif /* USE_HAL_IWDG_REGISTER_CALLBACKS */
+
+
 /**
   * @}
   */
@@ -372,7 +391,6 @@ HAL_StatusTypeDef HAL_IWDG_UnRegisterCallback(IWDG_HandleTypeDef *hiwdg, HAL_IWD
   * @{
   */
 
-
 /**
   * @brief  Refresh the IWDG.
   * @param  hiwdg  pointer to a IWDG_HandleTypeDef structure that contains
@@ -387,6 +405,7 @@ HAL_StatusTypeDef HAL_IWDG_Refresh(IWDG_HandleTypeDef *hiwdg)
   /* Return function status */
   return HAL_OK;
 }
+
 
 /**
   * @brief  Handle IWDG interrupt request.
@@ -404,23 +423,19 @@ HAL_StatusTypeDef HAL_IWDG_Refresh(IWDG_HandleTypeDef *hiwdg)
   */
 void HAL_IWDG_IRQHandler(IWDG_HandleTypeDef *hiwdg)
 {
-  /* Check if Early Wakeup Interrupt is enable */
-  if ((hiwdg->Instance->EWCR & IWDG_EWCR_EWIE) != 0x00u)
+  /* Check if IWDG Early Wakeup Interrupt occurred */
+  if ((hiwdg->Instance->SR & IWDG_SR_EWIF) != 0x00u)
   {
-    /* Check if IWDG Early Wakeup Interrupt occurred */
-    if ((hiwdg->Instance->SR & IWDG_SR_EWIF) != 0x00u)
-    {
-      /* Clear the IWDG Early Wakeup flag */
-      hiwdg->Instance->EWCR |= IWDG_EWCR_EWIC;
+    /* Clear the IWDG Early Wakeup flag */
+    hiwdg->Instance->EWCR |= IWDG_EWCR_EWIC;
 
 #if (USE_HAL_IWDG_REGISTER_CALLBACKS == 1)
-      /* Early Wakeup registered callback */
-      hiwdg->EwiCallback(hiwdg);
+    /* Early Wakeup registered callback */
+    hiwdg->EwiCallback(hiwdg);
 #else
-      /* Early Wakeup callback */
-      HAL_IWDG_EarlyWakeupCallback(hiwdg);
+    /* Early Wakeup callback */
+    HAL_IWDG_EarlyWakeupCallback(hiwdg);
 #endif /* USE_HAL_IWDG_REGISTER_CALLBACKS */
-    }
   }
 }
 
@@ -440,6 +455,8 @@ __weak void HAL_IWDG_EarlyWakeupCallback(IWDG_HandleTypeDef *hiwdg)
            the HAL_IWDG_EarlyWakeupCallback could be implemented in the user file
    */
 }
+
+
 /**
   * @}
   */

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -15,11 +15,11 @@
   *                        opensource.org/licenses/BSD-3-Clause
   *
   ******************************************************************************
-*/
+  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef  STM32U5xx_LL_EXTI_H
-#define STM32U5xx_LL_EXTI_H
+#define  STM32U5xx_LL_EXTI_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,7 +28,7 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u5xx.h"
 
-/** @addtogroup STM32L5xx_LL_Driver
+/** @addtogroup STM32U5xx_LL_Driver
   * @{
   */
 
@@ -109,7 +109,7 @@ typedef struct
 #define LL_EXTI_LINE_20               EXTI_IMR1_IM20          /*!< Extended line 20 */
 #define LL_EXTI_LINE_21               EXTI_IMR1_IM21          /*!< Extended line 21 */
 #define LL_EXTI_LINE_22               EXTI_IMR1_IM22          /*!< Extended line 22 */
-#define LL_EXTI_LINE_ALL_0_31    0x007FFFFF                  /*!< ALL Extended line */
+#define LL_EXTI_LINE_ALL_0_31         0x007FFFFFU             /*!< ALL Extended line */
 
 #if defined(USE_FULL_LL_DRIVER)
 #define LL_EXTI_LINE_NONE              0x00000000U             /*!< None Extended line */
@@ -225,8 +225,8 @@ typedef struct
 
 /* Exported functions --------------------------------------------------------*/
 /** @defgroup EXTI_LL_Exported_Functions EXTI Exported Functions
- * @{
- */
+  * @{
+  */
 /** @defgroup EXTI_LL_EF_IT_Management IT_Management
   * @{
   */
@@ -1056,7 +1056,8 @@ __STATIC_INLINE void LL_EXTI_ClearRisingFlag_0_31(uint32_t ExtiLine)
   */
 __STATIC_INLINE void LL_EXTI_SetEXTISource(uint32_t Port, uint32_t Line)
 {
-  MODIFY_REG(EXTI->EXTICR[Line & 0x03U], EXTI_EXTICR1_EXTI0 << (Line >> LL_EXTI_REGISTER_PINPOS_SHFT), Port << (Line >> LL_EXTI_REGISTER_PINPOS_SHFT));
+  MODIFY_REG(EXTI->EXTICR[Line & 0x03U], EXTI_EXTICR1_EXTI0 << (Line >> LL_EXTI_REGISTER_PINPOS_SHFT), \
+             Port << (Line >> LL_EXTI_REGISTER_PINPOS_SHFT));
 }
 
 /**
@@ -1107,7 +1108,9 @@ __STATIC_INLINE void LL_EXTI_SetEXTISource(uint32_t Port, uint32_t Line)
   */
 __STATIC_INLINE uint32_t LL_EXTI_GetEXTISource(uint32_t Line)
 {
-  return (uint32_t)(READ_BIT(EXTI->EXTICR[Line & 0x03U], (EXTI_EXTICR1_EXTI0 << (Line >> LL_EXTI_REGISTER_PINPOS_SHFT))) >> (Line >> LL_EXTI_REGISTER_PINPOS_SHFT));
+  return (uint32_t)(READ_BIT(EXTI->EXTICR[Line & 0x03U],
+                             (EXTI_EXTICR1_EXTI0 << (Line >> LL_EXTI_REGISTER_PINPOS_SHFT))) >>
+                    (Line >> LL_EXTI_REGISTER_PINPOS_SHFT));
 }
 /**
   * @}

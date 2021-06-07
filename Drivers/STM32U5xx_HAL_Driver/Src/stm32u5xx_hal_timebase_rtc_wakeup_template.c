@@ -6,7 +6,7 @@
   *
   *          This file overrides the native HAL time base functions (defined as weak)
   *          to use the RTC WAKEUP for the time base generation:
-  *           + Intializes the RTC peripheral and configures the wakeup timer to be
+  *           + Initializes the RTC peripheral and configures the wakeup timer to be
   *             incremented each 1ms
   *           + The wakeup feature is configured to assert an interrupt each 1ms
   *           + HAL_IncTick is called inside the HAL_RTCEx_WakeUpTimerEventCallback
@@ -64,33 +64,24 @@
   + RTC_CLOCK_SOURCE_LSI: can be selected for applications with low constraint on timing
                           precision.
   */
-#define RTC_CLOCK_SOURCE_HSE
+/* #define RTC_CLOCK_SOURCE_HSE */
 /* #define RTC_CLOCK_SOURCE_LSE */
-/* #define RTC_CLOCK_SOURCE_LSI */
+#define RTC_CLOCK_SOURCE_LSI
 
 /* The time base should be 1ms
    Time base = ((RTC_ASYNCH_PREDIV + 1) * (RTC_SYNCH_PREDIV + 1)) / RTC_CLOCK
-   HSE as RTC clock
-     Time base = ((99 + 1) * (4 + 1)) / 500KHz
-               = 1ms
-   LSE as RTC clock
-     Time base = ((32 + 1) * (0 + 1)) / 32.768KHz
-               = ~1ms
-   LSI as RTC clock
-     Time base = ((31 + 1) * (0 + 1)) / 32KHz
-               = 1ms
 */
-#if defined (RTC_CLOCK_SOURCE_HSE)         /* 500KHz */
-  #define RTC_ASYNCH_PREDIV      99U
-  #define RTC_SYNCH_PREDIV        4U
-#elif defined (RTC_CLOCK_SOURCE_LSE)      /* 32768 */
-  #define RTC_ASYNCH_PREDIV       0U
-  #define RTC_SYNCH_PREDIV       32U
-#elif defined (RTC_CLOCK_SOURCE_LSI)      /* 32000 */
-  #define RTC_ASYNCH_PREDIV       0U
-  #define RTC_SYNCH_PREDIV       31U
+#if defined (RTC_CLOCK_SOURCE_HSE)
+#define RTC_ASYNCH_PREDIV      99U
+#define RTC_SYNCH_PREDIV        4U
+#elif defined (RTC_CLOCK_SOURCE_LSE)
+#define RTC_ASYNCH_PREDIV       0U
+#define RTC_SYNCH_PREDIV       32U
+#elif defined (RTC_CLOCK_SOURCE_LSI)
+#define RTC_ASYNCH_PREDIV       0U
+#define RTC_SYNCH_PREDIV       31U
 #else
-  #error Please select the RTC Clock source
+#error Please select the RTC Clock source
 #endif /* RTC_CLOCK_SOURCE_LSE */
 
 /* Private macro -------------------------------------------------------------*/
@@ -101,7 +92,7 @@ static RTC_HandleTypeDef        hRTC_Handle;
 void RTC_IRQHandler(void);
 #if (USE_HAL_RTC_REGISTER_CALLBACKS == 1U)
 void TimeBase_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc);
-#endif
+#endif /* USE_HAL_RTC_REGISTER_CALLBACKS */
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -113,7 +104,7 @@ void TimeBase_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc);
   * @param  TickPriority Tick interrupt priority.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_InitTick (uint32_t TickPriority)
+HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
   __IO uint32_t      counter = 0U;
   HAL_StatusTypeDef  Status;
@@ -134,25 +125,26 @@ HAL_StatusTypeDef HAL_InitTick (uint32_t TickPriority)
   __HAL_RCC_RTCAPB_CLK_ENABLE();
 
 #if defined (RTC_CLOCK_SOURCE_LSE)
-  /* Configue LSE as RTC clock soucre */
+  /* Configure LSE as RTC clock source */
   RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_NONE;
   RCC_OscInitStruct.LSEState            = RCC_LSE_RTC_ONLY;
   PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
 #elif defined (RTC_CLOCK_SOURCE_LSI)
-  /* Configue LSI as RTC clock soucre */
+  /* Configure LSI as RTC clock source */
   RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_NONE;
   RCC_OscInitStruct.LSIState            = RCC_LSI_ON;
+  RCC_OscInitStruct.LSIDiv              = RCC_LSI_DIV1;
   PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
 #elif defined (RTC_CLOCK_SOURCE_HSE)
-  /* Configue HSE as RTC clock soucre */
+  /* Configure HSE as RTC clock source */
   RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_NONE;
   RCC_OscInitStruct.HSEState            = RCC_HSE_ON;
   PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_HSE_DIV32;
 #else
-  #error Please select the RTC Clock source
+#error Please select the RTC Clock source
 #endif /* RTC_CLOCK_SOURCE_LSE */
 
   Status = HAL_RCC_OscConfig(&RCC_OscInitStruct);
@@ -178,7 +170,7 @@ HAL_StatusTypeDef HAL_InitTick (uint32_t TickPriority)
 
 #if (USE_HAL_RTC_REGISTER_CALLBACKS == 1U)
     HAL_RTC_RegisterCallback(&hRTC_Handle, HAL_RTC_WAKEUPTIMER_EVENT_CB_ID, TimeBase_RTCEx_WakeUpTimerEventCallback);
-#endif
+#endif /* USE_HAL_RTC_REGISTER_CALLBACKS */
   }
 
   if (Status == HAL_OK)
@@ -189,7 +181,7 @@ HAL_StatusTypeDef HAL_InitTick (uint32_t TickPriority)
   if (TickPriority < (1UL << __NVIC_PRIO_BITS))
   {
     /* Enable the RTC global Interrupt */
-    HAL_NVIC_SetPriority(RTC_IRQn, TickPriority, 0U); 
+    HAL_NVIC_SetPriority(RTC_IRQn, TickPriority, 0U);
     uwTickPrio = TickPriority;
   }
   else
@@ -244,7 +236,7 @@ void HAL_ResumeTick(void)
 void TimeBase_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc)
 #else
 void HAL_RTCEx_WakeUpTimerEventCallback(RTC_HandleTypeDef *hrtc)
-#endif
+#endif /* USE_HAL_RTC_REGISTER_CALLBACKS */
 {
   /* Prevent unused argument(s) compilation warning */
   UNUSED(hrtc);

@@ -394,7 +394,8 @@ HAL_StatusTypeDef HAL_I2CEx_SetConfigAutonomousMode(I2C_HandleTypeDef *hi2c, I2C
     __HAL_I2C_DISABLE(hi2c);
 
     /* I2Cx AUTOCR Configuration */
-    WRITE_REG(hi2c->Instance->AUTOCR, (sConfig->TriggerState | ((sConfig->TriggerSelection) & I2C_AUTOCR_TRIGSEL_Msk) | sConfig->TriggerPolarity));
+    WRITE_REG(hi2c->Instance->AUTOCR, (sConfig->TriggerState | ((sConfig->TriggerSelection) & I2C_AUTOCR_TRIGSEL_Msk) |
+                                       sConfig->TriggerPolarity));
 
     /* Enable the selected I2C peripheral */
     __HAL_I2C_ENABLE(hi2c);

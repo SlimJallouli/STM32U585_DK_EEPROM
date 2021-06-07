@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -29,7 +29,7 @@
 #include "stm32_assert.h"
 #else
 #define assert_param(expr) ((void)0U)
-#endif
+#endif /* USE_FULL_ASSERT */
 
 /** @addtogroup STM32U5xx_LL_Driver
   * @{
@@ -49,172 +49,173 @@
   * @{
   */
 
-#define IS_LL_SPI_MODE(__VALUE__)                   (((__VALUE__) == LL_SPI_MODE_MASTER)                 \
-                                                  || ((__VALUE__) == LL_SPI_MODE_SLAVE))
+#define IS_LL_SPI_MODE(__VALUE__)                   (((__VALUE__) == LL_SPI_MODE_MASTER)         || \
+                                                     ((__VALUE__) == LL_SPI_MODE_SLAVE))
 
-#define IS_LL_SPI_SS_IDLENESS(__VALUE__)            (((__VALUE__) == LL_SPI_SS_IDLENESS_00CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_01CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_02CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_03CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_04CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_05CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_06CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_07CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_08CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_09CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_10CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_11CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_12CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_13CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_14CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_SS_IDLENESS_15CYCLE))
+#define IS_LL_SPI_SS_IDLENESS(__VALUE__)            (((__VALUE__) == LL_SPI_SS_IDLENESS_00CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_01CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_02CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_03CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_04CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_05CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_06CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_07CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_08CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_09CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_10CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_11CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_12CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_13CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_14CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_SS_IDLENESS_15CYCLE))
 
-#define IS_LL_SPI_ID_IDLENESS(__VALUE__)            (((__VALUE__) == LL_SPI_ID_IDLENESS_00CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_01CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_02CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_03CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_04CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_05CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_06CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_07CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_08CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_09CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_10CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_11CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_12CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_13CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_14CYCLE)         \
-                                                  || ((__VALUE__) == LL_SPI_ID_IDLENESS_15CYCLE))
+#define IS_LL_SPI_ID_IDLENESS(__VALUE__)            (((__VALUE__) == LL_SPI_ID_IDLENESS_00CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_01CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_02CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_03CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_04CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_05CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_06CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_07CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_08CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_09CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_10CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_11CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_12CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_13CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_14CYCLE) || \
+                                                     ((__VALUE__) == LL_SPI_ID_IDLENESS_15CYCLE))
 
-#define IS_LL_SPI_TXCRCINIT_PATTERN(__VALUE__)      (((__VALUE__) == LL_SPI_TXCRCINIT_ALL_ZERO_PATTERN)  \
-                                                  || ((__VALUE__) == LL_SPI_TXCRCINIT_ALL_ONES_PATTERN))
+#define IS_LL_SPI_TXCRCINIT_PATTERN(__VALUE__)      (((__VALUE__) == LL_SPI_TXCRCINIT_ALL_ZERO_PATTERN) || \
+                                                     ((__VALUE__) == LL_SPI_TXCRCINIT_ALL_ONES_PATTERN))
 
-#define IS_LL_SPI_RXCRCINIT_PATTERN(__VALUE__)      (((__VALUE__) == LL_SPI_RXCRCINIT_ALL_ZERO_PATTERN)  \
-                                                  || ((__VALUE__) == LL_SPI_RXCRCINIT_ALL_ONES_PATTERN))
+#define IS_LL_SPI_RXCRCINIT_PATTERN(__VALUE__)      (((__VALUE__) == LL_SPI_RXCRCINIT_ALL_ZERO_PATTERN) || \
+                                                     ((__VALUE__) == LL_SPI_RXCRCINIT_ALL_ONES_PATTERN))
 
-#define IS_LL_SPI_UDR_CONFIG_REGISTER(__VALUE__)    (((__VALUE__) == LL_SPI_UDR_CONFIG_REGISTER_PATTERN) \
-                                                  || ((__VALUE__) == LL_SPI_UDR_CONFIG_LAST_RECEIVED)    \
-                                                  || ((__VALUE__) == LL_SPI_UDR_CONFIG_LAST_TRANSMITTED))
+#define IS_LL_SPI_UDR_CONFIG_REGISTER(__VALUE__)    (((__VALUE__) == LL_SPI_UDR_CONFIG_REGISTER_PATTERN) || \
+                                                     ((__VALUE__) == LL_SPI_UDR_CONFIG_LAST_RECEIVED)    || \
+                                                     ((__VALUE__) == LL_SPI_UDR_CONFIG_LAST_TRANSMITTED))
 
-#define IS_LL_SPI_UDR_DETECT_BEGIN_DATA(__VALUE__)  (((__VALUE__) == LL_SPI_UDR_DETECT_BEGIN_DATA_FRAME) \
-                                                  || ((__VALUE__) == LL_SPI_UDR_DETECT_END_DATA_FRAME)   \
-                                                  || ((__VALUE__) == LL_SPI_UDR_DETECT_BEGIN_ACTIVE_NSS))
+#define IS_LL_SPI_UDR_DETECT_BEGIN_DATA(__VALUE__)  (((__VALUE__) == LL_SPI_UDR_DETECT_BEGIN_DATA_FRAME) || \
+                                                     ((__VALUE__) == LL_SPI_UDR_DETECT_END_DATA_FRAME)   || \
+                                                     ((__VALUE__) == LL_SPI_UDR_DETECT_BEGIN_ACTIVE_NSS))
 
-#define IS_LL_SPI_PROTOCOL(__VALUE__)               (((__VALUE__) == LL_SPI_PROTOCOL_MOTOROLA)           \
-                                                  || ((__VALUE__) == LL_SPI_PROTOCOL_TI))
+#define IS_LL_SPI_PROTOCOL(__VALUE__)               (((__VALUE__) == LL_SPI_PROTOCOL_MOTOROLA)           || \
+                                                     ((__VALUE__) == LL_SPI_PROTOCOL_TI))
 
-#define IS_LL_SPI_PHASE(__VALUE__)                  (((__VALUE__) == LL_SPI_PHASE_1EDGE)                 \
-                                                  || ((__VALUE__) == LL_SPI_PHASE_2EDGE))
+#define IS_LL_SPI_PHASE(__VALUE__)                  (((__VALUE__) == LL_SPI_PHASE_1EDGE)                 || \
+                                                     ((__VALUE__) == LL_SPI_PHASE_2EDGE))
 
-#define IS_LL_SPI_POLARITY(__VALUE__)               (((__VALUE__) == LL_SPI_POLARITY_LOW)                \
-                                                  || ((__VALUE__) == LL_SPI_POLARITY_HIGH))
+#define IS_LL_SPI_POLARITY(__VALUE__)               (((__VALUE__) == LL_SPI_POLARITY_LOW)                || \
+                                                     ((__VALUE__) == LL_SPI_POLARITY_HIGH))
 
-#define IS_LL_SPI_BAUDRATEPRESCALER(__VALUE__)      (((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV2)      \
-                                                  || ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV4)      \
-                                                  || ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV8)      \
-                                                  || ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV16)     \
-                                                  || ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV32)     \
-                                                  || ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV64)     \
-                                                  || ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV128)    \
-                                                  || ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV256))
+#define IS_LL_SPI_BAUDRATEPRESCALER(__VALUE__)      (((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_BYPASS)    || \
+                                                     ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV2)      || \
+                                                     ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV4)      || \
+                                                     ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV8)      || \
+                                                     ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV16)     || \
+                                                     ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV32)     || \
+                                                     ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV64)     || \
+                                                     ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV128)    || \
+                                                     ((__VALUE__) == LL_SPI_BAUDRATEPRESCALER_DIV256))
 
-#define IS_LL_SPI_BITORDER(__VALUE__)               (((__VALUE__) == LL_SPI_LSB_FIRST)                   \
-                                                  || ((__VALUE__) == LL_SPI_MSB_FIRST))
+#define IS_LL_SPI_BITORDER(__VALUE__)               (((__VALUE__) == LL_SPI_LSB_FIRST)                   || \
+                                                     ((__VALUE__) == LL_SPI_MSB_FIRST))
 
-#define IS_LL_SPI_TRANSFER_DIRECTION(__VALUE__)     (((__VALUE__) == LL_SPI_FULL_DUPLEX)                 \
-                                                  || ((__VALUE__) == LL_SPI_SIMPLEX_TX)                  \
-                                                  || ((__VALUE__) == LL_SPI_SIMPLEX_RX)                  \
-                                                  || ((__VALUE__) == LL_SPI_HALF_DUPLEX_RX)              \
-                                                  || ((__VALUE__) == LL_SPI_HALF_DUPLEX_TX))
+#define IS_LL_SPI_TRANSFER_DIRECTION(__VALUE__)     (((__VALUE__) == LL_SPI_FULL_DUPLEX)                 || \
+                                                     ((__VALUE__) == LL_SPI_SIMPLEX_TX)                  || \
+                                                     ((__VALUE__) == LL_SPI_SIMPLEX_RX)                  || \
+                                                     ((__VALUE__) == LL_SPI_HALF_DUPLEX_RX)              || \
+                                                     ((__VALUE__) == LL_SPI_HALF_DUPLEX_TX))
 
-#define IS_LL_SPI_DATAWIDTH(__VALUE__)              (((__VALUE__) == LL_SPI_DATAWIDTH_4BIT)              \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_5BIT)              \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_6BIT)              \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_7BIT)              \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_8BIT)              \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_9BIT)              \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_10BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_11BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_12BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_13BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_14BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_15BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_16BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_17BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_18BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_19BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_20BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_21BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_22BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_23BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_24BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_25BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_26BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_27BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_28BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_29BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_30BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_31BIT)             \
-                                                  || ((__VALUE__) == LL_SPI_DATAWIDTH_32BIT))
+#define IS_LL_SPI_DATAWIDTH(__VALUE__)              (((__VALUE__) == LL_SPI_DATAWIDTH_4BIT)              || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_5BIT)              || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_6BIT)              || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_7BIT)              || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_8BIT)              || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_9BIT)              || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_10BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_11BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_12BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_13BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_14BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_15BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_16BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_17BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_18BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_19BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_20BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_21BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_22BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_23BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_24BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_25BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_26BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_27BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_28BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_29BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_30BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_31BIT)             || \
+                                                     ((__VALUE__) == LL_SPI_DATAWIDTH_32BIT))
 
-#define IS_LL_SPI_FIFO_TH(__VALUE__)                (((__VALUE__) == LL_SPI_FIFO_TH_01DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_02DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_03DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_04DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_05DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_06DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_07DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_08DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_09DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_10DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_11DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_12DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_13DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_14DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_15DATA)              \
-                                                  || ((__VALUE__) == LL_SPI_FIFO_TH_16DATA))
+#define IS_LL_SPI_FIFO_TH(__VALUE__)                (((__VALUE__) == LL_SPI_FIFO_TH_01DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_02DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_03DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_04DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_05DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_06DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_07DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_08DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_09DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_10DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_11DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_12DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_13DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_14DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_15DATA)              || \
+                                                     ((__VALUE__) == LL_SPI_FIFO_TH_16DATA))
 
-#define IS_LL_SPI_CRC(__VALUE__)                    (((__VALUE__) == LL_SPI_CRC_4BIT)                    \
-                                                  || ((__VALUE__) == LL_SPI_CRC_5BIT)                    \
-                                                  || ((__VALUE__) == LL_SPI_CRC_6BIT)                    \
-                                                  || ((__VALUE__) == LL_SPI_CRC_7BIT)                    \
-                                                  || ((__VALUE__) == LL_SPI_CRC_8BIT)                    \
-                                                  || ((__VALUE__) == LL_SPI_CRC_9BIT)                    \
-                                                  || ((__VALUE__) == LL_SPI_CRC_10BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_11BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_12BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_13BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_14BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_15BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_16BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_17BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_18BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_19BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_20BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_21BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_22BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_23BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_24BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_25BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_26BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_27BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_28BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_29BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_30BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_31BIT)                   \
-                                                  || ((__VALUE__) == LL_SPI_CRC_32BIT))
+#define IS_LL_SPI_CRC(__VALUE__)                    (((__VALUE__) == LL_SPI_CRC_4BIT)                    || \
+                                                     ((__VALUE__) == LL_SPI_CRC_5BIT)                    || \
+                                                     ((__VALUE__) == LL_SPI_CRC_6BIT)                    || \
+                                                     ((__VALUE__) == LL_SPI_CRC_7BIT)                    || \
+                                                     ((__VALUE__) == LL_SPI_CRC_8BIT)                    || \
+                                                     ((__VALUE__) == LL_SPI_CRC_9BIT)                    || \
+                                                     ((__VALUE__) == LL_SPI_CRC_10BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_11BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_12BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_13BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_14BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_15BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_16BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_17BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_18BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_19BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_20BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_21BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_22BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_23BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_24BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_25BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_26BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_27BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_28BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_29BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_30BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_31BIT)                   || \
+                                                     ((__VALUE__) == LL_SPI_CRC_32BIT))
 
-#define IS_LL_SPI_NSS(__VALUE__)                    (((__VALUE__) == LL_SPI_NSS_SOFT)                    \
-                                                  || ((__VALUE__) == LL_SPI_NSS_HARD_INPUT)              \
-                                                  || ((__VALUE__) == LL_SPI_NSS_HARD_OUTPUT))
+#define IS_LL_SPI_NSS(__VALUE__)                    (((__VALUE__) == LL_SPI_NSS_SOFT)                    || \
+                                                     ((__VALUE__) == LL_SPI_NSS_HARD_INPUT)              || \
+                                                     ((__VALUE__) == LL_SPI_NSS_HARD_OUTPUT))
 
-#define IS_LL_SPI_RX_FIFO(__VALUE__)                (((__VALUE__) == LL_SPI_RX_FIFO_0PACKET)             \
-                                                  || ((__VALUE__) == LL_SPI_RX_FIFO_1PACKET)             \
-                                                  || ((__VALUE__) == LL_SPI_RX_FIFO_2PACKET)             \
-                                                  || ((__VALUE__) == LL_SPI_RX_FIFO_3PACKET))
+#define IS_LL_SPI_RX_FIFO(__VALUE__)                (((__VALUE__) == LL_SPI_RX_FIFO_0PACKET)             || \
+                                                     ((__VALUE__) == LL_SPI_RX_FIFO_1PACKET)             || \
+                                                     ((__VALUE__) == LL_SPI_RX_FIFO_2PACKET)             || \
+                                                     ((__VALUE__) == LL_SPI_RX_FIFO_3PACKET))
 
-#define IS_LL_SPI_CRCCALCULATION(__VALUE__)         (((__VALUE__) == LL_SPI_CRCCALCULATION_ENABLE)       \
-                                                  || ((__VALUE__) == LL_SPI_CRCCALCULATION_DISABLE))
+#define IS_LL_SPI_CRCCALCULATION(__VALUE__)         (((__VALUE__) == LL_SPI_CRCCALCULATION_ENABLE)       || \
+                                                     ((__VALUE__) == LL_SPI_CRCCALCULATION_DISABLE))
 
 #define IS_LL_SPI_CRC_POLYNOMIAL(__VALUE__)          ((__VALUE__) >= 0x1UL)
 
@@ -256,6 +257,7 @@ ErrorStatus LL_SPI_DeInit(SPI_TypeDef *SPIx)
     /* Release reset of SPI clock */
     LL_APB2_GRP1_ReleaseReset(LL_APB2_GRP1_PERIPH_SPI1);
 
+    /* Update the return status */
     status = SUCCESS;
   }
 #endif /* SPI1 */
@@ -268,6 +270,7 @@ ErrorStatus LL_SPI_DeInit(SPI_TypeDef *SPIx)
     /* Release reset of SPI clock */
     LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_SPI2);
 
+    /* Update the return status */
     status = SUCCESS;
   }
 #endif /* SPI2 */
@@ -280,6 +283,7 @@ ErrorStatus LL_SPI_DeInit(SPI_TypeDef *SPIx)
     /* Release reset of SPI clock */
     LL_APB3_GRP1_ReleaseReset(LL_APB3_GRP1_PERIPH_SPI3);
 
+    /* Update the return status */
     status = SUCCESS;
   }
 #endif /* SPI3 */
@@ -292,6 +296,7 @@ ErrorStatus LL_SPI_DeInit(SPI_TypeDef *SPIx)
     /* Release reset of SPI clock */
     LL_APB2_GRP1_ReleaseReset(LL_APB2_GRP1_PERIPH_SPI4);
 
+    /* Update the return status */
     status = SUCCESS;
   }
 #endif /* SPI4 */
@@ -304,6 +309,7 @@ ErrorStatus LL_SPI_DeInit(SPI_TypeDef *SPIx)
     /* Release reset of SPI clock */
     LL_APB2_GRP1_ReleaseReset(LL_APB2_GRP1_PERIPH_SPI5);
 
+    /* Update the return status */
     status = SUCCESS;
   }
 #endif /* SPI5 */
@@ -316,6 +322,7 @@ ErrorStatus LL_SPI_DeInit(SPI_TypeDef *SPIx)
     /* Release reset of SPI clock */
     LL_APB5_GRP1_ReleaseReset(LL_APB5_GRP1_PERIPH_SPI6);
 
+    /* Update the return status */
     status = SUCCESS;
   }
 #endif /* SPI6 */
@@ -325,8 +332,9 @@ ErrorStatus LL_SPI_DeInit(SPI_TypeDef *SPIx)
 
 /**
   * @brief  Initialize the SPI registers according to the specified parameters in SPI_InitStruct.
-  * @note   As some bits in SPI configuration registers can only be written when the SPI is disabled (SPI_CR1_SPE bit =0),
-  *         SPI IP should be in disabled state prior calling this function. Otherwise, ERROR result will be returned.
+  * @note   As some bits in SPI configuration registers can only be written when the SPI is disabled
+  *         (SPI_CR1_SPE bit =0), SPI IP should be in disabled state prior calling this function.
+  *         Otherwise, ERROR result will be returned.
   * @param  SPIx SPI Instance
   * @param  SPI_InitStruct pointer to a @ref LL_SPI_InitTypeDef structure
   * @retval An ErrorStatus enumeration value. (Return always SUCCESS)
@@ -351,22 +359,24 @@ ErrorStatus LL_SPI_Init(SPI_TypeDef *SPIx, LL_SPI_InitTypeDef *SPI_InitStruct)
   assert_param(IS_LL_SPI_BITORDER(SPI_InitStruct->BitOrder));
   assert_param(IS_LL_SPI_CRCCALCULATION(SPI_InitStruct->CRCCalculation));
 
+  /* Check the SPI instance is not enabled */
   if (LL_SPI_IsEnabled(SPIx) == 0x00000000UL)
   {
     /*---------------------------- SPIx CFG1 Configuration ------------------------
        * Configure SPIx CFG1 with parameters:
-       * - Master Baud Rate       : SPI_CFG1_MBR[2:0] bits
+       * - Master Baud Rate       : SPI_CFG1_MBR[2:0] bits & SPI_CFG1_BPASS bit
        * - CRC Computation Enable : SPI_CFG1_CRCEN bit
        * - Length of data frame   : SPI_CFG1_DSIZE[4:0] bits
        */
-    MODIFY_REG(SPIx->CFG1, SPI_CFG1_MBR              | SPI_CFG1_CRCEN                 | SPI_CFG1_DSIZE,
+    MODIFY_REG(SPIx->CFG1, SPI_CFG1_BPASS | SPI_CFG1_MBR | SPI_CFG1_CRCEN | SPI_CFG1_DSIZE,
                SPI_InitStruct->BaudRate  | SPI_InitStruct->CRCCalculation | SPI_InitStruct->DataWidth);
 
     tmp_nss  = SPI_InitStruct->NSS;
     tmp_mode = SPI_InitStruct->Mode;
 
     /* Checks to setup Internal SS signal level and avoid a MODF Error */
-    if ((LL_SPI_GetNSSPolarity(SPIx) == LL_SPI_NSS_POLARITY_LOW) && (tmp_nss == LL_SPI_NSS_SOFT) && (tmp_mode == LL_SPI_MODE_MASTER))
+    if ((LL_SPI_GetNSSPolarity(SPIx) == LL_SPI_NSS_POLARITY_LOW) && (tmp_nss == LL_SPI_NSS_SOFT) &&
+        (tmp_mode == LL_SPI_MODE_MASTER))
     {
       LL_SPI_SetInternalSSLevel(SPIx, LL_SPI_SS_LEVEL_HIGH);
     }
@@ -383,8 +393,8 @@ ErrorStatus LL_SPI_Init(SPI_TypeDef *SPIx, LL_SPI_InitTypeDef *SPI_InitStruct)
     MODIFY_REG(SPIx->CFG2, SPI_CFG2_SSM   | SPI_CFG2_SSOE    |
                SPI_CFG2_CPOL              | SPI_CFG2_CPHA    |
                SPI_CFG2_LSBFRST           | SPI_CFG2_MASTER  | SPI_CFG2_COMM,
-               SPI_InitStruct->NSS        |   SPI_InitStruct->ClockPolarity                    |
-               SPI_InitStruct->ClockPhase |   SPI_InitStruct->BitOrder                         |
+               SPI_InitStruct->NSS        | SPI_InitStruct->ClockPolarity                    |
+               SPI_InitStruct->ClockPhase | SPI_InitStruct->BitOrder                         |
                SPI_InitStruct->Mode       | (SPI_InitStruct->TransferDirection & SPI_CFG2_COMM));
 
     /*---------------------------- SPIx CR1 Configuration ------------------------
@@ -438,90 +448,6 @@ void LL_SPI_StructInit(LL_SPI_InitTypeDef *SPI_InitStruct)
 /**
   * @}
   */
-
-/**
-  * @}
-  */
-
-/** @addtogroup I2S_LL
-  * @{
-  */
-
-/* Private types -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private constants ---------------------------------------------------------*/
-/** @defgroup I2S_LL_Private_Constants I2S Private Constants
-  * @{
-  */
-/* I2S registers Masks */
-#define I2S_I2SCFGR_CLEAR_MASK                       (SPI_I2SCFGR_CHLEN   | SPI_I2SCFGR_DATLEN | \
-                                                      SPI_I2SCFGR_DATFMT  | SPI_I2SCFGR_CKPOL  | \
-                                                      SPI_I2SCFGR_I2SSTD  | SPI_I2SCFGR_MCKOE  | \
-                                                      SPI_I2SCFGR_I2SCFG  | SPI_I2SCFGR_I2SMOD )
-
-/**
-  * @}
-  */
-/* Private macros ------------------------------------------------------------*/
-/** @defgroup I2S_LL_Private_Macros I2S Private Macros
-  * @{
-  */
-
-#define IS_LL_I2S_DATAFORMAT(__VALUE__)            (((__VALUE__) == LL_I2S_DATAFORMAT_16B)              \
-                                                 || ((__VALUE__) == LL_I2S_DATAFORMAT_16B_EXTENDED)     \
-                                                 || ((__VALUE__) == LL_I2S_DATAFORMAT_24B)              \
-                                                 || ((__VALUE__) == LL_I2S_DATAFORMAT_24B_LEFT_ALIGNED) \
-                                                 || ((__VALUE__) == LL_I2S_DATAFORMAT_32B))
-
-#define IS_LL_I2S_CHANNEL_LENGTH_TYPE (__VALUE__)  (((__VALUE__) == LL_I2S_SLAVE_VARIABLE_CH_LENGTH)    \
-                                                 || ((__VALUE__) == LL_I2S_SLAVE_FIXED_CH_LENGTH))
-
-#define IS_LL_I2S_CKPOL(__VALUE__)                  (((__VALUE__) == LL_I2S_POLARITY_LOW)               \
-                                                 || ((__VALUE__) == LL_I2S_POLARITY_HIGH))
-
-#define IS_LL_I2S_STANDARD(__VALUE__)              (((__VALUE__) == LL_I2S_STANDARD_PHILIPS)            \
-                                                 || ((__VALUE__) == LL_I2S_STANDARD_MSB)                \
-                                                 || ((__VALUE__) == LL_I2S_STANDARD_LSB)                \
-                                                 || ((__VALUE__) == LL_I2S_STANDARD_PCM_SHORT)          \
-                                                 || ((__VALUE__) == LL_I2S_STANDARD_PCM_LONG))
-
-#define IS_LL_I2S_MODE(__VALUE__)                  (((__VALUE__) == LL_I2S_MODE_SLAVE_TX)               \
-                                                 || ((__VALUE__) == LL_I2S_MODE_SLAVE_RX)               \
-                                                 || ((__VALUE__) == LL_I2S_MODE_SLAVE_FULL_DUPLEX)      \
-                                                 || ((__VALUE__) == LL_I2S_MODE_MASTER_TX)              \
-                                                 || ((__VALUE__) == LL_I2S_MODE_MASTER_RX)              \
-                                                 || ((__VALUE__) == LL_I2S_MODE_MASTER_FULL_DUPLEX))
-
-#define IS_LL_I2S_MCLK_OUTPUT(__VALUE__)           (((__VALUE__) == LL_I2S_MCLK_OUTPUT_ENABLE)          \
-                                                 || ((__VALUE__) == LL_I2S_MCLK_OUTPUT_DISABLE))
-
-#define IS_LL_I2S_AUDIO_FREQ(__VALUE__)           ((((__VALUE__) >= LL_I2S_AUDIOFREQ_8K)                \
-                                                 && ((__VALUE__) <= LL_I2S_AUDIOFREQ_192K))             \
-                                                 || ((__VALUE__) == LL_I2S_AUDIOFREQ_DEFAULT))
-
-#define IS_LL_I2S_PRESCALER_LINEAR(__VALUE__)       ((__VALUE__) <= 0xFFUL)
-
-#define IS_LL_I2S_PRESCALER_PARITY(__VALUE__)      (((__VALUE__) == LL_I2S_PRESCALER_PARITY_EVEN)       \
-                                                 || ((__VALUE__) == LL_I2S_PRESCALER_PARITY_ODD))
-
-#define IS_LL_I2S_FIFO_TH (__VALUE__)              (((__VALUE__) == LL_I2S_LL_I2S_FIFO_TH_01DATA)       \
-                                                 || ((__VALUE__) == LL_I2S_LL_I2S_FIFO_TH_02DATA)       \
-                                                 || ((__VALUE__) == LL_I2S_LL_I2S_FIFO_TH_03DATA)       \
-                                                 || ((__VALUE__) == LL_I2S_LL_I2S_FIFO_TH_04DATA)       \
-                                                 || ((__VALUE__) == LL_I2S_LL_I2S_FIFO_TH_05DATA)       \
-                                                 || ((__VALUE__) == LL_I2S_LL_I2S_FIFO_TH_06DATA)       \
-                                                 || ((__VALUE__) == LL_I2S_LL_I2S_FIFO_TH_07DATA)       \
-                                                 || ((__VALUE__) == LL_I2S_LL_I2S_FIFO_TH_08DATA))
-
-#define IS_LL_I2S_BIT_ORDER(__VALUE__)             (((__VALUE__) == LL_I2S_LSB_FIRST)                   \
-                                                 || ((__VALUE__) == LL_I2S_MSB_FIRST))
-/**
-  * @}
-  */
-
-/* Private function prototypes -----------------------------------------------*/
-
-/* Exported functions --------------------------------------------------------*/
 
 /**
   * @}

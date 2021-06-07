@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -88,7 +88,8 @@ typedef struct __DCACHE_HandleTypeDef
 /**
   * @brief  HAL DCACHE Callback pointer definition
   */
-typedef  void (*pDCACHE_CallbackTypeDef)(DCACHE_HandleTypeDef *hdcache);  /*!< Pointer to a DCACHE common callback function */
+/*!< Pointer to a DCACHE common callback function */
+typedef  void (*pDCACHE_CallbackTypeDef)(DCACHE_HandleTypeDef *hdcache);
 
 /**
   * @brief  HAL DCACHE Callback ID enumeration definition
@@ -135,8 +136,9 @@ typedef enum
 #define DCACHE_MONITOR_READ_HIT        DCACHE_CR_RHITMEN   /*!< Read Hit monitoring */
 #define DCACHE_MONITOR_READ_MISS       DCACHE_CR_RMISSMEN  /*!< Read Miss monitoring */
 #define DCACHE_MONITOR_WRITE_HIT       DCACHE_CR_WHITMEN   /*!< Write Hit monitoring */
-#define DCACHE_MONITOR_WRITE_MISS      DCACHE_CR_WMISSMEN  /*!< write Miss monitoring */
-#define DCACHE_MONITOR_ALL             (DCACHE_CR_RHITMEN | DCACHE_CR_RMISSMEN | DCACHE_CR_WHITMEN | DCACHE_CR_WMISSMEN)
+#define DCACHE_MONITOR_WRITE_MISS      DCACHE_CR_WMISSMEN  /*!< Write Miss monitoring */
+#define DCACHE_MONITOR_ALL             (DCACHE_CR_RHITMEN | DCACHE_CR_RMISSMEN | \
+                                        DCACHE_CR_WHITMEN | DCACHE_CR_WMISSMEN)
 /**
   * @}
   */
@@ -187,7 +189,7 @@ typedef enum
   *         This parameter can be any combination of the following values:
   *            @arg @ref DCACHE_IT_BUSYEND  Busy end interrupt
   *            @arg @ref DCACHE_IT_ERROR    Cache error interrupt
-  *            @arg @ref DCACHE_IT_CMDEND   Cache error interrupt
+  *            @arg @ref DCACHE_IT_CMDEND   Cache Command end interrupt
   * @retval None
   */
 #define __HAL_DCACHE_ENABLE_IT(__HANDLE__, __INTERRUPT__) SET_BIT((__HANDLE__)->Instance->IER, (__INTERRUPT__))
@@ -198,7 +200,7 @@ typedef enum
   *         This parameter can be any combination of the following values:
   *            @arg @ref DCACHE_IT_BUSYEND  Busy end interrupt
   *            @arg @ref DCACHE_IT_ERROR    Cache error interrupt
-  *            @arg @ref DCACHE_IT_CMDEND   Cache error interrupt
+  *            @arg @ref DCACHE_IT_CMDEND   Cache Command end interrupt
   * @retval None
   */
 #define __HAL_DCACHE_DISABLE_IT(__HANDLE__, __INTERRUPT__) CLEAR_BIT((__HANDLE__)->Instance->IER, (__INTERRUPT__))
@@ -208,23 +210,23 @@ typedef enum
   * @param  __INTERRUPT__ specifies the DCACHE interrupt source to check.
   *         This parameter can be any combination of the following values:
   *            @arg @ref DCACHE_IT_BUSYEND  Busy end interrupt
-  *            @arg @ref DCACHE_IT_ERROR  Cache error interrupt
-  *            @arg @ref DCACHE_IT_CMDEND  Cache error interrupt
+  *            @arg @ref DCACHE_IT_ERROR    Cache error interrupt
+  *            @arg @ref DCACHE_IT_CMDEND   Cache Command end interrupt
   *
   * @retval The state of __INTERRUPT__ (SET or RESET).
   */
 #define __HAL_DCACHE_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)  \
-          ((READ_BIT((__HANDLE__)->Instance->IER, (__INTERRUPT__)) == (__INTERRUPT__)) ? SET : RESET)
+  ((READ_BIT((__HANDLE__)->Instance->IER, (__INTERRUPT__)) == (__INTERRUPT__)) ? SET : RESET)
 
 /** @brief  Check whether the selected DCACHE flag is set or not.
   * @param  __HANDLE__ specifies the DCACHE handle.
   * @param  __FLAG__   specifies the flag to check.
   *         This parameter can be one of the following values:
-  *            @arg @ref DCACHE_FLAG_BUSY  Busy flag
+  *            @arg @ref DCACHE_FLAG_BUSY     Busy flag
   *            @arg @ref DCACHE_FLAG_BUSYEND  Busy end flag
   *            @arg @ref DCACHE_FLAG_ERROR    Cache error flag
-  *            @arg @ref DCACHE_FLAG_BUSYCMD  Cache error flag
-  *            @arg @ref DCACHE_FLAG_CMDEND   Cache error flag
+  *            @arg @ref DCACHE_FLAG_BUSYCMD  Cache Busy command flag
+  *            @arg @ref DCACHE_FLAG_CMDEND   Cache command end flag
   * @retval The state of __FLAG__ (0 or 1).
   */
 #define __HAL_DCACHE_GET_FLAG(__HANDLE__, __FLAG__) ((READ_BIT((__HANDLE__)->Instance->SR, (__FLAG__)) != 0U) ? 1U : 0U)
@@ -235,7 +237,7 @@ typedef enum
   *         This parameter can be any combination of the following values:
   *            @arg @ref DCACHE_FLAG_BUSYEND  Busy end flag
   *            @arg @ref DCACHE_FLAG_ERROR    Cache error flag
-  *            @arg @ref DCACHE_FLAG_CMDEND   Cache error flag
+  *            @arg @ref DCACHE_FLAG_CMDEND   Cache command end flag
   */
 #define __HAL_DCACHE_CLEAR_FLAG(__HANDLE__, __FLAG__) WRITE_REG((__HANDLE__)->Instance->FCR, (__FLAG__))
 
@@ -260,15 +262,20 @@ HAL_StatusTypeDef HAL_DCACHE_SetReadBurstType(DCACHE_HandleTypeDef *hdcache, uin
 
 /*** Cache maintenance in blocking mode (Polling) ***/
 HAL_StatusTypeDef HAL_DCACHE_Invalidate(DCACHE_HandleTypeDef *hdcache);
-HAL_StatusTypeDef HAL_DCACHE_InvalidateByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize);
-HAL_StatusTypeDef HAL_DCACHE_CleanByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize);
-HAL_StatusTypeDef HAL_DCACHE_CleanInvalidateByAddr(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize);
+HAL_StatusTypeDef HAL_DCACHE_InvalidateByAddr(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr,
+                                              uint32_t dSize);
+HAL_StatusTypeDef HAL_DCACHE_CleanByAddr(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr, uint32_t dSize);
+HAL_StatusTypeDef HAL_DCACHE_CleanInvalidateByAddr(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr,
+                                                   uint32_t dSize);
 
 /*** Cache maintenance in non-blocking mode (Interrupt) ***/
 HAL_StatusTypeDef HAL_DCACHE_Invalidate_IT(DCACHE_HandleTypeDef *hdcache);
-HAL_StatusTypeDef HAL_DCACHE_InvalidateByAddr_IT(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize);
-HAL_StatusTypeDef HAL_DCACHE_CleanByAddr_IT(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize);
-HAL_StatusTypeDef HAL_DCACHE_CleanInvalidateByAddr_IT(DCACHE_HandleTypeDef *hdcache, uint32_t *addr, uint32_t dsize);
+HAL_StatusTypeDef HAL_DCACHE_InvalidateByAddr_IT(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr,
+                                                 uint32_t dSize);
+HAL_StatusTypeDef HAL_DCACHE_CleanByAddr_IT(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr,
+                                            uint32_t dSize);
+HAL_StatusTypeDef HAL_DCACHE_CleanInvalidateByAddr_IT(DCACHE_HandleTypeDef *hdcache, const uint32_t *const pAddr,
+                                                      uint32_t dSize);
 
 /*** IRQHandler and Callbacks ***/
 void HAL_DCACHE_IRQHandler(DCACHE_HandleTypeDef *hdcache);
@@ -279,7 +286,8 @@ void HAL_DCACHE_InvalidateCompleteCallback(DCACHE_HandleTypeDef *hdcache);
 void HAL_DCACHE_CleanAndInvalidateByAddrCallback(DCACHE_HandleTypeDef *hdcache);
 
 /* Callbacks Register/UnRegister functions ***/
-HAL_StatusTypeDef HAL_DCACHE_RegisterCallback(DCACHE_HandleTypeDef *hdcache, HAL_DCACHE_CallbackIDTypeDef CallbackID, pDCACHE_CallbackTypeDef pCallback);
+HAL_StatusTypeDef HAL_DCACHE_RegisterCallback(DCACHE_HandleTypeDef *hdcache, HAL_DCACHE_CallbackIDTypeDef CallbackID,
+                                              pDCACHE_CallbackTypeDef pCallback);
 HAL_StatusTypeDef HAL_DCACHE_UnRegisterCallback(DCACHE_HandleTypeDef *hdcache, HAL_DCACHE_CallbackIDTypeDef CallbackID);
 
 /*** Performance instruction cache monitoring functions ***/
@@ -289,11 +297,11 @@ uint32_t HAL_DCACHE_Monitor_GetWriteHitValue(DCACHE_HandleTypeDef *hdcache);
 uint32_t HAL_DCACHE_Monitor_GetWriteMissValue(DCACHE_HandleTypeDef *hdcache);
 HAL_StatusTypeDef HAL_DCACHE_Monitor_Reset(DCACHE_HandleTypeDef *hdcache, uint32_t MonitorType);
 HAL_StatusTypeDef HAL_DCACHE_Monitor_Start(DCACHE_HandleTypeDef *hdcache, uint32_t MonitorType);
-HAL_StatusTypeDef HAL_DCACHE_Monitor_Stop (DCACHE_HandleTypeDef *hdcache, uint32_t MonitorType);
+HAL_StatusTypeDef HAL_DCACHE_Monitor_Stop(DCACHE_HandleTypeDef *hdcache, uint32_t MonitorType);
 
 /* Peripheral State functions ***************************************************/
 HAL_DCACHE_StateTypeDef HAL_DCACHE_GetState(DCACHE_HandleTypeDef *hdcache);
-
+uint32_t HAL_DCACHE_GetError(DCACHE_HandleTypeDef *hdcache);
 /**
   * @}
   */
@@ -302,24 +310,6 @@ HAL_DCACHE_StateTypeDef HAL_DCACHE_GetState(DCACHE_HandleTypeDef *hdcache);
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
 /* Private macros ------------------------------------------------------------*/
-/** @defgroup DCACHE_Private_Macros DCACHE Private Macros
-  * @{
-  */
-#define IS_DCACHE_REGION_SIZE(__SIZE__)                ((__SIZE__) > 0U)
-
-#define IS_DCACHE_MONITOR_TYPE(__TYPE__)               (((__TYPE__) & ~DCACHE_MONITOR_ALL) == 0U)
-
-#define IS_DCACHE_SINGLE_MONITOR_TYPE(__TYPE__)        (((__TYPE__) == DCACHE_MONITOR_READ_HIT)  || \
-                                                        ((__TYPE__) == DCACHE_MONITOR_READ_MISS) || \
-                                                        ((__TYPE__) == DCACHE_MONITOR_WRITE_HIT) || \
-                                                        ((__TYPE__) == DCACHE_MONITOR_WRITE_MISS))
-
-#define IS_DCACHE_READ_BURST_TYPE(__OUTPUTBURSTTYPE__) (((__OUTPUTBURSTTYPE__) == DCACHE_READ_BURST_WRAP) || \
-                                                        ((__OUTPUTBURSTTYPE__) == DCACHE_READ_BURST_INCR))
-
-/**
-  * @}
-  */
 
 /**
   * @}

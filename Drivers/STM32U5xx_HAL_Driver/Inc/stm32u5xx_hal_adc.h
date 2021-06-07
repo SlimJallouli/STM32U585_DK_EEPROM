@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -164,15 +164,13 @@ typedef struct
                                              (in case of usage of ADC group injected, use the equivalent functions
                                              HAL_ADCExInjected_Start(), HAL_ADCEx_InjectedGetValue(), ...). */
 
-   uint32_t LowPowerAutoPowerOff;  /*!< Select the auto-off mode: the ADC automatically powers-off after a
-                                             conversion and automatically wakes-up when a new conversion is triggered
-                                            (with startup time between trigger and start of sampling).
-                                       This feature can be combined with automatic wait mode
-                                      (parameter 'LowPowerAutoWait').
-                                       This parameter can be value of @ref ADC_HAL_LowPower_DPD.
-                                       Note: If activated, this feature also turns off the ADC dedicated 16 MHz
-                                             RC oscillator (HSI16).
-                                             This parameter can be used for ADC4 only. */
+  uint32_t LowPowerAutoPowerOff;  /*!< Select the auto-off low power mode: the ADC automatically powers-off after
+                                        a conversion and automatically wakes-up when a new conversion is triggered.
+                                        This feature can be combined with automatic wait mode ('LowPowerAutoWait').
+                                        This parameter can be value of @ref ADC_HAL_LowPower_DPD.
+                                        Note: If activated, this feature also turns off the ADC dedicated 16 MHz
+                                              RC oscillator (HSI16).
+                                        Note: This parameter can be used for ADC4 only. */
 
   FunctionalState ContinuousConvMode; /*!< Specify whether the conversion is performed in single mode (one conversion)
                                         or continuous mode for ADC group regular, after the first ADC conversion start
@@ -308,8 +306,8 @@ typedef struct
                                              some rearm cycles are inserted before performing ADC conversion
                                              start, inducing a delay of 2 ADC clock cycles. */
 
- uint32_t VrefProtection;         /*!< Select the Vref protection mode: specify VREF+ protection mode
-                                             when multiple ADCs are working simultaneously.
+  uint32_t VrefProtection;        /*!< Select the Vref protection mode: specify VREF+ protection mode
+                                       when multiple ADCs are working simultaneously.
                                        This parameter can be value of @ref ADC_HAL_VrefProt.
                                        Note: This parameter can be used for ADC4 only. */
 
@@ -732,10 +730,10 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 /** @defgroup ADC_HAL_LowPower_DPD ADC low power and deep power down selection
   * @{
   */
-#define ADC_LOW_POWER_NONE              (0x00000000UL)                 /*!< Both Low Power Auto Off and Deep Power Down is Disbaled*/
-#define ADC_LOW_POWER_AUTOFF            (ADC4_PW_AUTOFF)               /*!< Low Power Auto Off Enabled and Deep Power Down is Disbaled*/
-#define ADC_LOW_POWER_DPD               (ADC4_PW_DPD)                  /*!< Low Power Auto Off Disbled and Deep Power Down is Enabaled*/
-#define ADC_LOW_POWER_AUTOFF_DPD        (ADC4_PW_AUTOFF | ADC4_PW_DPD) /*!< Low Power Auto Off Disbled and Deep Power Down is Enabaled*/
+#define ADC_LOW_POWER_NONE              (0x00000000UL)                 /*!< Both Low Power Auto Off and Deep Power Down is Disabled*/
+#define ADC_LOW_POWER_AUTOFF            (ADC4_PW_AUTOFF)               /*!< Low Power Auto Off Enabled and Deep Power Down is Disabled*/
+#define ADC_LOW_POWER_DPD               (ADC4_PW_DPD)                  /*!< Low Power Auto Off Disabled and Deep Power Down is Enabaled*/
+#define ADC_LOW_POWER_AUTOFF_DPD        (ADC4_PW_AUTOFF | ADC4_PW_DPD) /*!< Low Power Auto Off Disabled and Deep Power Down is Enabaled*/
 /**
   * @}
   */
@@ -2076,6 +2074,7 @@ __LL_ADC_CALC_DATA_TO_VOLTAGE((__ADCx__), (__VREFANALOG_VOLTAGE__),   \
   *         internal voltage reference VrefInt.
   *         Otherwise, this macro performs the processing to scale
   *         ADC conversion data to 12 bits.
+  * @param  __ADCx__ ADC instance
   * @param  __VREFINT_ADC_DATA__ ADC conversion data (resolution 12 bits)
   *         of internal voltage reference VrefInt (unit: digital value).
   * @param  __ADC_RESOLUTION__ This parameter can be one of the following values:
@@ -2089,9 +2088,9 @@ __LL_ADC_CALC_DATA_TO_VOLTAGE((__ADCx__), (__VREFANALOG_VOLTAGE__),   \
   *         (2) On STM32U5, parameter available only on ADC instance: ADC4.\n
   * @retval Analog reference voltage (unit: mV)
   */
-#define __HAL_ADC_CALC_VREFANALOG_VOLTAGE(__VREFINT_ADC_DATA__,\
-                                          __ADC_RESOLUTION__)                  \
-__LL_ADC_CALC_VREFANALOG_VOLTAGE((__VREFINT_ADC_DATA__),\
+#define __HAL_ADC_CALC_VREFANALOG_VOLTAGE(__ADCx__, __VREFINT_ADC_DATA__,  \
+                                          __ADC_RESOLUTION__)              \
+__LL_ADC_CALC_VREFANALOG_VOLTAGE((__ADCx__),(__VREFINT_ADC_DATA__),        \
                                  (__ADC_RESOLUTION__))
 
 /**
@@ -2269,7 +2268,7 @@ HAL_StatusTypeDef       HAL_ADC_Start_IT(ADC_HandleTypeDef *hadc);
 HAL_StatusTypeDef       HAL_ADC_Stop_IT(ADC_HandleTypeDef *hadc);
 
 /* Non-blocking mode: DMA */
-HAL_StatusTypeDef       HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, uint32_t *pData, uint32_t Length);
+HAL_StatusTypeDef       HAL_ADC_Start_DMA(ADC_HandleTypeDef *hadc, const uint32_t *pData, uint32_t Length);
 HAL_StatusTypeDef       HAL_ADC_Stop_DMA(ADC_HandleTypeDef *hadc);
 
 /* ADC retrieve conversion value intended to be used with polling or interruption */
@@ -2290,8 +2289,8 @@ void                    HAL_ADC_ErrorCallback(ADC_HandleTypeDef *hadc);
   * @{
   */
 /* Peripheral Control functions ***********************************************/
-HAL_StatusTypeDef       HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConfTypeDef *sConfig);
-HAL_StatusTypeDef       HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDGConfTypeDef *AnalogWDGConfig);
+HAL_StatusTypeDef       HAL_ADC_ConfigChannel(ADC_HandleTypeDef *hadc, ADC_ChannelConfTypeDef *pConfig);
+HAL_StatusTypeDef       HAL_ADC_AnalogWDGConfig(ADC_HandleTypeDef *hadc, ADC_AnalogWDGConfTypeDef *pAnalogWDGConfig);
 
 /**
   * @}

@@ -224,6 +224,8 @@
   * @{
   */
 
+#ifdef HAL_MDF_MODULE_ENABLED
+
 /* Private typedef -----------------------------------------------------------*/
 /** @defgroup MDF_Private_Typedefs  MDF Private Typedefs
   * @{
@@ -383,7 +385,14 @@ HAL_StatusTypeDef HAL_MDF_Init(MDF_HandleTypeDef *hmdf)
                                (hmdf->Init.CommonParam.OutputClock.Pins >> 4U));
             if (hmdf->Init.CommonParam.OutputClock.Trigger.Activation == ENABLE)
             {
-              assert_param(IS_MDF_OUTPUT_CLOCK_TRIGGER_SOURCE(hmdf->Init.CommonParam.OutputClock.Trigger.Source));
+              if (IS_MDF_INSTANCE(hmdf->Instance))
+              {
+                assert_param(IS_MDF_OUTPUT_CLOCK_TRIGGER_SOURCE(hmdf->Init.CommonParam.OutputClock.Trigger.Source));
+              }
+              else /* ADF instance */
+              {
+                assert_param(IS_ADF_OUTPUT_CLOCK_TRIGGER_SOURCE(hmdf->Init.CommonParam.OutputClock.Trigger.Source));
+              }
               assert_param(IS_MDF_OUTPUT_CLOCK_TRIGGER_EDGE(hmdf->Init.CommonParam.OutputClock.Trigger.Edge));
               mdfBase->CKGCR |= (hmdf->Init.CommonParam.OutputClock.Trigger.Source |
                                  hmdf->Init.CommonParam.OutputClock.Trigger.Edge |
@@ -889,7 +898,7 @@ HAL_StatusTypeDef HAL_MDF_UnRegisterSndLvlCallback(MDF_HandleTypeDef *hmdf)
                         ##### Acquisition functions #####
   ==============================================================================
     [..]  This section provides functions allowing to :
-      (+) Start and stop acquisition in polling, interrupt ot DMA mode.
+      (+) Start and stop acquisition in polling, interrupt or DMA mode.
       (+) Wait and get acquisition values.
       (+) Generate pulse on TRGO signal.
       (+) Modify and get some filter parameters during acquisition.
@@ -1186,7 +1195,7 @@ HAL_StatusTypeDef HAL_MDF_GetSnapshotAcqValue(MDF_HandleTypeDef *hmdf, MDF_Snaps
     /* Read value of snapshot data register */
     snpsdr_value = hmdf->Instance->SNPSDR;
 
-    /* Clear snaphot data ready flag */
+    /* Clear snapshot data ready flag */
     hmdf->Instance->DFLTISR |= MDF_DFLTISR_SSDRF;
 
     /* Store value of decimation counter in snapshot parameter structure */
@@ -1372,7 +1381,10 @@ HAL_StatusTypeDef HAL_MDF_AcqStart_IT(MDF_HandleTypeDef *hmdf, MDF_FilterConfigT
         if ((IS_ADF_INSTANCE(hmdf->Instance)) && (pFilterConfig->SoundActivity.Activation == ENABLE))
         {
           /* Enable sound level value ready and sound activity detection interrupts */
-          hmdf->Instance->DFLTIER |= (MDF_DFLTIER_SDLVLIE | MDF_DFLTIER_SDDETIE);
+          assert_param(IS_FUNCTIONAL_STATE(pFilterConfig->SoundActivity.SoundLevelInterrupt));
+          hmdf->Instance->DFLTIER |= (pFilterConfig->SoundActivity.SoundLevelInterrupt == ENABLE) ?
+                                     (MDF_DFLTIER_SDLVLIE | MDF_DFLTIER_SDDETIE) :
+                                     MDF_DFLTIER_SDDETIE;
         }
 
         /* Configure filter and start acquisition */
@@ -1542,7 +1554,10 @@ HAL_StatusTypeDef HAL_MDF_AcqStart_DMA(MDF_HandleTypeDef *hmdf, MDF_FilterConfig
         if ((IS_ADF_INSTANCE(hmdf->Instance)) && (pFilterConfig->SoundActivity.Activation == ENABLE))
         {
           /* Enable sound level value ready and sound activity detection interrupts */
-          hmdf->Instance->DFLTIER |= (MDF_DFLTIER_SDLVLIE | MDF_DFLTIER_SDDETIE);
+          assert_param(IS_FUNCTIONAL_STATE(pFilterConfig->SoundActivity.SoundLevelInterrupt));
+          hmdf->Instance->DFLTIER |= (pFilterConfig->SoundActivity.SoundLevelInterrupt == ENABLE) ?
+                                     (MDF_DFLTIER_SDLVLIE | MDF_DFLTIER_SDDETIE) :
+                                     MDF_DFLTIER_SDDETIE;
         }
 
         /* Enable MDF DMA requests */
@@ -1944,7 +1959,7 @@ HAL_StatusTypeDef HAL_MDF_GetOffset(MDF_HandleTypeDef *hmdf, int32_t *pOffset)
 }
 
 /**
-  * @brief  This function allows to poll for sound level datas.
+  * @brief  This function allows to poll for sound level data.
   * @param  hmdf MDF handle.
   * @param  Timeout Timeout value in milliseconds.
   * @param  pSoundLevel Sound level.
@@ -1979,7 +1994,7 @@ HAL_StatusTypeDef HAL_MDF_PollForSndLvl(MDF_HandleTypeDef *hmdf, uint32_t Timeou
   {
     uint32_t tickstart = HAL_GetTick();
 
-    /* Wait for available sound level datas */
+    /* Wait for available sound level data */
     while (((hmdf->Instance->DFLTISR & MDF_DFLTISR_SDLVLF) != MDF_DFLTISR_SDLVLF) && (status == HAL_OK))
     {
       /* Check the timeout */
@@ -3556,6 +3571,8 @@ static void MDF_DmaErrorCallback(DMA_HandleTypeDef *hdma)
 /**
   * @}
   */
+
+#endif /* HAL_MDF_MODULE_ENABLED */
 
 /**
   * @}

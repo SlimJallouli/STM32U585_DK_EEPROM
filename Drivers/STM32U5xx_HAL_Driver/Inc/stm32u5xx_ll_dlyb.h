@@ -18,34 +18,34 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef stm32u5xx_LL_DLYB_H
-#define stm32u5xx_LL_DLYB_H
+#ifndef STM32U5xx_LL_DLYB_H
+#define STM32U5xx_LL_DLYB_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32u5xx_hal_def.h"
 
-/** @addtogroup stm32u5xx_LL_Driver
+/** @addtogroup STM32U5xx_LL_Driver
   * @{
   */
 
 #if defined(HAL_SD_MODULE_ENABLED) || defined(HAL_QSPI_MODULE_ENABLED)|| defined(HAL_OSPI_MODULE_ENABLED)
 
-/** @addtogroup DLYB_LL DLYB
+/** @addtogroup DLYB
   * @{
   */
 
 /* Exported types ------------------------------------------------------------*/
-/** @defgroup DLYB_LL_Exported_Types DLYB_LL Exported Types
+/** @defgroup DLYB_LL_Exported_Types DLYB Exported Types
   * @{
   */
 
- /**
+/**
   * @brief  DLYB Configuration Structure definition
-  */
+ */
 
 typedef struct
 {
@@ -54,25 +54,21 @@ typedef struct
 
   uint32_t PhaseSel;               /*!< Specifies the Phase for the output clock.
                                         This parameter can be a value between 0 and DLYB_MAX_SELECT             */
-}LL_DLYB_CfgTypeDef ;
+} LL_DLYB_CfgTypeDef;
 
 /**
   * @}
   */
 
 /* Exported constants --------------------------------------------------------*/
-/** @defgroup DLYB_Exported_Constants DelayBlock Exported Constants
+/** @defgroup DLYB_Exported_Constants DLYB Exported Constants
   * @{
   */
 
 #define DLYB_MAX_UNIT   ((uint32_t)0x00000080U) /*!< Max UNIT value (128)  */
 #define DLYB_MAX_SELECT ((uint32_t)0x0000000CU) /*!< Max SELECT value (12)  */
 
-/**
-  * @}
-  */
-
-/** @defgroup DLYB_LL_Flags Flags
+/** @defgroup DLYB_LL_Flags DLYB Flags
   * @{
   */
 
@@ -126,9 +122,13 @@ __STATIC_INLINE void LL_DLYB_Disable(DLYB_TypeDef *DLYBx)
   * @{
   */
 
-void LL_DLYB_SetDelay (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef  *pdlyb_cfg);
-void LL_DLYB_GetDelay (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg);
-uint32_t LL_DLYB_GetClockPeriod (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg);
+void LL_DLYB_SetDelay(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef  *pdlyb_cfg);
+void LL_DLYB_GetDelay(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg);
+uint32_t LL_DLYB_GetClockPeriod(DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_cfg);
+
+/**
+  * @}
+  */
 
 /**
   * @}
@@ -148,6 +148,6 @@ uint32_t LL_DLYB_GetClockPeriod (DLYB_TypeDef *DLYBx, LL_DLYB_CfgTypeDef *pdlyb_
 }
 #endif
 
-#endif /* stm32u5xx_LL_DLYB_H */
+#endif /* STM32U5xx_LL_DLYB_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

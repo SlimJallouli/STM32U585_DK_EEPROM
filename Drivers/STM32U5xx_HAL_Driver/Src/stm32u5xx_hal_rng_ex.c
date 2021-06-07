@@ -51,14 +51,6 @@
   */
 /* Private macros ------------------------------------------------------------*/
 /* Private functions prototypes ----------------------------------------------*/
-/** @addtogroup RNG_Private_Functions
-  * @{
-  */
-HAL_StatusTypeDef RNG_RecoverSeedError(RNG_HandleTypeDef *hrng);
-
-/**
-  * @}
-  */
 /* Private functions  --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 
@@ -148,9 +140,13 @@ HAL_StatusTypeDef HAL_RNGEx_SetConfig(RNG_HandleTypeDef *hrng, RNG_ConfigTypeDef
     {
       if ((HAL_GetTick() - tickstart) > RNG_TIMEOUT_VALUE)
       {
-        hrng->State = HAL_RNG_STATE_READY;
-        hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;
-        return HAL_ERROR;
+        /* New check to avoid false timeout detection in case of prememption */
+        if (HAL_IS_BIT_SET(hrng->Instance->CR, RNG_CR_CONDRST))
+        {
+          hrng->State = HAL_RNG_STATE_READY;
+          hrng->ErrorCode = HAL_RNG_ERROR_TIMEOUT;
+          return HAL_ERROR;
+        }
       }
     }
 

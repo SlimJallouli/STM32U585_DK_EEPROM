@@ -1006,6 +1006,20 @@ HAL_OPAMP_StateTypeDef HAL_OPAMP_GetState(OPAMP_HandleTypeDef *hopamp)
   * @}
   */
 
+/** @defgroup OPAMP_Exported_Functions_Group5 Peripheral Callback functions
+  *  @brief   Peripheral Callback functions
+  *
+@verbatim
+ ===============================================================================
+                      ##### Peripheral Callback functions #####
+ ===============================================================================
+    [..]
+    This subsection permits to get in run-time the status of the peripheral.
+
+@endverbatim
+  * @{
+  */
+
 #if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
 /**
   * @brief  Register a User OPAMP Callback
@@ -1085,7 +1099,6 @@ HAL_StatusTypeDef HAL_OPAMP_RegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_OP
   *          @arg @ref HAL_OPAMP_ALL_CB_ID                   OPAMP All Callbacks
   * @retval status
   */
-
 HAL_StatusTypeDef HAL_OPAMP_UnRegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_OPAMP_CallbackIDTypeDef CallbackID)
 {
   HAL_StatusTypeDef status = HAL_OK;
@@ -1139,8 +1152,11 @@ HAL_StatusTypeDef HAL_OPAMP_UnRegisterCallback(OPAMP_HandleTypeDef *hopamp, HAL_
   __HAL_UNLOCK(hopamp);
   return status;
 }
-
 #endif /* USE_HAL_OPAMP_REGISTER_CALLBACKS */
+
+/**
+  * @}
+  */
 
 
 /**

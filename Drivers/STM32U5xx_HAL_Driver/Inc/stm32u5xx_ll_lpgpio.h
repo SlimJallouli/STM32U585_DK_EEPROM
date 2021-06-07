@@ -6,7 +6,7 @@
   *****************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
+  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -32,7 +32,7 @@ extern "C" {
   * @{
   */
 
-#if defined (LPGPIO)
+#if defined (LPGPIO1)
 
 /** @defgroup LPGPIO_LL LPGPIO
   * @{
@@ -69,7 +69,7 @@ typedef struct
   uint32_t Mode;         /*!< Specifies the operating mode for the selected pins.
                               This parameter can be a value of @ref LPGPIO_LL_EC_MODE.*/
 
-}LL_LPGPIO_InitTypeDef;
+} LL_LPGPIO_InitTypeDef;
 
 /**
   * @}
@@ -81,28 +81,31 @@ typedef struct
   * @{
   */
 
-/** @defgroup LPGPIO_pins LPGPIO pins
+/** @defgroup LPGPIO_LL_EC_PIN PIN
   * @{
   */
-#define LL_LPGPIO_PIN_0                 ((uint16_t)0x0001)  /* Pin 0 selected    */
-#define LL_LPGPIO_PIN_1                 ((uint16_t)0x0002)  /* Pin 1 selected    */
-#define LL_LPGPIO_PIN_2                 ((uint16_t)0x0004)  /* Pin 2 selected    */
-#define LL_LPGPIO_PIN_3                 ((uint16_t)0x0008)  /* Pin 3 selected    */
-#define LL_LPGPIO_PIN_4                 ((uint16_t)0x0010)  /* Pin 4 selected    */
-#define LL_LPGPIO_PIN_5                 ((uint16_t)0x0020)  /* Pin 5 selected    */
-#define LL_LPGPIO_PIN_6                 ((uint16_t)0x0040)  /* Pin 6 selected    */
-#define LL_LPGPIO_PIN_7                 ((uint16_t)0x0080)  /* Pin 7 selected    */
-#define LL_LPGPIO_PIN_8                 ((uint16_t)0x0100)  /* Pin 8 selected    */
-#define LL_LPGPIO_PIN_9                 ((uint16_t)0x0200)  /* Pin 9 selected    */
-#define LL_LPGPIO_PIN_10                ((uint16_t)0x0400)  /* Pin 10 selected   */
-#define LL_LPGPIO_PIN_11                ((uint16_t)0x0800)  /* Pin 11 selected   */
-#define LL_LPGPIO_PIN_12                ((uint16_t)0x1000)  /* Pin 12 selected   */
-#define LL_LPGPIO_PIN_13                ((uint16_t)0x2000)  /* Pin 13 selected   */
-#define LL_LPGPIO_PIN_14                ((uint16_t)0x4000)  /* Pin 14 selected   */
-#define LL_LPGPIO_PIN_15                ((uint16_t)0x8000)  /* Pin 15 selected   */
-#define LL_LPGPIO_PIN_ALL               ((uint16_t)0xFFFF)  /* All pins selected */
-
-#define LL_LPGPIO_PIN_MASK              ((uint32_t)0x0000FFFF) /* PIN mask for assert test */
+#define LL_LPGPIO_PIN_0                   LPGPIO_BSRR_BS0 /*!< Select pin 0 */
+#define LL_LPGPIO_PIN_1                   LPGPIO_BSRR_BS1 /*!< Select pin 1 */
+#define LL_LPGPIO_PIN_2                   LPGPIO_BSRR_BS2 /*!< Select pin 2 */
+#define LL_LPGPIO_PIN_3                   LPGPIO_BSRR_BS3 /*!< Select pin 3 */
+#define LL_LPGPIO_PIN_4                   LPGPIO_BSRR_BS4 /*!< Select pin 4 */
+#define LL_LPGPIO_PIN_5                   LPGPIO_BSRR_BS5 /*!< Select pin 5 */
+#define LL_LPGPIO_PIN_6                   LPGPIO_BSRR_BS6 /*!< Select pin 6 */
+#define LL_LPGPIO_PIN_7                   LPGPIO_BSRR_BS7 /*!< Select pin 7 */
+#define LL_LPGPIO_PIN_8                   LPGPIO_BSRR_BS8 /*!< Select pin 8 */
+#define LL_LPGPIO_PIN_9                   LPGPIO_BSRR_BS9 /*!< Select pin 9 */
+#define LL_LPGPIO_PIN_10                  LPGPIO_BSRR_BS10 /*!< Select pin 10 */
+#define LL_LPGPIO_PIN_11                  LPGPIO_BSRR_BS11 /*!< Select pin 11 */
+#define LL_LPGPIO_PIN_12                  LPGPIO_BSRR_BS12 /*!< Select pin 12 */
+#define LL_LPGPIO_PIN_13                  LPGPIO_BSRR_BS13 /*!< Select pin 13 */
+#define LL_LPGPIO_PIN_14                  LPGPIO_BSRR_BS14 /*!< Select pin 14 */
+#define LL_LPGPIO_PIN_15                  LPGPIO_BSRR_BS15 /*!< Select pin 15 */
+#define LL_LPGPIO_PIN_ALL                 (LPGPIO_BSRR_BS0  | LPGPIO_BSRR_BS1  | LPGPIO_BSRR_BS2  | \
+                                           LPGPIO_BSRR_BS3  | LPGPIO_BSRR_BS4  | LPGPIO_BSRR_BS5  | \
+                                           LPGPIO_BSRR_BS6  | LPGPIO_BSRR_BS7  | LPGPIO_BSRR_BS8  | \
+                                           LPGPIO_BSRR_BS9  | LPGPIO_BSRR_BS10 | LPGPIO_BSRR_BS11 | \
+                                           LPGPIO_BSRR_BS12 | LPGPIO_BSRR_BS13 | LPGPIO_BSRR_BS14 | \
+                                           LPGPIO_BSRR_BS15) /*!< Select all pins */
 /**
   * @}
   */
@@ -192,7 +195,7 @@ typedef struct
   */
 __STATIC_INLINE void LL_LPGPIO_SetPinMode(GPIO_TypeDef *LPGPIOx, uint32_t Pin, uint32_t Mode)
 {
-  MODIFY_REG(LPGPIOx->MODER, (LPGPIO_MODER_MOD0 << (POSITION_VAL(Pin))), (Mode << (POSITION_VAL(Pin) )));
+  MODIFY_REG(LPGPIOx->MODER, (LPGPIO_MODER_MOD0 << (POSITION_VAL(Pin))), (Mode << (POSITION_VAL(Pin))));
 }
 
 /**
@@ -225,8 +228,12 @@ __STATIC_INLINE void LL_LPGPIO_SetPinMode(GPIO_TypeDef *LPGPIOx, uint32_t Pin, u
 __STATIC_INLINE uint32_t LL_LPGPIO_GetPinMode(GPIO_TypeDef *LPGPIOx, uint32_t Pin)
 {
   return (uint32_t)(READ_BIT(LPGPIOx->MODER,
-                             (LPGPIO_MODER_MOD0 << (POSITION_VAL(Pin) ))) >> (POSITION_VAL(Pin) ));
+                             (LPGPIO_MODER_MOD0 << (POSITION_VAL(Pin)))) >> (POSITION_VAL(Pin)));
 }
+
+/**
+  * @}
+  */
 
 
 /** @defgroup LPGPIO_LL_EF_Data_Access Data Access
@@ -270,7 +277,7 @@ __STATIC_INLINE uint32_t LL_LPGPIO_ReadInputPort(GPIO_TypeDef *LPGPIOx)
   */
 __STATIC_INLINE uint32_t LL_LPGPIO_IsInputPinSet(GPIO_TypeDef *LPGPIOx, uint32_t PinMask)
 {
-  return (READ_BIT(LPGPIOx->IDR, PinMask) == (PinMask));
+  return ((READ_BIT(LPGPIOx->IDR, PinMask) == (PinMask)) ? 1UL : 0UL);
 }
 
 /**
@@ -322,7 +329,7 @@ __STATIC_INLINE uint32_t LL_LPGPIO_ReadOutputPort(GPIO_TypeDef *LPGPIOx)
   */
 __STATIC_INLINE uint32_t LL_LPGPIO_IsOutputPinSet(GPIO_TypeDef *LPGPIOx, uint32_t PinMask)
 {
-  return (READ_BIT(LPGPIOx->ODR, PinMask) == (PinMask));
+  return ((READ_BIT(LPGPIOx->ODR, PinMask) == (PinMask)) ? 1UL : 0UL);
 }
 
 /**
@@ -412,6 +419,13 @@ __STATIC_INLINE void LL_LPGPIO_TogglePin(GPIO_TypeDef *LPGPIOx, uint32_t PinMask
   WRITE_REG(LPGPIOx->ODR, READ_REG(LPGPIOx->ODR) ^ PinMask);
 }
 
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 
 #if defined(USE_FULL_LL_DRIVER)
 /** @defgroup GPIO_LL_EF_Init Initialization and de-initialization functions
@@ -419,7 +433,7 @@ __STATIC_INLINE void LL_LPGPIO_TogglePin(GPIO_TypeDef *LPGPIOx, uint32_t PinMask
   */
 
 ErrorStatus LL_LPGPIO_DeInit(GPIO_TypeDef *LPGPIOx);
-ErrorStatus LL_LPGPIO_Init(GPIO_TypeDef *LPGPIOx, LL_LPGPIO_InitTypeDef *LPGPIO_InitStruct);
+ErrorStatus LL_LPGPIO_Init(GPIO_TypeDef *LPGPIOx, const LL_LPGPIO_InitTypeDef *const LPGPIO_InitStruct);
 void        LL_LPGPIO_StructInit(LL_LPGPIO_InitTypeDef *LPGPIO_InitStruct);
 
 /**
@@ -431,11 +445,7 @@ void        LL_LPGPIO_StructInit(LL_LPGPIO_InitTypeDef *LPGPIO_InitStruct);
   * @}
   */
 
-/**
-  * @}
-  */
-
-#endif /* defined (LPGPIO) */
+#endif /* defined (LPGPIO1) */
 /**
   * @}
   */

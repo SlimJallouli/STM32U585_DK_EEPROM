@@ -41,6 +41,16 @@ extern "C" {
 /* Exported types ------------------------------------------------------------*/
 
 /**
+  * @brief  DAC Autonomous Mode Configuration structure definition
+  */
+typedef struct
+{
+  uint32_t AutonomousModeState;    /*!< Specifies the autonomous mode state.
+                                        This parameter can be a value of @ref DACx_Autonomous_mode */
+
+} DAC_AutonomousModeConfTypeDef;
+
+/**
   * @brief  HAL State structures definition
   */
 
@@ -82,6 +92,27 @@ extern "C" {
   * @}
   */
 
+/** @defgroup DACx_Autonomous_mode DACx Autonomous Mode
+  * @brief    DAC Autonomous mode
+  * @{
+  */
+#define DAC_AUTONOMOUS_MODE_DISABLE  0x00000000U          /*!< Autonomous mode disable */
+#define DAC_AUTONOMOUS_MODE_ENABLE   DAC_AUTOCR_AUTOMODE  /*!< Autonomous mode enable  */
+/**
+  * @}
+  */
+
+/** @defgroup DACx_Trigger_Stop_mode DACx Trigger Stop Mode
+  * @brief    DAC Trigger stop mode
+  * @{
+  */
+#define DAC_TRIGGER_STOP_LPTIM1_OUT DAC_TRIGGER_LPTIM1_OUT /*!< LPTIM1 output selected as DAC trigger in stop mode */
+#define DAC_TRIGGER_STOP_LPTIM3_OUT DAC_TRIGGER_LPTIM3_OUT /*!< LPTIM3 output selected as DAC trigger in stop mode */
+#define DAC_TRIGGER_STOP_EXT_IT9    DAC_TRIGGER_EXT_IT9    /*!< EXTI line 9 selected as DAC trigger in stop mode   */
+/**
+  * @}
+  */
+
 /**
   * @}
   */
@@ -94,18 +125,21 @@ extern "C" {
 /** @defgroup DACEx_Private_Macros DACEx Private Macros
   * @{
   */
-#define IS_DAC_TRIGGER(TRIGGER) (((TRIGGER) == DAC_TRIGGER_NONE)       || \
-                                 ((TRIGGER) == DAC_TRIGGER_T1_TRGO)    || \
-                                 ((TRIGGER) == DAC_TRIGGER_T2_TRGO)    || \
-                                 ((TRIGGER) == DAC_TRIGGER_T4_TRGO)    || \
-                                 ((TRIGGER) == DAC_TRIGGER_T5_TRGO)    || \
-                                 ((TRIGGER) == DAC_TRIGGER_T6_TRGO)    || \
-                                 ((TRIGGER) == DAC_TRIGGER_T7_TRGO)    || \
-                                 ((TRIGGER) == DAC_TRIGGER_T8_TRGO)    || \
-                                 ((TRIGGER) == DAC_TRIGGER_T15_TRGO)   || \
-                                 ((TRIGGER) == DAC_TRIGGER_LPTIM1_OUT) || \
-                                 ((TRIGGER) == DAC_TRIGGER_LPTIM3_OUT) || \
-                                 ((TRIGGER) == DAC_TRIGGER_EXT_IT9)    || \
+#define IS_DAC_TRIGGER(TRIGGER) (((TRIGGER) == DAC_TRIGGER_NONE)            || \
+                                 ((TRIGGER) == DAC_TRIGGER_T1_TRGO)         || \
+                                 ((TRIGGER) == DAC_TRIGGER_T2_TRGO)         || \
+                                 ((TRIGGER) == DAC_TRIGGER_T4_TRGO)         || \
+                                 ((TRIGGER) == DAC_TRIGGER_T5_TRGO)         || \
+                                 ((TRIGGER) == DAC_TRIGGER_T6_TRGO)         || \
+                                 ((TRIGGER) == DAC_TRIGGER_T7_TRGO)         || \
+                                 ((TRIGGER) == DAC_TRIGGER_T8_TRGO)         || \
+                                 ((TRIGGER) == DAC_TRIGGER_T15_TRGO)        || \
+                                 ((TRIGGER) == DAC_TRIGGER_LPTIM1_OUT)      || \
+                                 ((TRIGGER) == DAC_TRIGGER_LPTIM3_OUT)      || \
+                                 ((TRIGGER) == DAC_TRIGGER_EXT_IT9)         || \
+                                 ((TRIGGER) == DAC_TRIGGER_STOP_LPTIM1_OUT) || \
+                                 ((TRIGGER) == DAC_TRIGGER_STOP_LPTIM3_OUT) || \
+                                 ((TRIGGER) == DAC_TRIGGER_STOP_EXT_IT9)    || \
                                  ((TRIGGER) == DAC_TRIGGER_SOFTWARE))
 
 #define  IS_DAC_HIGH_FREQUENCY_MODE(MODE) (((MODE) == DAC_HIGH_FREQUENCY_INTERFACE_MODE_DISABLE)         || \
@@ -155,6 +189,9 @@ extern "C" {
                                                       ((VALUE) == DAC_TRIANGLEAMPLITUDE_1023) || \
                                                       ((VALUE) == DAC_TRIANGLEAMPLITUDE_2047) || \
                                                       ((VALUE) == DAC_TRIANGLEAMPLITUDE_4095))
+
+#define IS_DAC_AUTONOMOUS(AUTONOMOUS) (((AUTONOMOUS) == DAC_AUTONOMOUS_MODE_DISABLE) || \
+                                       ((AUTONOMOUS) == DAC_AUTONOMOUS_MODE_ENABLE))
 /**
   * @}
   */
@@ -203,7 +240,9 @@ HAL_StatusTypeDef HAL_DACEx_SetUserTrimming(DAC_HandleTypeDef *hdac, DAC_Channel
 uint32_t HAL_DACEx_GetTrimOffset(DAC_HandleTypeDef *hdac, uint32_t Channel);
 
 /* Autonomous Mode Control functions  **********************************************/
-HAL_StatusTypeDef HAL_DACEx_GetConfigAutonomousMode(DAC_HandleTypeDef *hdac, DAC_ChannelConfTypeDef *sConfig);
+HAL_StatusTypeDef HAL_DACEx_SetConfigAutonomousMode(DAC_HandleTypeDef *hdac, DAC_AutonomousModeConfTypeDef *sConfig);
+HAL_StatusTypeDef HAL_DACEx_GetConfigAutonomousMode(DAC_HandleTypeDef *hdac, DAC_AutonomousModeConfTypeDef *sConfig);
+HAL_StatusTypeDef HAL_DACEx_ClearConfigAutonomousMode(DAC_HandleTypeDef *hdac);
 
 /**
   * @}
@@ -241,6 +280,6 @@ void DAC_DMAHalfConvCpltCh2(DMA_HandleTypeDef *hdma);
 }
 #endif
 
-#endif /*STM32U5xx_HAL_DAC_EX_H */
+#endif /* STM32U5xx_HAL_DAC_EX_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

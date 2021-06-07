@@ -12,8 +12,10 @@
                       ##### How to use this driver #####
   ==============================================================================
     [..]
+
      *** Dual mode IO operation ***
      ==============================
+     [..]
       (+) Use HAL_DACEx_DualStart() to enable both channel and start conversion
           for dual mode operation.
           If software trigger is selected, using HAL_DACEx_DualStart() will start
@@ -35,6 +37,7 @@
 
      *** Signal generation operation ***
      ===================================
+     [..]
       (+) Use HAL_DACEx_TriangleWaveGenerate() to generate Triangle signal.
       (+) Use HAL_DACEx_NoiseWaveGenerate() to generate Noise signal.
 
@@ -46,7 +49,10 @@
 
      *** Autonomous Mode operation ***
      ===================================
+     [..]
+      (+) Use HAL_DACx_SetConfigAutonomousMode() to configure the autonomous mode
       (+) Use HAL_DACx_GetConfigAutonomousMode() to get the current configuration of the autonomous mode
+      (+) Use HAL_DACx_ClearConfigAutonomousMode() to clear the configuration of the autonomous mode
 
  @endverbatim
   ******************************************************************************
@@ -110,6 +116,7 @@
   * @{
   */
 
+
 /**
   * @brief  Enables DAC and starts conversion of both channels.
   * @param  hdac pointer to a DAC_HandleTypeDef structure that contains
@@ -134,11 +141,11 @@ HAL_StatusTypeDef HAL_DACEx_DualStart(DAC_HandleTypeDef *hdac)
   HAL_Delay(1);
 
   /* Check if software trigger enabled */
-  if ((hdac->Instance->CR & (DAC_CR_TEN1 | DAC_CR_TSEL1)) == DAC_CR_TEN1)
+  if ((hdac->Instance->CR & (DAC_CR_TEN1 | DAC_CR_TSEL1)) == DAC_TRIGGER_SOFTWARE)
   {
     tmp_swtrig |= DAC_SWTRIGR_SWTRIG1;
   }
-  if ((hdac->Instance->CR & (DAC_CR_TEN2 | DAC_CR_TSEL2)) == DAC_CR_TEN2)
+  if ((hdac->Instance->CR & (DAC_CR_TEN2 | DAC_CR_TSEL2)) == (DAC_TRIGGER_SOFTWARE << (DAC_CHANNEL_2 & 0x10UL)))
   {
     tmp_swtrig |= DAC_SWTRIGR_SWTRIG2;
   }
@@ -198,7 +205,8 @@ HAL_StatusTypeDef HAL_DACEx_DualStart_DMA(DAC_HandleTypeDef *hdac, uint32_t Chan
                                           uint32_t Alignment)
 {
   HAL_StatusTypeDef status;
-  uint32_t tmpreg = 0UL;
+  uint32_t tmpreg;
+  uint32_t LengthInBytes;
 
   /* Check the parameters */
   assert_param(IS_DAC_CHANNEL(Channel));
@@ -249,11 +257,9 @@ HAL_StatusTypeDef HAL_DACEx_DualStart_DMA(DAC_HandleTypeDef *hdac, uint32_t Chan
       /* Get DHR12L1 address */
       tmpreg = (uint32_t)&hdac->Instance->DHR12LD;
       break;
-    case DAC_ALIGN_8B_R:
+    default: /* case DAC_ALIGN_8B_R */
       /* Get DHR8R1 address */
       tmpreg = (uint32_t)&hdac->Instance->DHR8RD;
-      break;
-    default:
       break;
   }
 
@@ -263,13 +269,16 @@ HAL_StatusTypeDef HAL_DACEx_DualStart_DMA(DAC_HandleTypeDef *hdac, uint32_t Chan
     /* Enable the DAC DMA underrun interrupt */
     __HAL_DAC_ENABLE_IT(hdac, DAC_IT_DMAUDR1);
 
+    /* Length should be converted to number of bytes */
+    LengthInBytes = Length * 4U;
+
     /* Check linkedlist mode */
     if ((hdac->DMA_Handle1->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
     {
       if ((hdac->DMA_Handle1->LinkedListQueue != NULL) && (hdac->DMA_Handle1->LinkedListQueue->Head != NULL))
       {
         /* Set DMA data size */
-        hdac->DMA_Handle1->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = Length;
+        hdac->DMA_Handle1->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = LengthInBytes;
 
         /* Set DMA source address */
         hdac->DMA_Handle1->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = (uint32_t)pData;
@@ -289,7 +298,7 @@ HAL_StatusTypeDef HAL_DACEx_DualStart_DMA(DAC_HandleTypeDef *hdac, uint32_t Chan
     else
     {
       /* Enable the DMA channel */
-      status = HAL_DMA_Start_IT(hdac->DMA_Handle1, (uint32_t)pData, tmpreg, Length);
+      status = HAL_DMA_Start_IT(hdac->DMA_Handle1, (uint32_t)pData, tmpreg, LengthInBytes);
     }
   }
   else
@@ -297,13 +306,16 @@ HAL_StatusTypeDef HAL_DACEx_DualStart_DMA(DAC_HandleTypeDef *hdac, uint32_t Chan
     /* Enable the DAC DMA underrun interrupt */
     __HAL_DAC_ENABLE_IT(hdac, DAC_IT_DMAUDR2);
 
+    /* Length should be converted to number of bytes */
+    LengthInBytes = Length * 4U;
+
     /* Check linkedlist mode */
     if ((hdac->DMA_Handle2->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
     {
       if ((hdac->DMA_Handle2->LinkedListQueue != NULL) && (hdac->DMA_Handle2->LinkedListQueue->Head != NULL))
       {
         /* Set DMA data size */
-        hdac->DMA_Handle2->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = Length;
+        hdac->DMA_Handle2->LinkedListQueue->Head->LinkRegisters[NODE_CBR1_DEFAULT_OFFSET] = LengthInBytes;
 
         /* Set DMA source address */
         hdac->DMA_Handle2->LinkedListQueue->Head->LinkRegisters[NODE_CSAR_DEFAULT_OFFSET] = (uint32_t)pData;
@@ -323,7 +335,7 @@ HAL_StatusTypeDef HAL_DACEx_DualStart_DMA(DAC_HandleTypeDef *hdac, uint32_t Chan
     else
     {
       /* Enable the DMA channel */
-      status = HAL_DMA_Start_IT(hdac->DMA_Handle2, (uint32_t)pData, tmpreg, Length);
+      status = HAL_DMA_Start_IT(hdac->DMA_Handle2, (uint32_t)pData, tmpreg, LengthInBytes);
     }
   }
 
@@ -406,6 +418,7 @@ HAL_StatusTypeDef HAL_DACEx_DualStop_DMA(DAC_HandleTypeDef *hdac, uint32_t Chann
   /* Return function status */
   return status;
 }
+
 
 /**
   * @brief  Enable or disable the selected DAC channel wave generation.
@@ -506,6 +519,7 @@ HAL_StatusTypeDef HAL_DACEx_NoiseWaveGenerate(DAC_HandleTypeDef *hdac, uint32_t 
   /* Return function status */
   return HAL_OK;
 }
+
 
 /**
   * @brief  Set the specified data holding register value for dual DAC channel.
@@ -615,6 +629,7 @@ __weak void HAL_DACEx_DMAUnderrunCallbackCh2(DAC_HandleTypeDef *hdac)
             the HAL_DACEx_DMAUnderrunCallbackCh2 could be implemented in the user file
    */
 }
+
 
 /**
   * @brief  Run the self calibration of one DAC channel.
@@ -828,6 +843,7 @@ uint32_t HAL_DACEx_GetTrimOffset(DAC_HandleTypeDef *hdac, uint32_t Channel)
   * @{
   */
 
+
 /**
   * @brief  Return the last data output value of the selected DAC channel.
   * @param  hdac pointer to a DAC_HandleTypeDef structure that contains
@@ -846,23 +862,97 @@ uint32_t HAL_DACEx_DualGetValue(DAC_HandleTypeDef *hdac)
   return tmp;
 }
 
+
 /**
   * @}
   */
+/**
+  * @brief Set autonomous mode Configuration.
+  * @note  The autonomous mode applies to the 2 channels of a DAC block (same for both channels)
+  * @param hdac pointer to a DAC_HandleTypeDef structure that contains
+  *        the configuration information for the specified DAC.
+  * @param sConfig pointer to Autonomous mode structure parameters.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_DACEx_SetConfigAutonomousMode(DAC_HandleTypeDef *hdac, DAC_AutonomousModeConfTypeDef *sConfig)
+{
+  assert_param(IS_DAC_AUTONOMOUS(sConfig->AutonomousModeState));
+
+  if (hdac->State == HAL_DAC_STATE_READY)
+  {
+    /* Process Locked */
+    __HAL_LOCK(hdac);
+
+    hdac->State = HAL_DAC_STATE_BUSY;
+
+    /* NOTE: The set/reset of the bit automode in the AUTOCR
+             register is for both dac_channel1 and dac_channel2 */
+
+    /* Update the AUTOCR register */
+    MODIFY_REG(hdac->Instance->AUTOCR, DAC_AUTOCR_AUTOMODE, sConfig->AutonomousModeState);
+
+    /* Update the DAC state */
+    hdac->State = HAL_DAC_STATE_READY;
+
+    /* Process Unlocked */
+    __HAL_UNLOCK(hdac);
+
+    return HAL_OK;
+  }
+  else
+  {
+    return HAL_BUSY;
+  }
+}
 
 /**
   * @brief Get autonomous mode Configuration.
   * @param hdac pointer to a DAC_HandleTypeDef structure that contains
   *        the configuration information for the specified DAC.
-  * @param sConfig pointer to dac channel typedef structure parameters.
+  * @param sConfig pointer to Autonomous mode structure parameters.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DACEx_GetConfigAutonomousMode(DAC_HandleTypeDef *hdac, DAC_ChannelConfTypeDef *sConfig)
+HAL_StatusTypeDef HAL_DACEx_GetConfigAutonomousMode(DAC_HandleTypeDef *hdac, DAC_AutonomousModeConfTypeDef *sConfig)
 {
   /* Fill Autonomous structure parameter */
-  sConfig->DAC_AutonomousMode = (READ_REG(hdac->Instance->AUTOCR) == DAC_AUTOCR_AUTOMODE) ? ENABLE : DISABLE;
+  sConfig->AutonomousModeState = READ_BIT(hdac->Instance->AUTOCR, DAC_AUTOCR_AUTOMODE);
 
   return HAL_OK;
+}
+
+/**
+  * @brief Clear autonomous mode Configuration.
+  * @note  The autonomous mode applies to the 2 channels of a DAC block (same for both channels)
+  * @param hdac pointer to a DAC_HandleTypeDef structure that contains
+  *        the configuration information for the specified DAC.
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_DACEx_ClearConfigAutonomousMode(DAC_HandleTypeDef *hdac)
+{
+  if (hdac->State == HAL_DAC_STATE_READY)
+  {
+    /* Process Locked */
+    __HAL_LOCK(hdac);
+
+    hdac->State = HAL_DAC_STATE_BUSY;
+
+    /* NOTE: The set/reset of the bit automode in the AUTOCR
+             register is for both dac_channel1 and dac_channel2 */
+
+    /* Clear AUTOCR register */
+    CLEAR_BIT(hdac->Instance->AUTOCR, DAC_AUTOCR_AUTOMODE);
+
+    hdac->State = HAL_DAC_STATE_READY;
+
+    /* Process Unlocked */
+    __HAL_UNLOCK(hdac);
+
+    return HAL_OK;
+  }
+  else
+  {
+    return HAL_BUSY;
+  }
 }
 /**
   * @}
@@ -873,6 +963,7 @@ HAL_StatusTypeDef HAL_DACEx_GetConfigAutonomousMode(DAC_HandleTypeDef *hdac, DAC
   *  @brief    Extended private functions
   * @{
   */
+
 
 /**
   * @brief  DMA conversion complete callback.
@@ -931,6 +1022,7 @@ void DAC_DMAErrorCh2(DMA_HandleTypeDef *hdma)
 
   hdac->State = HAL_DAC_STATE_READY;
 }
+
 
 /**
   * @}

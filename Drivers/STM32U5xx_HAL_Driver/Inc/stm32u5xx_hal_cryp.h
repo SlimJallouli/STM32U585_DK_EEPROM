@@ -195,9 +195,9 @@ typedef struct
 } CRYP_HandleTypeDef;
 
 #if (USE_HAL_CRYP_REGISTER_CALLBACKS == 1U)
-/** @defgroup HAL_CRYP_Callback_ID_enumeration_definition HAL CRYP Callback ID enumeration definition
+
+/**
   * @brief  HAL CRYP Callback ID enumeration definition
-  * @{
   */
 typedef enum
 {
@@ -207,20 +207,11 @@ typedef enum
   HAL_CRYP_OUTPUT_COMPLETE_CB_ID   = 0x03U,    /*!< CRYP Output FIFO transfer completed callback ID */
   HAL_CRYP_ERROR_CB_ID             = 0x04U,    /*!< CRYP Error callback ID                          */
 } HAL_CRYP_CallbackIDTypeDef;
-/**
-  * @}
-  */
 
-/** @defgroup HAL_CRYP_Callback_pointer_definition HAL CRYP Callback pointer definition
+/**
   * @brief  HAL CRYP Callback pointer definition
-  * @{
   */
-
 typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< pointer to a common CRYP callback function */
-
-/**
-  * @}
-  */
 
 #endif /* USE_HAL_CRYP_REGISTER_CALLBACKS */
 
@@ -334,7 +325,7 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @}
   */
 
-/** @defgroup AES_Key_Protection AES Key Protection
+/** @defgroup CRYP_Key_Protection CRYP Key Protection
   * @{
   */
 
@@ -483,9 +474,9 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @param  __HANDLE__ specifies the CRYP handle.
   * @param  __FLAG__ specifies the flag to clear.
   *         This parameter can be one of the following values:
-  *            @arg @ref CRYP_RWEIF_CLEAR Read (RDERR), Write (WRERR) or Read/write (RWEIF) Error  Flag Clear
-  *            @arg @ref CRYP_CCF_CLEAR Computation Complete Flag (CCF) Clear
-  *            @arg @ref CRYP_KEIF_CLEAR Key error interrupt flag clear
+  *            @arg @ref CRYP_CLEAR_RWEIF Read (RDERR), Write (WRERR) or Read/write (RWEIF) Error  Flag Clear
+  *            @arg @ref CRYP_CLEAR_CCF Computation Complete Flag (CCF) Clear
+  *            @arg @ref CRYP_CLEAR_KEIF Key error interrupt flag clear
   * @retval None
   */
 
@@ -609,10 +600,6 @@ uint32_t HAL_CRYP_GetError(CRYP_HandleTypeDef *hcryp);
   * @{
   */
 
-/** @defgroup CRYP_IS_CRYP_Definitions CRYP Private macros to check input parameters
-  * @{
-  */
-
 #define IS_CRYP_INSTANCE(INSTANCE)(((INSTANCE) == AES)   || \
                                    ((INSTANCE) == SAES))
 
@@ -641,9 +628,6 @@ uint32_t HAL_CRYP_GetError(CRYP_HandleTypeDef *hcryp);
    (((ALGO) == CRYP_AES_ECB) || ((ALGO) == CRYP_AES_CBC)                  || \
     ((ALGO)== CRYP_AES_GCM_GMAC) || ((ALGO) == CRYP_AES_CCM)))
 
-/**
-  * @}
-  */
 
 /**
   * @}
@@ -651,13 +635,6 @@ uint32_t HAL_CRYP_GetError(CRYP_HandleTypeDef *hcryp);
 
 
 /* Private constants ---------------------------------------------------------*/
-/** @defgroup CRYP_Private_Constants CRYP Private Constants
-  * @{
-  */
-
-/**
-  * @}
-  */
 /* Private defines -----------------------------------------------------------*/
 /** @defgroup CRYP_Private_Defines CRYP Private Defines
   * @{
@@ -668,14 +645,6 @@ uint32_t HAL_CRYP_GetError(CRYP_HandleTypeDef *hcryp);
   */
 
 /* Private variables ---------------------------------------------------------*/
-/** @defgroup CRYP_Private_Variables CRYP Private Variables
-  * @{
-  */
-
-/**
-  * @}
-  */
-
 /* Private functions ---------------------------------------------------------*/
 /** @defgroup CRYP_Private_Functions CRYP Private Functions
   * @{

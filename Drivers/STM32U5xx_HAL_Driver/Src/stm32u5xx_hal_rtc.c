@@ -225,8 +225,8 @@
   */
 
 /** @addtogroup RTC_Exported_Functions_Group1
- *  @brief    Initialization and Configuration functions
- *
+  *  @brief    Initialization and Configuration functions
+  *
 @verbatim
  ===============================================================================
               ##### Initialization and de-initialization functions #####
@@ -288,27 +288,54 @@ HAL_StatusTypeDef HAL_RTC_Init(RTC_HandleTypeDef *hrtc)
     {
       /* Allocate lock resource and initialize it */
       hrtc->Lock = HAL_UNLOCKED;
-
-      hrtc->AlarmAEventCallback          = HAL_RTC_AlarmAEventCallback;            /* Legacy weak AlarmAEventCallback      */
-      hrtc->AlarmBEventCallback          = HAL_RTCEx_AlarmBEventCallback;          /* Legacy weak AlarmBEventCallback      */
-      hrtc->TimeStampEventCallback       = HAL_RTCEx_TimeStampEventCallback;       /* Legacy weak TimeStampEventCallback   */
-      hrtc->WakeUpTimerEventCallback     = HAL_RTCEx_WakeUpTimerEventCallback;     /* Legacy weak WakeUpTimerEventCallback */
-      hrtc->SSRUEventCallback            = HAL_RTCEx_SSRUEventCallback;            /* Legacy weak SSRUEventCallback */
-      hrtc->Tamper1EventCallback         = HAL_RTCEx_Tamper1EventCallback;         /* Legacy weak Tamper1EventCallback     */
-      hrtc->Tamper2EventCallback         = HAL_RTCEx_Tamper2EventCallback;         /* Legacy weak Tamper2EventCallback     */
-      hrtc->Tamper3EventCallback         = HAL_RTCEx_Tamper3EventCallback;         /* Legacy weak Tamper3EventCallback     */
-      hrtc->Tamper4EventCallback         = HAL_RTCEx_Tamper4EventCallback;         /* Legacy weak Tamper4EventCallback     */
-      hrtc->Tamper5EventCallback         = HAL_RTCEx_Tamper5EventCallback;         /* Legacy weak Tamper5EventCallback     */
-      hrtc->Tamper6EventCallback         = HAL_RTCEx_Tamper6EventCallback;         /* Legacy weak Tamper6EventCallback     */
-      hrtc->Tamper7EventCallback         = HAL_RTCEx_Tamper7EventCallback;         /* Legacy weak Tamper7EventCallback     */
-      hrtc->Tamper8EventCallback         = HAL_RTCEx_Tamper8EventCallback;         /* Legacy weak Tamper8EventCallback     */
-      hrtc->InternalTamper1EventCallback = HAL_RTCEx_InternalTamper1EventCallback; /* Legacy weak InternalTamper1EventCallback */
-      hrtc->InternalTamper2EventCallback = HAL_RTCEx_InternalTamper2EventCallback; /* Legacy weak InternalTamper2EventCallback */
-      hrtc->InternalTamper3EventCallback = HAL_RTCEx_InternalTamper3EventCallback; /* Legacy weak InternalTamper3EventCallback */
-      hrtc->InternalTamper5EventCallback = HAL_RTCEx_InternalTamper5EventCallback; /* Legacy weak InternalTamper5EventCallback */
-      hrtc->InternalTamper8EventCallback = HAL_RTCEx_InternalTamper8EventCallback; /* Legacy weak InternalTamper8EventCallback */
-
-
+      /* Legacy weak AlarmAEventCallback      */
+      hrtc->AlarmAEventCallback          = HAL_RTC_AlarmAEventCallback;
+      /* Legacy weak AlarmBEventCallback      */
+      hrtc->AlarmBEventCallback          = HAL_RTCEx_AlarmBEventCallback;
+      /* Legacy weak TimeStampEventCallback   */
+      hrtc->TimeStampEventCallback       = HAL_RTCEx_TimeStampEventCallback;
+      /* Legacy weak WakeUpTimerEventCallback */
+      hrtc->WakeUpTimerEventCallback     = HAL_RTCEx_WakeUpTimerEventCallback;
+      /* Legacy weak SSRUEventCallback */
+      hrtc->SSRUEventCallback            = HAL_RTCEx_SSRUEventCallback;
+      /* Legacy weak Tamper1EventCallback     */
+      hrtc->Tamper1EventCallback         = HAL_RTCEx_Tamper1EventCallback;
+      /* Legacy weak Tamper2EventCallback     */
+      hrtc->Tamper2EventCallback         = HAL_RTCEx_Tamper2EventCallback;
+      /* Legacy weak Tamper3EventCallback     */
+      hrtc->Tamper3EventCallback         = HAL_RTCEx_Tamper3EventCallback;
+      /* Legacy weak Tamper4EventCallback     */
+      hrtc->Tamper4EventCallback         = HAL_RTCEx_Tamper4EventCallback;
+      /* Legacy weak Tamper5EventCallback     */
+      hrtc->Tamper5EventCallback         = HAL_RTCEx_Tamper5EventCallback;
+      /* Legacy weak Tamper6EventCallback     */
+      hrtc->Tamper6EventCallback         = HAL_RTCEx_Tamper6EventCallback;
+      /* Legacy weak Tamper7EventCallback     */
+      hrtc->Tamper7EventCallback         = HAL_RTCEx_Tamper7EventCallback;
+      /* Legacy weak Tamper8EventCallback     */
+      hrtc->Tamper8EventCallback         = HAL_RTCEx_Tamper8EventCallback;
+      /* Legacy weak InternalTamper1EventCallback */
+      hrtc->InternalTamper1EventCallback = HAL_RTCEx_InternalTamper1EventCallback;
+      /* Legacy weak InternalTamper2EventCallback */
+      hrtc->InternalTamper2EventCallback = HAL_RTCEx_InternalTamper2EventCallback;
+      /* Legacy weak InternalTamper3EventCallback */
+      hrtc->InternalTamper3EventCallback = HAL_RTCEx_InternalTamper3EventCallback;
+      /* Legacy weak InternalTamper5EventCallback */
+      hrtc->InternalTamper5EventCallback = HAL_RTCEx_InternalTamper5EventCallback;
+      /* Legacy weak InternalTamper6EventCallback */
+      hrtc->InternalTamper6EventCallback = HAL_RTCEx_InternalTamper6EventCallback;
+      /* Legacy weak InternalTamper7EventCallback */
+      hrtc->InternalTamper7EventCallback = HAL_RTCEx_InternalTamper7EventCallback;
+      /* Legacy weak InternalTamper8EventCallback */
+      hrtc->InternalTamper8EventCallback = HAL_RTCEx_InternalTamper8EventCallback;
+      /* Legacy weak InternalTamper9EventCallback */
+      hrtc->InternalTamper9EventCallback = HAL_RTCEx_InternalTamper9EventCallback;
+      /* Legacy weak InternalTamper11EventCallback */
+      hrtc->InternalTamper11EventCallback = HAL_RTCEx_InternalTamper11EventCallback;
+      /* Legacy weak InternalTamper12EventCallback */
+      hrtc->InternalTamper12EventCallback = HAL_RTCEx_InternalTamper12EventCallback;
+      /* Legacy weak InternalTamper13EventCallback */
+      hrtc->InternalTamper13EventCallback = HAL_RTCEx_InternalTamper13EventCallback;
       if (hrtc->MspInitCallback == NULL)
       {
         hrtc->MspInitCallback = HAL_RTC_MspInit;
@@ -407,11 +434,12 @@ HAL_StatusTypeDef HAL_RTC_DeInit(RTC_HandleTypeDef *hrtc)
     CLEAR_REG(RTC->CALR);
     CLEAR_REG(RTC->ALRMASSR);
     CLEAR_REG(RTC->ALRMBSSR);
-    WRITE_REG(RTC->SCR, RTC_SCR_CITSF | RTC_SCR_CTSOVF | RTC_SCR_CTSF | RTC_SCR_CWUTF | RTC_SCR_CALRBF | RTC_SCR_CALRAF);
+    WRITE_REG(RTC->SCR, RTC_SCR_CITSF | RTC_SCR_CTSOVF | RTC_SCR_CTSF | RTC_SCR_CWUTF | RTC_SCR_CALRBF | \
+              RTC_SCR_CALRAF);
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
     WRITE_REG(RTC->SECCFGR, (RTC_SECCFGR_SEC | RTC_SECCFGR_INITSEC | RTC_SECCFGR_CALSEC | RTC_SECCFGR_TSSEC \
                              | RTC_SECCFGR_WUTSEC | RTC_SECCFGR_ALRBSEC | RTC_SECCFGR_ALRASEC));
-#endif
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
     CLEAR_REG(RTC->PRIVCFGR);
 
     /* Exit initialization mode */
@@ -428,7 +456,7 @@ HAL_StatusTypeDef HAL_RTC_DeInit(RTC_HandleTypeDef *hrtc)
       CLEAR_REG(TAMP->ATCR2);
 #if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
       WRITE_REG(TAMP->SECCFGR, TAMP_SECCFGR_TAMPSEC);
-#endif
+#endif /* (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U) */
       CLEAR_REG(TAMP->PRIVCFGR);
     }
   }
@@ -496,7 +524,8 @@ HAL_StatusTypeDef HAL_RTC_DeInit(RTC_HandleTypeDef *hrtc)
   * @param  pCallback pointer to the Callback function
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_RTC_RegisterCallback(RTC_HandleTypeDef *hrtc, HAL_RTC_CallbackIDTypeDef CallbackID, pRTC_CallbackTypeDef pCallback)
+HAL_StatusTypeDef HAL_RTC_RegisterCallback(RTC_HandleTypeDef *hrtc, HAL_RTC_CallbackIDTypeDef CallbackID,
+                                           pRTC_CallbackTypeDef pCallback)
 {
   HAL_StatusTypeDef status = HAL_OK;
 
@@ -698,99 +727,123 @@ HAL_StatusTypeDef HAL_RTC_UnRegisterCallback(RTC_HandleTypeDef *hrtc, HAL_RTC_Ca
     switch (CallbackID)
     {
       case HAL_RTC_ALARM_A_EVENT_CB_ID :
-        hrtc->AlarmAEventCallback = HAL_RTC_AlarmAEventCallback;         /* Legacy weak AlarmAEventCallback */
+        /* Legacy weak AlarmAEventCallback */
+        hrtc->AlarmAEventCallback = HAL_RTC_AlarmAEventCallback;
         break;
 
       case HAL_RTC_ALARM_B_EVENT_CB_ID :
-        hrtc->AlarmBEventCallback = HAL_RTCEx_AlarmBEventCallback;        /* Legacy weak AlarmBEventCallback */
+        /* Legacy weak AlarmBEventCallback */
+        hrtc->AlarmBEventCallback = HAL_RTCEx_AlarmBEventCallback;
         break;
 
       case HAL_RTC_TIMESTAMP_EVENT_CB_ID :
-        hrtc->TimeStampEventCallback = HAL_RTCEx_TimeStampEventCallback;   /* Legacy weak TimeStampEventCallback */
+        /* Legacy weak TimeStampEventCallback */
+        hrtc->TimeStampEventCallback = HAL_RTCEx_TimeStampEventCallback;
         break;
 
       case HAL_RTC_WAKEUPTIMER_EVENT_CB_ID :
-        hrtc->WakeUpTimerEventCallback = HAL_RTCEx_WakeUpTimerEventCallback; /* Legacy weak WakeUpTimerEventCallback */
+        /* Legacy weak WakeUpTimerEventCallback */
+        hrtc->WakeUpTimerEventCallback = HAL_RTCEx_WakeUpTimerEventCallback;
         break;
 
       case HAL_RTC_SSRU_EVENT_CB_ID :
-        hrtc->SSRUEventCallback = HAL_RTCEx_SSRUEventCallback;               /* Legacy weak SSRUEventCallback */
+        /* Legacy weak SSRUEventCallback */
+        hrtc->SSRUEventCallback = HAL_RTCEx_SSRUEventCallback;
         break;
 
       case HAL_RTC_TAMPER1_EVENT_CB_ID :
-        hrtc->Tamper1EventCallback = HAL_RTCEx_Tamper1EventCallback;         /* Legacy weak Tamper1EventCallback */
+        /* Legacy weak Tamper1EventCallback */
+        hrtc->Tamper1EventCallback = HAL_RTCEx_Tamper1EventCallback;
         break;
 
       case HAL_RTC_TAMPER2_EVENT_CB_ID :
-        hrtc->Tamper2EventCallback = HAL_RTCEx_Tamper2EventCallback;         /* Legacy weak Tamper2EventCallback */
+        /* Legacy weak Tamper2EventCallback */
+        hrtc->Tamper2EventCallback = HAL_RTCEx_Tamper2EventCallback;
         break;
 
       case HAL_RTC_TAMPER3_EVENT_CB_ID :
-        hrtc->Tamper3EventCallback = HAL_RTCEx_Tamper3EventCallback;         /* Legacy weak Tamper3EventCallback */
+        /* Legacy weak Tamper3EventCallback */
+        hrtc->Tamper3EventCallback = HAL_RTCEx_Tamper3EventCallback;
         break;
 
       case HAL_RTC_TAMPER4_EVENT_CB_ID :
-        hrtc->Tamper4EventCallback = HAL_RTCEx_Tamper4EventCallback;         /* Legacy weak Tamper4EventCallback */
+        /* Legacy weak Tamper4EventCallback */
+        hrtc->Tamper4EventCallback = HAL_RTCEx_Tamper4EventCallback;
         break;
 
       case HAL_RTC_TAMPER5_EVENT_CB_ID :
-        hrtc->Tamper5EventCallback = HAL_RTCEx_Tamper5EventCallback;         /* Legacy weak Tamper5EventCallback */
+        /* Legacy weak Tamper5EventCallback */
+        hrtc->Tamper5EventCallback = HAL_RTCEx_Tamper5EventCallback;
         break;
 
       case HAL_RTC_TAMPER6_EVENT_CB_ID :
-        hrtc->Tamper6EventCallback = HAL_RTCEx_Tamper6EventCallback;         /* Legacy weak Tamper6EventCallback */
+        /* Legacy weak Tamper6EventCallback */
+        hrtc->Tamper6EventCallback = HAL_RTCEx_Tamper6EventCallback;
         break;
 
       case HAL_RTC_TAMPER7_EVENT_CB_ID :
-        hrtc->Tamper7EventCallback = HAL_RTCEx_Tamper7EventCallback;         /* Legacy weak Tamper7EventCallback */
+        /* Legacy weak Tamper7EventCallback */
+        hrtc->Tamper7EventCallback = HAL_RTCEx_Tamper7EventCallback;
         break;
 
       case HAL_RTC_TAMPER8_EVENT_CB_ID :
-        hrtc->Tamper8EventCallback = HAL_RTCEx_Tamper8EventCallback;         /* Legacy weak Tamper8EventCallback */
+        /* Legacy weak Tamper8EventCallback */
+        hrtc->Tamper8EventCallback = HAL_RTCEx_Tamper8EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER1_EVENT_CB_ID :
-        hrtc->InternalTamper1EventCallback = HAL_RTCEx_InternalTamper1EventCallback;    /* Legacy weak InternalTamper1EventCallback */
+        /* Legacy weak InternalTamper1EventCallback */
+        hrtc->InternalTamper1EventCallback = HAL_RTCEx_InternalTamper1EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER2_EVENT_CB_ID :
-        hrtc->InternalTamper2EventCallback = HAL_RTCEx_InternalTamper2EventCallback;    /* Legacy weak InternalTamper2EventCallback */
+        /* Legacy weak InternalTamper2EventCallback */
+        hrtc->InternalTamper2EventCallback = HAL_RTCEx_InternalTamper2EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER3_EVENT_CB_ID :
-        hrtc->InternalTamper3EventCallback = HAL_RTCEx_InternalTamper3EventCallback;     /* Legacy weak InternalTamper3EventCallback */
+        /* Legacy weak InternalTamper3EventCallback */
+        hrtc->InternalTamper3EventCallback = HAL_RTCEx_InternalTamper3EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER5_EVENT_CB_ID :
-        hrtc->InternalTamper5EventCallback = HAL_RTCEx_InternalTamper5EventCallback;     /* Legacy weak InternalTamper5EventCallback */
+        /* Legacy weak InternalTamper5EventCallback */
+        hrtc->InternalTamper5EventCallback = HAL_RTCEx_InternalTamper5EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER6_EVENT_CB_ID :
-        hrtc->InternalTamper6EventCallback = HAL_RTCEx_InternalTamper6EventCallback;    /* Legacy weak InternalTamper6EventCallback */
+        /* Legacy weak InternalTamper6EventCallback */
+        hrtc->InternalTamper6EventCallback = HAL_RTCEx_InternalTamper6EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER7_EVENT_CB_ID :
-        hrtc->InternalTamper7EventCallback = HAL_RTCEx_InternalTamper7EventCallback;    /* Legacy weak InternalTamper7EventCallback */
+        /* Legacy weak InternalTamper7EventCallback */
+        hrtc->InternalTamper7EventCallback = HAL_RTCEx_InternalTamper7EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER8_EVENT_CB_ID :
-        hrtc->InternalTamper8EventCallback = HAL_RTCEx_InternalTamper8EventCallback;     /* Legacy weak InternalTamper8EventCallback */
+        /* Legacy weak InternalTamper8EventCallback */
+        hrtc->InternalTamper8EventCallback = HAL_RTCEx_InternalTamper8EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER9_EVENT_CB_ID :
-        hrtc->InternalTamper9EventCallback = HAL_RTCEx_InternalTamper9EventCallback;     /* Legacy weak InternalTamper9EventCallback */
+        /* Legacy weak InternalTamper9EventCallback */
+        hrtc->InternalTamper9EventCallback = HAL_RTCEx_InternalTamper9EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER11_EVENT_CB_ID :
-        hrtc->InternalTamper11EventCallback = HAL_RTCEx_InternalTamper11EventCallback;   /* Legacy weak InternalTamper11EventCallback */
+        /* Legacy weak InternalTamper11EventCallback */
+        hrtc->InternalTamper11EventCallback = HAL_RTCEx_InternalTamper11EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER12_EVENT_CB_ID :
-        hrtc->InternalTamper12EventCallback = HAL_RTCEx_InternalTamper12EventCallback;   /* Legacy weak InternalTamper12EventCallback */
+        /* Legacy weak InternalTamper12EventCallback */
+        hrtc->InternalTamper12EventCallback = HAL_RTCEx_InternalTamper12EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER13_EVENT_CB_ID :
-        hrtc->InternalTamper13EventCallback = HAL_RTCEx_InternalTamper13EventCallback;   /* Legacy weak InternalTamper13EventCallback */
+        /* Legacy weak InternalTamper13EventCallback */
+        hrtc->InternalTamper13EventCallback = HAL_RTCEx_InternalTamper13EventCallback;
         break;
       case HAL_RTC_MSPINIT_CB_ID :
         hrtc->MspInitCallback = HAL_RTC_MspInit;
@@ -872,8 +925,8 @@ __weak void HAL_RTC_MspDeInit(RTC_HandleTypeDef *hrtc)
   */
 
 /** @addtogroup RTC_Exported_Functions_Group2
- *  @brief   RTC Time and Date functions
- *
+  *  @brief   RTC Time and Date functions
+  *
 @verbatim
  ===============================================================================
                  ##### RTC Time and Date functions #####
@@ -889,8 +942,10 @@ __weak void HAL_RTC_MspDeInit(RTC_HandleTypeDef *hrtc)
   * @brief  Set RTC current time.
   * @param  hrtc RTC handle
   * @param  sTime Pointer to Time structure
-  *          if Binary mode is RTC_BINARY_ONLY, this parameter is not used and RTC_SSR will be automatically reset to 0xFFFFFFFF
-             else sTime->SubSeconds is not used and RTC_SSR will be automatically reset to the A 7-bit async prescaler (RTC_PRER_PREDIV_A)
+  *          if Binary mode is RTC_BINARY_ONLY, this parameter is not used and RTC_SSR will be automatically
+  *          reset to 0xFFFFFFFF
+  *          else sTime->SubSeconds is not used and RTC_SSR will be automatically reset to the
+  *          A 7-bit async prescaler (RTC_PRER_PREDIV_A)
   * @param  Format Format of sTime->Hours, sTime->Minutes and sTime->Seconds.
   *          if Binary mode is RTC_BINARY_ONLY, this parameter is not used
   *          else this parameter can be one of the following values
@@ -909,8 +964,6 @@ HAL_StatusTypeDef HAL_RTC_SetTime(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTim
   {
     /* Check the parameters */
     assert_param(IS_RTC_FORMAT(Format));
-    assert_param(IS_RTC_DAYLIGHT_SAVING(sTime->DayLightSaving));
-    assert_param(IS_RTC_STORE_OPERATION(sTime->StoreOperation));
   }
 #endif /* USE_FULL_ASSERT */
 
@@ -972,10 +1025,10 @@ HAL_StatusTypeDef HAL_RTC_SetTime(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTim
       /* Set the RTC_TR register */
       WRITE_REG(RTC->TR, (tmpreg & RTC_TR_RESERVED_MASK));
 
-      /* Clear the bits to be configured */
+      /* This interface is deprecated. To manage Daylight Saving Time, please use HAL_RTC_DST_xxx functions */
       CLEAR_BIT(RTC->CR, RTC_CR_BKP);
 
-      /* Configure the RTC_CR register */
+      /* This interface is deprecated. To manage Daylight Saving Time, please use HAL_RTC_DST_xxx functions */
       SET_BIT(RTC->CR, (sTime->DayLightSaving | sTime->StoreOperation));
     }
 
@@ -998,6 +1051,72 @@ HAL_StatusTypeDef HAL_RTC_SetTime(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTim
 }
 
 /**
+  * @brief  Daylight Saving Time, Add one hour to the calendar in one single operation
+  *         without going through the initialization procedure.
+  * @param  hrtc RTC handle
+  * @retval None
+  */
+void HAL_RTC_DST_Add1Hour(RTC_HandleTypeDef *hrtc)
+{
+  UNUSED(hrtc);
+  __HAL_RTC_WRITEPROTECTION_DISABLE(hrtc);
+  SET_BIT(RTC->CR, RTC_CR_ADD1H);
+  __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);
+}
+
+/**
+  * @brief  Daylight Saving Time, Subtract one hour from the calendar in one
+  *         single operation without going through the initialization procedure.
+  * @param  hrtc RTC handle
+  * @retval None
+  */
+void HAL_RTC_DST_Sub1Hour(RTC_HandleTypeDef *hrtc)
+{
+  UNUSED(hrtc);
+  __HAL_RTC_WRITEPROTECTION_DISABLE(hrtc);
+  SET_BIT(RTC->CR, RTC_CR_SUB1H);
+  __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);
+}
+
+/**
+  * @brief  Daylight Saving Time, Set the store operation bit.
+  * @note   It can be used by the software in order to memorize the DST status.
+  * @param  hrtc RTC handle
+  * @retval None
+  */
+void HAL_RTC_DST_SetStoreOperation(RTC_HandleTypeDef *hrtc)
+{
+  UNUSED(hrtc);
+  __HAL_RTC_WRITEPROTECTION_DISABLE(hrtc);
+  SET_BIT(RTC->CR, RTC_CR_BKP);
+  __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);
+}
+
+/**
+  * @brief  Daylight Saving Time, Clear the store operation bit.
+  * @param  hrtc RTC handle
+  * @retval None
+  */
+void HAL_RTC_DST_ClearStoreOperation(RTC_HandleTypeDef *hrtc)
+{
+  UNUSED(hrtc);
+  __HAL_RTC_WRITEPROTECTION_DISABLE(hrtc);
+  CLEAR_BIT(RTC->CR, RTC_CR_BKP);
+  __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);
+}
+
+/**
+  * @brief  Daylight Saving Time, Read the store operation bit.
+  * @param  hrtc RTC handle
+  * @retval operation see RTC_StoreOperation_Definitions
+  */
+uint32_t HAL_RTC_DST_ReadStoreOperation(RTC_HandleTypeDef *hrtc)
+{
+  UNUSED(hrtc);
+  return READ_BIT(RTC->CR, RTC_CR_BKP);
+}
+
+/**
   * @brief  Get RTC current time.
   * @note  You can use SubSeconds and SecondFraction (sTime structure fields returned) to convert SubSeconds
   *        value in second fraction ratio with time unit following generic formula:
@@ -1012,9 +1131,9 @@ HAL_StatusTypeDef HAL_RTC_SetTime(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTim
   *          if Binary mode is RTC_BINARY_ONLY, sTime->SubSeconds only is updated
   *          else
   *             Pointer to Time structure with Hours, Minutes and Seconds fields returned
-*               with input format (BIN or BCD), also SubSeconds field returning the
-*               RTC_SSR register content and SecondFraction field the Synchronous pre-scaler
-*               factor to be used for second fraction ratio computation.
+  *               with input format (BIN or BCD), also SubSeconds field returning the
+  *               RTC_SSR register content and SecondFraction field the Synchronous pre-scaler
+  *               factor to be used for second fraction ratio computation.
   * @param  Format Format of sTime->Hours, sTime->Minutes and sTime->Seconds.
   *          if Binary mode is RTC_BINARY_ONLY, this parameter is not used
   *          else this parameter can be one of the following values:
@@ -1187,8 +1306,8 @@ HAL_StatusTypeDef HAL_RTC_GetDate(RTC_HandleTypeDef *hrtc, RTC_DateTypeDef *sDat
   */
 
 /** @addtogroup RTC_Exported_Functions_Group3
- *  @brief   RTC Alarm functions
- *
+  *  @brief   RTC Alarm functions
+  *
 @verbatim
  ===============================================================================
                  ##### RTC Alarm functions #####
@@ -1216,7 +1335,8 @@ HAL_StatusTypeDef HAL_RTC_GetDate(RTC_HandleTypeDef *hrtc, RTC_DateTypeDef *sDat
   */
 HAL_StatusTypeDef HAL_RTC_SetAlarm(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef *sAlarm, uint32_t Format)
 {
-  uint32_t tmpreg = 0, binaryMode;
+  uint32_t tmpreg = 0;
+  uint32_t binaryMode;
 
   /* Process Locked */
   __HAL_LOCK(hrtc);
@@ -1245,8 +1365,10 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef *sA
     assert_param(IS_RTC_ALARM(sAlarm->Alarm));
     assert_param(IS_RTC_ALARM_MASK(sAlarm->AlarmMask));
     assert_param(IS_RTC_ALARM_DATE_WEEKDAY_SEL(sAlarm->AlarmDateWeekDaySel));
-    /* In Binary Mix Mode, the RTC can not generate an alarm on a match involving all calendar items + the upper SSR bits */
-    assert_param((sAlarm->AlarmSubSecondMask >> RTC_ALRMASSR_MASKSS_Pos) <= (8U + (READ_BIT(RTC->ICSR, RTC_ICSR_BCDU) >> RTC_ICSR_BCDU_Pos)));
+    /* In Binary Mix Mode, the RTC can not generate an alarm on a match involving all calendar items
+       + the upper SSR bits */
+    assert_param((sAlarm->AlarmSubSecondMask >> RTC_ALRMASSR_MASKSS_Pos) <=
+                 (8U + (READ_BIT(RTC->ICSR, RTC_ICSR_BCDU) >> RTC_ICSR_BCDU_Pos)));
   }
 #endif /* USE_FULL_ASSERT */
 
@@ -1422,7 +1544,8 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef *sA
   */
 HAL_StatusTypeDef HAL_RTC_SetAlarm_IT(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef *sAlarm, uint32_t Format)
 {
-  uint32_t tmpreg = 0, binaryMode;
+  uint32_t tmpreg = 0;
+  uint32_t binaryMode;
 
   /* Process Locked */
   __HAL_LOCK(hrtc);
@@ -1453,7 +1576,8 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm_IT(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef 
     assert_param(IS_RTC_ALARM_DATE_WEEKDAY_SEL(sAlarm->AlarmDateWeekDaySel));
     /* In Binary Mix Mode, the RTC can not generate an alarm on a match
      involving all calendar items + the upper SSR bits */
-    assert_param((sAlarm->AlarmSubSecondMask >> RTC_ALRMASSR_MASKSS_Pos) <= (8U + (READ_BIT(RTC->ICSR, RTC_ICSR_BCDU) >> RTC_ICSR_BCDU_Pos)));
+    assert_param((sAlarm->AlarmSubSecondMask >> RTC_ALRMASSR_MASKSS_Pos) <=
+                 (8U + (READ_BIT(RTC->ICSR, RTC_ICSR_BCDU) >> RTC_ICSR_BCDU_Pos)));
   }
 #endif /* USE_FULL_ASSERT */
 
@@ -1538,7 +1662,7 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm_IT(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef 
   if (sAlarm->Alarm == RTC_ALARM_A)
   {
     /* Disable the Alarm A interrupt */
-    CLEAR_BIT(RTC->CR, RTC_CR_ALRAE |RTC_CR_ALRAIE);
+    CLEAR_BIT(RTC->CR, RTC_CR_ALRAE | RTC_CR_ALRAIE);
     /* Clear flag alarm A */
     WRITE_REG(RTC->SCR, RTC_SCR_CALRAF);
 
@@ -1571,7 +1695,7 @@ HAL_StatusTypeDef HAL_RTC_SetAlarm_IT(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef 
   else
   {
     /* Disable the Alarm B interrupt */
-    CLEAR_BIT(RTC->CR, RTC_CR_ALRBE|RTC_CR_ALRBIE);
+    CLEAR_BIT(RTC->CR, RTC_CR_ALRBE | RTC_CR_ALRBIE);
     /* Clear flag alarm B */
     WRITE_REG(RTC->SCR, RTC_SCR_CALRBF);
 
@@ -1640,10 +1764,14 @@ HAL_StatusTypeDef HAL_RTC_DeactivateAlarm(RTC_HandleTypeDef *hrtc, uint32_t Alar
   if (Alarm == RTC_ALARM_A)
   {
     CLEAR_BIT(RTC->CR, RTC_CR_ALRAE | RTC_CR_ALRAIE);
+    /* AlarmA, Clear SSCLR */
+    CLEAR_BIT(RTC->ALRMASSR, RTC_ALRMASSR_SSCLR);
   }
   else
   {
     CLEAR_BIT(RTC->CR, RTC_CR_ALRBE | RTC_CR_ALRBIE);
+    /* AlarmB, Clear SSCLR */
+    CLEAR_BIT(RTC->ALRMBSSR, RTC_ALRMBSSR_SSCLR);
   }
 
   /* Enable the write protection for RTC registers */
@@ -1673,7 +1801,8 @@ HAL_StatusTypeDef HAL_RTC_DeactivateAlarm(RTC_HandleTypeDef *hrtc, uint32_t Alar
   */
 HAL_StatusTypeDef HAL_RTC_GetAlarm(RTC_HandleTypeDef *hrtc, RTC_AlarmTypeDef *sAlarm, uint32_t Alarm, uint32_t Format)
 {
-  uint32_t tmpreg, subsecondtmpreg;
+  uint32_t tmpreg;
+  uint32_t subsecondtmpreg;
 
   UNUSED(hrtc);
   /* Check the parameters */
@@ -1861,8 +1990,8 @@ HAL_StatusTypeDef HAL_RTC_PollForAlarmAEvent(RTC_HandleTypeDef *hrtc, uint32_t T
   */
 
 /** @addtogroup RTC_Exported_Functions_Group4
- *  @brief   Peripheral Control functions
- *
+  *  @brief   Peripheral Control functions
+  *
 @verbatim
  ===============================================================================
                      ##### Peripheral Control functions #####
@@ -1895,7 +2024,7 @@ HAL_StatusTypeDef HAL_RTC_WaitForSynchro(RTC_HandleTypeDef *hrtc)
 
   UNUSED(hrtc);
   /* Clear RSF flag */
-  SET_BIT(RTC->ICSR, RTC_RSF_MASK);
+  CLEAR_BIT(RTC->ICSR, RTC_ICSR_RSF);
 
   tickstart = HAL_GetTick();
 
@@ -1916,8 +2045,8 @@ HAL_StatusTypeDef HAL_RTC_WaitForSynchro(RTC_HandleTypeDef *hrtc)
   */
 
 /** @addtogroup RTC_Exported_Functions_Group5
- *  @brief   Peripheral State functions
- *
+  *  @brief   Peripheral State functions
+  *
 @verbatim
  ===============================================================================
                      ##### Peripheral State functions #####
