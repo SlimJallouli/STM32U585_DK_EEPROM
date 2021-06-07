@@ -146,7 +146,7 @@ int main(void)
   M24_pIO.Delay       = &HAL_Delay;
   
   M24_RegisterBusIO(&M24_pObj, &M24_pIO);
-  M24_i2c_Init(&M24_pObj);
+  M24_i2c_Init     (&M24_pObj);
   /* USER CODE END 2 */
   
   /* Infinite loop */
@@ -154,12 +154,12 @@ int main(void)
   while (1)
   {
     printf("\r\n");
-    printf("Enter %c to modify Endpoint\r\n"            , ENDPOINT    );
-    printf("Enter %c to modify Wi-Fi SSID\r\n"          , SSID        );
-    printf("Enter %c to modify Wi-Fi Password\r\n"      , PSWD        );
-    printf("Enter %c to modify Wi-Fi Security\r\n"      , DECURITY    );
-    printf("Enter %c to write to EEPROM\r\n"            , SAVE        );
-    printf("Enter %c to read parameters from EEPROM\r\n", READ        );
+    printf("Enter %c to modify Endpoint\r\n"            , ENDPOINT);
+    printf("Enter %c to modify Wi-Fi SSID\r\n"          , SSID    );
+    printf("Enter %c to modify Wi-Fi Password\r\n"      , PSWD    );
+    printf("Enter %c to modify Wi-Fi Security\r\n"      , DECURITY);
+    printf("Enter %c to write to EEPROM\r\n"            , SAVE    );
+    printf("Enter %c to read parameters from EEPROM\r\n", READ    );
     
     scanf("%c", &choice);
     
@@ -190,11 +190,13 @@ int main(void)
       
     case DECURITY:
       printf("0 = eWiFiSecurityOpen\r\n");
-      printf("1 = eWiFiSecurityWEP\r\n");
-      printf("2 = eWiFiSecurityWPA\r\n");
+      printf("1 = eWiFiSecurityWEP \r\n");
+      printf("2 = eWiFiSecurityWPA \r\n");
       printf("3 = eWiFiSecurityWPA2\r\n");
       printf("Enter Wi-Fi Security:\r\n");
+      
       HAL_UART_Receive(&STDIN_UART_HANDLER, (uint8_t *)&wifi_security, 1, 0xFFFFFFFF);
+      
       printf(" \n Wi-Fi Security set to: %c\r\n", wifi_security);
       flushRN();
       break;    
@@ -230,15 +232,15 @@ int main(void)
       break;
       
     case READ: //read parameters from EEPROM
-      err = M24_i2c_ReadData(&M24_pObj, (uint8_t *)saved_endpoint       , ENDPOINT_ADDRESS       , ENDPOINT_SIZE        );
-      err = M24_i2c_ReadData(&M24_pObj, (uint8_t *)saved_ssid           , SSID_ADDRESS           , SSID_SIZE            );
-      err = M24_i2c_ReadData(&M24_pObj, (uint8_t *)saved_pswd           , PSWD_ADDRESS           , PSWD_SIZE            );
-      err = M24_i2c_ReadData(&M24_pObj, (uint8_t *)&saved_wifi_security , WIFI_SECURITY_ADDRESS  , WIFI_SECURITY_SIZE   );
+      err = M24_i2c_ReadData(&M24_pObj, (uint8_t *)saved_endpoint      , ENDPOINT_ADDRESS     , ENDPOINT_SIZE     );
+      err = M24_i2c_ReadData(&M24_pObj, (uint8_t *)saved_ssid          , SSID_ADDRESS         , SSID_SIZE         );
+      err = M24_i2c_ReadData(&M24_pObj, (uint8_t *)saved_pswd          , PSWD_ADDRESS         , PSWD_SIZE         );
+      err = M24_i2c_ReadData(&M24_pObj, (uint8_t *)&saved_wifi_security, WIFI_SECURITY_ADDRESS, WIFI_SECURITY_SIZE);
       
-      printf("Endpoint       : %s\r\n", saved_endpoint       );
-      printf("Wi-Fi SSID     : %s\r\n", saved_ssid           );
-      printf("Wi-Fi PSWD     : %s\r\n", saved_pswd           );
-      printf("Wi-Fi Security : %c\r\n", saved_wifi_security  );      
+      printf("Endpoint       : %s\r\n", saved_endpoint     );
+      printf("Wi-Fi SSID     : %s\r\n", saved_ssid         );
+      printf("Wi-Fi PSWD     : %s\r\n", saved_pswd         );
+      printf("Wi-Fi Security : %c\r\n", saved_wifi_security);      
       break;
       
     default:
